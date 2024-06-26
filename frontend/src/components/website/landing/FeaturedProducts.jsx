@@ -3,6 +3,7 @@ import product1 from "../../../assets/website/img/job/product-1.jpg";
 import "react-multi-carousel/lib/styles.css";
 import { nanoid } from "nanoid";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
@@ -99,7 +100,11 @@ const FeaturedProducts = () => {
             spaceBetween={50}
             slidesPerView={4}
             loop={true}
+            autoplay={true}
             ref={sliderRef}
+            navigation={true}
+            modules={[Autoplay, Pagination, Navigation]}
+            className="mySwiper"
           >
             {imageArr.map((img) => {
               return <SwiperSlide key={nanoid()}>{img}</SwiperSlide>;
