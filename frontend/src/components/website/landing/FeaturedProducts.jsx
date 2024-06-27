@@ -15,7 +15,8 @@ const FeaturedProducts = () => {
   {
     numbers.map((i, index) => {
       const el = (
-        <div className="p-2 featuredcat" key={nanoid()}>
+        <article class="swiper-slide" key={nanoid()}>
+          {/* <div className="p-2 featuredcat" key={nanoid()}> */}
           <div className="job-post bg-offWhite position-relative">
             <div className="job-type-badge position-absolute d-flex flex-column gap-2">
               <p className="job-type-badge-primary">Hourly {index + 1}</p>
@@ -30,7 +31,7 @@ const FeaturedProducts = () => {
               <h3 className="job-post-title fw-semibold">
                 <a href="job-details.html">Canon R100 Mirrorless Camera...</a>
               </h3>
-              <a href="job-details.html" className="w-btn-primary-xl">
+              {/* <a href="job-details.html" className="w-btn-primary-xl">
                 View Details
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -47,10 +48,12 @@ const FeaturedProducts = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </a>
+              </a> */}
             </div>
           </div>
-        </div>
+
+          {/* </div> */}
+        </article>
       );
       imageArr.push(el);
     });
@@ -95,7 +98,7 @@ const FeaturedProducts = () => {
             </div>
           </div>
         </div>
-        <div className="recentJob swiper-container">
+        <div className="swiper recentJob #swiper-container">
           <Swiper
             spaceBetween={50}
             slidesPerView={4}
