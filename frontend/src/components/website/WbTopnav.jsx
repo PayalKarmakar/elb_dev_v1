@@ -46,7 +46,10 @@ const WbTopnav = () => {
           <Form method="get">
             <div className="hero-form-wrapper bg-white d-flex position-relative">
               <div>
-                <select className="form-select shadow-none" name="loc">
+                <select
+                  className="form-select shadow-none border-right-grey"
+                  name="loc"
+                >
                   <option value="0">Location</option>
                   <option value="1">Kolkata</option>
                   <option value="2">Mumbai</option>
@@ -103,23 +106,36 @@ const WbTopnav = () => {
             </div>
           </Form>
           <div className="navbar-right d-flex align-items-center gap-4">
-            <div className="mode">
+            <div className="align-items-center d-none d-lg-flex">
+              <Link to={`/sign-in`} className="w-btn-secondary-lg">
+                <FaUser size={14} style={{ borderRadius: "50%" }} />
+                Login
+              </Link>
+            </div>
+
+            <div class="mode_switcher">
+              <span class="light is_active">
+                {" "}
+                <CiLight size={25} className="text-white" />
+              </span>
+              <span class="dark">
+                {" "}
+                <MdDarkMode size={25} className="text-white" />
+              </span>
+            </div>
+
+            {/* <div className="mode">
               <CiLight size={25} className="text-white" />
               &nbsp;&nbsp;
               <MdDarkMode size={25} className="text-white" />
-            </div>
+            </div> */}
 
             {/* <div className="user_location"> 
               <FaLocationDot size={15} className="text-white" />
               <i className="fa-solid fa-location-dot"></i>
               <h6 className="fw-bold">Location</h6>
             </div>  */}
-            <div className="align-items-center d-none d-lg-flex">
-              <a href="signin.html" className="w-btn-secondary-lg">
-                <FaUser size={14} style={{ borderRadius: "50%" }} />
-                Login
-              </a>
-            </div>
+
             <button
               className="navbar-toggler d-block d-xl-none"
               type="button"

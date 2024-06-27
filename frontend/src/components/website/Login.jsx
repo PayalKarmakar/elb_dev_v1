@@ -64,9 +64,7 @@ export default function Login() {
       <div className="container">
         <div className="mb-5">
           <div className="row justify-content-center">
-            <div className="col-auto">
-             
-            </div>
+            <div className="col-auto"></div>
           </div>
         </div>
         <div className="bg-white rounded-3 p-3">
