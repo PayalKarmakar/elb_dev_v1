@@ -15,6 +15,7 @@ import { protectRoute } from "./middlewares/authMiddleware.js";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import masterRoute from "./routes/masterRoute.js";
+import websiteRoute from "./routes/websiteRoute.js";
 
 // public
 import { dirname } from "path";
@@ -41,6 +42,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/masters", protectRoute, masterRoute);
 app.use("/api/v1/users", protectRoute, userRoute);
+app.use("/api/v1/website", websiteRoute);
 // API ends ---
 
 app.get("*", (req, res) => {

@@ -120,3 +120,13 @@ export const deleteLocation = async (req, res) => {
 
   res.status(StatusCodes.NO_CONTENT).json({ data: `deleted` });
 };
+
+// ------
+export const getTopLocations = async (req, res) => {
+  const data = await pool.query(
+    `select * from master_locations where is_active=true limit 10`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+};

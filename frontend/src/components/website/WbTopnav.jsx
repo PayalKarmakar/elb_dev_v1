@@ -47,12 +47,12 @@ const WbTopnav = () => {
               </Link>
             </div>
 
-            <div class="mode_switcher">
-              <span class="light is_active">
+            <div className="mode_switcher">
+              <span className="light is_active">
                 {" "}
                 <CiLight size={25} className="text-white" />
               </span>
-              <span class="dark">
+              <span className="dark">
                 {" "}
                 <MdDarkMode size={25} className="text-white" />
               </span>

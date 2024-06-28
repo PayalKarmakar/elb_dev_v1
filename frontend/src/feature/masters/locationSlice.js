@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   allStates: [],
   listLocations: [],
+  topLocations: [],
   editId: "",
   deleteId: "",
   deleteModal: "",
@@ -23,6 +24,12 @@ const locationSlice = createSlice({
     },
     unsetListLocations: (state) => {
       state.listLocations = [];
+    },
+    setTopLocations: (state, action) => {
+      state.topLocations = action.payload;
+    },
+    unsetTopLocations: (state) => {
+      state.topLocations = [];
     },
     setEditLocation: (state, action) => {
       state.editId = action.payload;
@@ -46,6 +53,8 @@ export const {
   unsetAllStates,
   setListLocations,
   unsetListLocations,
+  setTopLocations,
+  unsetTopLocations,
   setEditLocation,
   unsetEditLocation,
   setDeleteLocation,

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Route,
   RouterProvider,
@@ -6,7 +7,10 @@ import {
 } from "react-router-dom";
 import * as Elb from "./pages";
 import { store } from "./store";
-import Landing from "./pages/website/Landing";
+import { ThemeProvider } from "../contexts/theme";
+
+import Login from "./components/website/Login";
+import Signup from "./components/website/Signup";
 
 // Actions ------
 import { action as loginAction } from "./components/website/Login";
@@ -16,18 +20,16 @@ import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPasswor
 // Loaders ------
 import { loader as layoutLoader } from "./pages/admin/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
-import Login from "./components/website/Login";
-import Signup from "./components/website/Signup";
-import { useEffect, useState } from "react";
-import { ThemeProvider } from "../contexts/theme";
+import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 
 const router = createBrowserRouter([
   // Website routes ------
   {
     path: "/",
     element: <Elb.LayoutWebsite />,
+    loader: websiteLoader(store),
     children: [
-      { index: true, element: <Landing /> },
+      { index: true, element: <Elb.Landing /> },
       { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
