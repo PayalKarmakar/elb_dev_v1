@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  searchCategories: [],
   allCategories: [],
   listCategories: [],
   parentCategories: [],
@@ -13,6 +14,9 @@ const categorySlice = createSlice({
   name: "categories",
   initialState: initialState,
   reducers: {
+    setSearchCategories: (state, action) => {
+      state.searchCategories = action.payload;
+    },
     setAllCategories: (state, action) => {
       state.allCategories = action.payload;
     },
@@ -49,6 +53,7 @@ const categorySlice = createSlice({
 });
 
 export const {
+  setSearchCategories,
   setAllCategories,
   unsetAllCategories,
   setListCategories,

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Form, Link } from "react-router-dom";
 import WbLogoSvg from "./WbLogoSvg";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
-import { MdDarkMode } from "react-icons/md";
+import { FaMoon } from "react-icons/fa";
 import { CiLight } from "react-icons/ci";
 import { ThemeContext } from "../../../contexts/theme";
 import TopSearch from "./search/TopSearch";
@@ -54,7 +54,7 @@ const WbTopnav = () => {
               </span>
               <span className="dark">
                 {" "}
-                <MdDarkMode size={25} className="text-white" />
+                <FaMoon size={20} className="text-white" />
               </span>
             </div>
 
