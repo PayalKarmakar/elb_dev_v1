@@ -31,9 +31,9 @@ const FeaturedProducts = () => {
                 <p className="job-post-subtitle fw-bold">₹46,990</p>
                 {/* <p className="job-post-subtitle fw-normal">$10 - $15</p> */}
                 <h3 className="job-post-title fw-semibold">
-                  <Link href="#" className="text-decoration-none">
+                  <span href="#" className="text-decoration-none">
                     Canon R100 Mirrorless Camera...
-                  </Link>
+                  </span>
                 </h3>
                 {/* <a href="job-details.html" className="w-btn-primary-xl">
                 View Details
