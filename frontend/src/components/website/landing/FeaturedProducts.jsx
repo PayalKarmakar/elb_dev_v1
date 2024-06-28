@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import product1 from "../../../assets/website/img/job/product-1.jpg";
 import "react-multi-carousel/lib/styles.css";
 import { nanoid } from "nanoid";
@@ -15,23 +16,26 @@ const FeaturedProducts = () => {
   {
     numbers.map((i, index) => {
       const el = (
-        <article class="swiper-slide" key={nanoid()}>
-          {/* <div className="p-2 featuredcat" key={nanoid()}> */}
-          <div className="job-post bg-offWhite position-relative">
-            <div className="job-type-badge position-absolute d-flex flex-column gap-2">
-              <p className="job-type-badge-primary">Hourly {index + 1}</p>
-              <p className="job-type-badge-secondary">Urgent</p>
-            </div>
-            <div className="d-flex flex-column justify-content-center align-items-center">
-              <div className="job-post-icon">
-                <img src={product1} alt="" />
+        <Link key={nanoid()} to={`#`} className="text-decoration-none">
+          <article className="swiper-slide">
+            {/* <div className="p-2 featuredcat" key={nanoid()}> */}
+            <div className="job-post bg-offWhite position-relative">
+              <div className="job-type-badge position-absolute d-flex flex-column gap-2">
+                <p className="job-type-badge-primary">Hourly {index + 1}</p>
+                <p className="job-type-badge-secondary">Urgent</p>
               </div>
-              <p className="job-post-subtitle fw-bold">₹46,990</p>
-              {/* <p className="job-post-subtitle fw-normal">$10 - $15</p> */}
-              <h3 className="job-post-title fw-semibold">
-                <a href="job-details.html">Canon R100 Mirrorless Camera...</a>
-              </h3>
-              {/* <a href="job-details.html" className="w-btn-primary-xl">
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <div className="job-post-icon">
+                  <img src={product1} alt="" />
+                </div>
+                <p className="job-post-subtitle fw-bold">₹46,990</p>
+                {/* <p className="job-post-subtitle fw-normal">$10 - $15</p> */}
+                <h3 className="job-post-title fw-semibold">
+                  <Link href="#" className="text-decoration-none">
+                    Canon R100 Mirrorless Camera...
+                  </Link>
+                </h3>
+                {/* <a href="job-details.html" className="w-btn-primary-xl">
                 View Details
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -49,11 +53,12 @@ const FeaturedProducts = () => {
                   />
                 </svg>
               </a> */}
+              </div>
             </div>
-          </div>
 
-          {/* </div> */}
-        </article>
+            {/* </div> */}
+          </article>
+        </Link>
       );
       imageArr.push(el);
     });

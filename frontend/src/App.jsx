@@ -28,31 +28,32 @@ const router = createBrowserRouter([
     element: <Elb.LayoutWebsite />,
     children: [
       { index: true, element: <Landing /> },
-      { path: "/about", element: <Elb.WebsiteAbout /> },
+      { path: "about", element: <Elb.WebsiteAbout /> },
       {
-        path: "/sign-in",
+        path: "sign-in",
         element: <Login />,
         errorElement: <Elb.Error />,
         action: loginAction,
       },
       {
-        path: "/sign-up",
+        path: "sign-up",
         element: <Signup />,
         errorElement: <Elb.Error />,
         action: registerAction,
       },
+      { path: "" },
     ],
   },
   // Admin routes ------
   {
-    path: "/sign-in-dev",
+    path: "sign-in-dev",
     element: <Elb.Login />,
     errorElement: <Elb.Error />,
     action: loginAction,
   },
 
   {
-    path: "/forgot-password",
+    path: "forgot-password",
     element: <Elb.ForgotPassword />,
     errorElement: <Elb.Error />,
     action: forgotPasswordAction,

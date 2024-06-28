@@ -9,6 +9,8 @@ import brandReducer from "./feature/masters/brandSlice";
 import brandModelReducer from "./feature/masters/brandModelSlice";
 import locationReducer from "./feature/masters/locationSlice";
 import formFieldReducer from "./feature/formFields/formFieldSlice";
+// Website related ------
+import searchReducer from "./feature/website/search/searchSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +24,7 @@ export const store = configureStore({
     models: brandModelReducer,
     locations: locationReducer,
     formFields: formFieldReducer,
+    //Website related ------
+    search: searchReducer,
   },
 });

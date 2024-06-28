@@ -34,3 +34,5 @@ export { default as WbLogoSvg } from "./website/WbLogoSvg";
 export { default as WbHeroSection } from "./website/landing/WbHeroSection";
 export { default as TopSellers } from "./website/landing/TopSellers";
 export { default as FeaturedProducts } from "./website/landing/FeaturedProducts";
+export { default as FilterLocation } from "./website/search/FilterLocation";
+export { default as FilterCategories } from "./website/search/FilterCategories";
