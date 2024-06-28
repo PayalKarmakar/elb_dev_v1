@@ -128,7 +128,7 @@ const Testimonial = () => {
             loop={true}
             ref={sliderRef}
             autoplay={true}
-            pauseOnMouseEnter={true}
+            // pauseOnMouseEnter={true}
             pagination={{
               clickable: true,
             }}
