@@ -1,21 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Form, Link } from "react-router-dom";
 import WbLogoSvg from "./WbLogoSvg";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
-import { MdDarkMode } from "react-icons/md";
-import { CiLight } from "react-icons/ci";
 import { ThemeContext } from "../../../contexts/theme";
 import TopSearch from "./search/TopSearch";
+import Themeswitch from "./Themeswtich";
 
 const WbTopnav = () => {
-  const { ThemeMode, darkTheme, lightTheme } = useContext(ThemeContext);
-
-  const chengeBtn = (e) => {
-    const btnstatus = e.target.checked;
-    if (btnstatus) darkTheme();
-    else lightTheme();
-  };
-
   const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = () => {
@@ -47,16 +38,7 @@ const WbTopnav = () => {
               </Link>
             </div>
 
-            <div className="mode_switcher">
-              <span className="light is_active">
-                {" "}
-                <CiLight size={25} className="text-white" />
-              </span>
-              <span className="dark">
-                {" "}
-                <MdDarkMode size={25} className="text-white" />
-              </span>
-            </div>
+            <Themeswitch />
 
             <button
               className="navbar-toggler d-block d-xl-none"
