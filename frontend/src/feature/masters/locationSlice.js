@@ -7,6 +7,7 @@ const initialState = {
   editId: "",
   deleteId: "",
   deleteModal: "",
+  searchLocation: "",
 };
 
 const locationSlice = createSlice({
@@ -45,6 +46,12 @@ const locationSlice = createSlice({
       state.deleteId = "";
       state.deleteModal = false;
     },
+    setSearchLocation: (state, action) => {
+      state.searchLocation = action.payload;
+    },
+    unsetSearchLocation: (state) => {
+      state.searchLocation = "";
+    },
   },
 });
 
@@ -59,5 +66,7 @@ export const {
   unsetEditLocation,
   setDeleteLocation,
   unsetDeleteLocation,
+  setSearchLocation,
+  unsetSearchLocation,
 } = locationSlice.actions;
 export default locationSlice.reducer;

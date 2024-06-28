@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import FilterLocation from "./FilterLocation";
 import FilterCategories from "./FilterCategories";
@@ -12,21 +12,30 @@ const TopSearch = () => {
     dispatch(setLocationModal());
   };
 
+  const [locationLabel, setLocationLabel] = useState(`Location`);
+  const { topLocations, searchLocation } = useSelector(
+    (store) => store.locations
+  );
+  const selectedLoc =
+    searchLocation && topLocations?.find((i) => i.id === searchLocation);
+
+  useEffect(() => {
+    setLocationLabel(selectedLoc?.city);
+  }, [selectedLoc]);
+
   return (
     <>
       <Form method="get">
         <div className="hero-form-wrapper bg-white d-flex position-relative">
           <div>
-            <select
+            <button
+              type="button"
               className="form-select shadow-none border-right-grey"
               name="loc"
               onClick={openModal}
             >
-              <option value="0">Location</option>
-              <option value="1">Kolkata</option>
-              <option value="2">Mumbai</option>
-              <option value="3">Delhi</option>
-            </select>
+              {locationLabel}
+            </button>
           </div>
           <div>
             <select
