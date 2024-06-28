@@ -16,6 +16,9 @@ const TopSearch = () => {
   const { topLocations, searchLocation } = useSelector(
     (store) => store.locations
   );
+  const { searchCategories } = useSelector((store) => store.categories);
+  console.log(searchCategories);
+
   const selectedLoc =
     searchLocation && topLocations?.find((i) => i.id === searchLocation);
 
