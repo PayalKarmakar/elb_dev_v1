@@ -10,13 +10,14 @@ import { WbSecondNav, WbTopnav } from "../../components";
 import WbFooter from "../../components/website/WbFooter";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
+import { setTopLocations } from "../../feature/masters/locationSlice";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
   try {
     if (topLocations.length === 0) {
       const tLoc = await customFetch.get(`/website/top-locations`);
-      console.log(tLoc);
+      store.dispatch(setTopLocations(tLoc?.data?.data?.rows));
     }
     return null;
   } catch (error) {

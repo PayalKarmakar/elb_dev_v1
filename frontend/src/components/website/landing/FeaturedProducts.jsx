@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import product1 from "../../../assets/website/img/job/product-1.jpg";
 import "react-multi-carousel/lib/styles.css";
