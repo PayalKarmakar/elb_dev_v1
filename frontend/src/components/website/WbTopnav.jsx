@@ -1,43 +1,34 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Form, Link } from "react-router-dom";
 import WbLogoSvg from "./WbLogoSvg";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
-import useTheme from "../../../contexts/theme";
 import { MdDarkMode } from "react-icons/md";
 import { CiLight } from "react-icons/ci";
+import { ThemeContext } from "../../../contexts/theme";
 import TopSearch from "./search/TopSearch";
 
 const WbTopnav = () => {
-  const { ThemeMode, darkTheme, lightTheme } = useTheme();
+  const { ThemeMode, darkTheme, lightTheme } = useContext(ThemeContext);
+
   const chengeBtn = (e) => {
-    const btnstatus = e.currentTarget.checked;
+    const btnstatus = e.target.checked;
     if (btnstatus) darkTheme();
     else lightTheme();
   };
-  const [hover, setHover] = useState(false);
+
   const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = () => {
-    if (window.scrollY > 100) {
-      setIsSticky(true);
-    } else {
-      setIsSticky(false);
-    }
+    setIsSticky(window.scrollY > 100);
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const chevronStyle = {
-    transition: "transform 0.3s ease-in-out",
-    transform: hover ? "rotate(180deg)" : "rotate(0deg)",
-  };
 
   return (
     <header className={`header-primary ${isSticky ? "sticky" : ""}`}>
@@ -56,28 +47,16 @@ const WbTopnav = () => {
               </Link>
             </div>
 
-            <div className="mode_switcher">
-              <span className="light is_active">
+            <div class="mode_switcher">
+              <span class="light is_active">
                 {" "}
                 <CiLight size={25} className="text-white" />
               </span>
-              <span className="dark">
+              <span class="dark">
                 {" "}
                 <MdDarkMode size={25} className="text-white" />
               </span>
             </div>
-
-            {/* <div className="mode">
-              <CiLight size={25} className="text-white" />
-              &nbsp;&nbsp;
-              <MdDarkMode size={25} className="text-white" />
-            </div> */}
-
-            {/* <div className="user_location"> 
-              <FaLocationDot size={15} className="text-white" />
-              <i className="fa-solid fa-location-dot"></i>
-              <h6 className="fw-bold">Location</h6>
-            </div>  */}
 
             <button
               className="navbar-toggler d-block d-xl-none"
@@ -90,15 +69,6 @@ const WbTopnav = () => {
             >
               <span></span>
             </button>
-            <div className="form-check form-switch">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="themeSwitch"
-                onChange={chengeBtn}
-                checked={ThemeMode === "dark"}
-              />
-            </div>
           </div>
         </nav>
       </div>
