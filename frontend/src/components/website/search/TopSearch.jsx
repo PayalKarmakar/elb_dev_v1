@@ -20,7 +20,7 @@ const TopSearch = () => {
     searchLocation && topLocations?.find((i) => i.id === searchLocation);
 
   useEffect(() => {
-    setLocationLabel(selectedLoc?.city);
+    setLocationLabel(selectedLoc?.city || `Location`);
   }, [selectedLoc]);
 
   return (
