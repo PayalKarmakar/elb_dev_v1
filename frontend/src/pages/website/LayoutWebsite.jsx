@@ -8,6 +8,22 @@ import "../../assets/website/css/resposive.css";
 
 import { WbSecondNav, WbTopnav } from "../../components";
 import WbFooter from "../../components/website/WbFooter";
+import { splitErrors } from "../../utils/showErrors";
+import customFetch from "../../utils/customFetch";
+
+export const loader = (store) => async () => {
+  const { topLocations } = store.getState().locations;
+  try {
+    if (topLocations.length === 0) {
+      const tLoc = await customFetch.get(`/website/top-locations`);
+      console.log(tLoc);
+    }
+    return null;
+  } catch (error) {
+    splitErrors(error?.response?.data?.msg);
+    return null;
+  }
+};
 
 const LayoutWebsite = () => {
   return (
