@@ -219,10 +219,10 @@ body,
   align-items: flex-start !important;
 }
 
-.hero-form-wrapper .form-select.border-right-grey,
+/* .hero-form-wrapper .form-select.border-right-grey,
 .border-right-grey {
   border-right: 1px solid var(--dark-100);
-}
+} */
 
 .mode_switcher {
   display: flex;
@@ -268,4 +268,32 @@ body,
   border-radius: 10px;
   justify-content: center;
   align-items: center;
+}
+
+/* login page css starts here */
+
+.form-container .form-label {
+  font-size: 16px;
+  color: var(--dark-300);
+  line-height: 18px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: var(--primary-color3);
+}
+
+.form-container .form-control {
+  border: 1px solid var(--primary-color3);
+  border-radius: 8px;
+  padding: 9px 20px;
+  height: auto;
+}
+
+.social-login .social-login-item{
+  width: 42px;
+  height: 42px;
+}
+
+.social-login .social-login-item:hover {
+  background-color: var(--primary-color3);
+  color: var(--white);
 }

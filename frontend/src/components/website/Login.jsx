@@ -60,13 +60,38 @@ export default function Login() {
   };
 
   return (
-    <section className="py-110 bg-offWhite">
+  //   <section
+  //   className="w-breadcrumb-area"
+  //   // style="
+  //   //   background: url('assets/img/common/breadcrumb-bg.png') no-repeat
+  //   //     center center/cover;
+  //   // "
+  // >
+  //   <div className="container">
+  //     <div className="row">
+  //       <div className="col-auto">
+  //         <div
+  //           className="position-relative z-2"
+  //           data-aos="fade-up"
+  //           data-aos-duration="1000"
+  //           data-aos-easing="linear"
+  //         >
+  //           <h2 className="section-title-light mb-2">Sign In</h2>
+  //           <nav aria-label="breadcrumb">
+  //             <ol className="breadcrumb w-breadcrumb">
+  //               <li className="breadcrumb-item"><a href="#">Home</a></li>
+  //               <li className="breadcrumb-item active" aria-current="page">
+  //                 Login
+  //               </li>
+  //             </ol>
+  //           </nav>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // </section>
+     <section className="py-110 bg-offWhite">
       <div className="container">
-        <div className="mb-5">
-          <div className="row justify-content-center">
-            <div className="col-auto"></div>
-          </div>
-        </div>
         <div className="bg-white rounded-3 p-3">
           <div className="row g-4">
             <div className="col-lg-6 p-3 p-lg-5">
@@ -134,7 +159,7 @@ export default function Login() {
                   <div className="d-grid">
                     <button
                       type="submit"
-                      className="w-btn-black-lg "
+                      className="w-btn-secondary-lg bluebg_btn"
                       disabled={isLoading}
                     >
                       {isLoading ? "Logging In..." : "Log In"}
@@ -148,25 +173,16 @@ export default function Login() {
                 </div>
               </div>
               <div className="d-flex gap-3 justify-content-center align-items-center social-login">
-                <SocialSvg type="LinkedIn" />
-                <SocialSvg type="Twitter" />
-                <SocialSvg type="Google" />
+                <SocialSvg type="LinkedIn" className="social-login-item"/>
+                <SocialSvg type="Twitter" className="social-login-item"/>
+                <SocialSvg type="Google" className="social-login-item"/>
               </div>
               <div className="mt-4">
                 <p className="text-center form-text">
                   Don’t have an account? <Link to="/sign-up">Sign up</Link>
                 </p>
               </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="login-img">
-                <img
-                  src={loginImage}
-                  className="img-fluid w-100"
-                  alt="Login Illustration"
-                />
-              </div>
-            </div>
+            </div>          
           </div>
         </div>
       </div>
