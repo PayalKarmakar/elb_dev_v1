@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
+import customFetch from "../../utils/customFetch";
+import { setListCategories } from "../../feature/masters/categorySlice";
+import { splitErrors } from "../../utils/showErrors";
 import CatNavImg from "../../assets/website/img/others/category.png";
+import { MdBikeScooter, MdCategory, MdLaptopChromebook, MdOutlineChair } from "react-icons/md";
+import { GiAmpleDress } from "react-icons/gi";
+import { FaBook, FaCar, FaMobile } from "react-icons/fa";
+
 
 const CategoryModal = ({ show, handleClose }) => {
+  const { listCategories } = useSelector((store) => store.categories);
+  const dispatch = useDispatch();
+
+  const fetchData = async () => {
+    try {
+      const response = await customFetch.get(`/masters/categories/all`);
+      dispatch(setListCategories(response?.data?.data?.rows));
+    } catch (error) {
+      splitErrors(error?.response?.data?.msg);
+      return error;
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Modal show={show} size="xl" onHide={handleClose}>
       <div className="modal-content">
@@ -43,194 +68,40 @@ const CategoryModal = ({ show, handleClose }) => {
         </div>
         <div className="modal-body px-5 py-4">
           <div className="row">
-            <div className="col-lg-8">
+            <div className="col-lg-12">
               <div className="row">
-                <div className="col-lg-4 mb-4">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      Logo & Brand Identity
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#"> Logo Design </a>
-                        </li>
-                        <li>
-                          <a href="#"> Brand Style Guides</a>
-                        </li>
-                        <li>
-                          <a href="#"> Business Cards & Stationery</a>
-                        </li>
-                        <li>
-                          <a href="#">Fonts & Typography </a>
-                        </li>
-                        <li>
-                          <a href="#"> Logo Maker Tool </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div className="col-lg-4 mb-4">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      Web & App Design
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#"> Website Design </a>
-                        </li>
-                        <li>
-                          <a href="#"> App Design</a>
-                        </li>
-                        <li>
-                          <a href="#"> UX Design</a>
-                        </li>
-                        <li>
-                          <a href="#">Landing Page Design</a>
-                        </li>
-                        <li>
-                          <a href="#"> Icon Design </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div className="col-lg-4 mb-4">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      Visual Design
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#"> Image Editing </a>
-                        </li>
-                        <li>
-                          <a href="#"> Presentation Design</a>
-                        </li>
-                        <li>
-                          <a href="#">Background Removal</a>
-                        </li>
-                        <li>
-                          <a href="#"> Infographic Design </a>
-                        </li>
-                        <li>
-                          <a href="#"> Vector Tracing </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div className="col-lg-4 mb-4 mb-lg-0">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      Art & Illustration
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#"> Illustration </a>
-                        </li>
-                        <li>
-                          <a href="#">AI ArtistsNEW</a>
-                        </li>
-                        <li>
-                          <a href="#"> Children's Book Illustration</a>
-                        </li>
-                        <li>
-                          <a href="#">Fonts & Typography </a>
-                        </li>
-                        <li>
-                          <a href="#"> Portraits & Caricatures</a>
-                        </li>
-                        <li>
-                          <a href="#"> Cartoons & Comics </a>
-                        </li>
-                        <li>
-                          <a href="#"> Pattern Design </a>
-                        </li>
-                        <li>
-                          <a href="#"> Tattoo Design </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div className="col-lg-4 mb-4 mb-lg-0">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      Product & Gaming
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#">Industrial & Product Design </a>
-                        </li>
-                        <li>
-                          <a href="#"> Character Modeling</a>
-                        </li>
-                        <li>
-                          <a href="#"> Game Art</a>
-                        </li>
-                        <li>
-                          <a href="#"> Graphics for Streamers</a>
-                        </li>
-                        <li>
-                          <a href="#"> Brochure Design Poster</a>
-                        </li>
-                        <li>
-                          <a href="#"> Design Catalog Design </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-                <div className="col-lg-4 mb-4 mb-lg-0">
-                  <div>
-                    <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                      3D Design
-                    </h4>
-                    <nav className="category-nav">
-                      <ul>
-                        <li>
-                          <a href="#"> 3D Architecture </a>
-                        </li>
-                        <li>
-                          <a href="">3D Industrial Design</a>
-                        </li>
-                        <li>
-                          <a href="">3D Industrial Design</a>
-                        </li>
-                        <li>
-                          <a href="">3D Fashion & Garment</a>
-                        </li>
-                        <li>
-                          <a href="">3D Printing Characters</a>
-                        </li>
-                        <li>
-                          <a href="">3D Landscape</a>
-                        </li>
-                        <li>
-                          <a href="">3D Game Art</a>
-                        </li>
-                        <li>
-                          <a href="#"> 3D Jewelry Design </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div>
-                <img
-                  src={CatNavImg}
-                  className="rounded-3 img-fluid w-100"
-                  alt=""
-                />
+                
+                  {listCategories
+                    ?.filter((i) => i.parent_id === null)
+                    .map((i) => (
+                      <div className="col-lg-4 mb-4" key={i.id} id={i.id}>
+                        <h4 className="text-18 fw-semibold text-dark-300 mb-2">
+                          {i.slug=='bikes' ?<MdBikeScooter />  : i.slug =='electronics-appliances'? <MdLaptopChromebook /> :
+                          i.slug =='furniture'? <MdOutlineChair /> :
+                          i.slug =='fashion'? <GiAmpleDress /> :
+                          i.slug =='books-sports-hobbies'? <FaBook /> :
+                          i.slug =='car'? <FaCar /> :
+                          i.slug =='mobiles'? <FaMobile /> :
+                          <MdCategory />}
+                          {` ${i.category}`}
+                        </h4>
+                        <nav className="category-nav">
+                          <ul>
+                            {listCategories?.filter((si) => si.parent_id == i.id)
+                              .map((si) => (
+                                <>
+                              <li>
+                                <a href="#">{si.category}</a>
+                              </li>
+                              </>
+                              ))}
+                            
+                            
+                          </ul>
+                        </nav>
+                      </div>
+                    ))}
+                
               </div>
             </div>
           </div>

@@ -70,7 +70,7 @@ export const allCategories = async (req, res) => {
     `select * from master_categories order by category`,
     []
   );
-
+// console.log(data.rows);
   res.status(StatusCodes.OK).json({ data });
 };
 
