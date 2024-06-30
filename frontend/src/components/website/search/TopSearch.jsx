@@ -3,28 +3,38 @@ import { Form } from "react-router-dom";
 import FilterLocation from "./FilterLocation";
 import FilterCategories from "./FilterCategories";
 import { useDispatch, useSelector } from "react-redux";
-import { setLocationModal } from "../../../feature/website/search/searchSlice";
+import { setLocationModal,setCategoryModal } from "../../../feature/website/search/searchSlice";
 
 const TopSearch = () => {
   const dispatch = useDispatch();
 
   const openModal = () => {
-    dispatch(setLocationModal());
+    dispatch(setLocationModal());    
   };
 
+  const catModal = () => {
+    dispatch(setCategoryModal());
+  };
   const [locationLabel, setLocationLabel] = useState(`Location`);
   const { topLocations, searchLocation } = useSelector(
     (store) => store.locations
   );
-  const { searchCategories } = useSelector((store) => store.categories);
-  console.log(searchCategories);
-
   const selectedLoc =
     searchLocation && topLocations?.find((i) => i.id === searchLocation);
-
   useEffect(() => {
     setLocationLabel(selectedLoc?.city || `Location`);
   }, [selectedLoc]);
+
+  const [categoryLabel, setCategoryLabel] = useState(`Categories`);
+  const { getCategories, searchCategory } = useSelector(
+    (store) => store.categories
+  );
+  const selectedCat =
+  searchCategory && getCategories?.find((i) => i.id === searchCategory);  
+
+  useEffect(() => {
+    setCategoryLabel(selectedCat?.category || `Categories`);
+  }, [selectedCat]);
 
   return (
     <>
@@ -41,16 +51,15 @@ const TopSearch = () => {
             </button>
           </div>
           <div>
-            <select
+          <button
+              type="button"
               className="form-select shadow-none categorysearch"
               name="cat"
+              onClick={catModal}
             >
-              <option value="0">All Categories</option>
-              <option value="1">Cars</option>
-              <option value="2">Mobiles</option>
-              <option value="3">Camera</option>
-            </select>
-          </div>
+              {categoryLabel}
+            </button>
+           </div>
           <div>
             <input
               type="text"
