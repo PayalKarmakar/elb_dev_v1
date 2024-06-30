@@ -130,6 +130,10 @@ export const getCategories= async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data });
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> a7f1f27b6a7b068f1740bd064920e3b39ea4690c
 export const getAllCategories= async (req, res) => {
   const data = await pool.query(
     `select * from master_categories where is_active=true`,

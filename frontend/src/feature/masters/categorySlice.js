@@ -1,21 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  searchCategories: [],
+  getCategories: [],
   allCategories: [],
   listCategories: [],
   parentCategories: [],
   editId: "",
   deleteId: "",
   deleteModal: false,
+  searchCategory: "",
 };
 
 const categorySlice = createSlice({
   name: "categories",
   initialState: initialState,
   reducers: {
-    setSearchCategories: (state, action) => {
-      state.searchCategories = action.payload;
+    setGetCategories: (state, action) => {
+      state.getCategories = action.payload;
+    },
+    setSearchCategory: (state, action) => {
+      state.searchCategory = action.payload;
+    },
+    unsetSearchCategory: (state) => {
+      state.searchCategory = "";
     },
     setAllCategories: (state, action) => {
       state.allCategories = action.payload;
@@ -49,11 +56,14 @@ const categorySlice = createSlice({
       state.deleteModal = false;
       state.deleteId = "";
     },
+    
   },
 });
 
 export const {
-  setSearchCategories,
+  setGetCategories,
+  setSearchCategory,
+  unsetSearchCategory,
   setAllCategories,
   unsetAllCategories,
   setListCategories,
@@ -63,6 +73,6 @@ export const {
   setEditCategory,
   unsetEditCategory,
   setDeleteCategory,
-  unsetDeleteCategory,
+  unsetDeleteCategory, 
 } = categorySlice.actions;
 export default categorySlice.reducer;
