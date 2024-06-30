@@ -11,21 +11,21 @@ import WbFooter from "../../components/website/WbFooter";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
-import { setSearchCategories } from "../../feature/masters/categorySlice";
+import { setGetCategories } from "../../feature/masters/categorySlice";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
-  const { searchCategories } = store.getState().categories;
+  const { getCategories } = store.getState().categories;
   try {
     if (topLocations.length === 0) {
       const tLoc = await customFetch.get(`/website/top-locations`);
       store.dispatch(setTopLocations(tLoc?.data?.data?.rows));
     }
 
-    if (searchCategories.length === 0) {
-      const sCat = await customFetch.get(`/website/top-locations`);
-      store.dispatch(setSearchCategories(sCat?.data?.data?.rows));
-    }
+    if (getCategories.length === 0) {
+      const sCat = await customFetch.get(`/website/get-categories`);
+      store.dispatch(setGetCategories(sCat?.data?.data?.rows));
+     }
     return null;
   } catch (error) {
     splitErrors(error?.response?.data?.msg);

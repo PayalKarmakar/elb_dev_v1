@@ -15,8 +15,14 @@ const searchSlice = createSlice({
     unsetLocationModal: (state) => {
       state.locationModal = false;
     },
+    setCategoryModal: (state) => {
+      state.categoryModal = true;
+    },
+    unsetCategoryModal: (state) => {
+      state.categoryModal = false;
+    },
   },
 });
 
-export const { setLocationModal, unsetLocationModal } = searchSlice.actions;
+export const { setLocationModal, unsetLocationModal, setCategoryModal, unsetCategoryModal } = searchSlice.actions;
 export default searchSlice.reducer;

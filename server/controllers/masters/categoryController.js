@@ -121,3 +121,12 @@ export const deleteCategory = async (req, res) => {
 
   res.status(StatusCodes.NO_CONTENT).json({ data: `success` });
 };
+
+export const getCategories= async (req, res) => {
+  const data = await pool.query(
+    `select * from master_categories where parent_id is null and is_active=true`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+};
