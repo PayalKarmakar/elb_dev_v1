@@ -5,6 +5,10 @@ import customFetch from "../../utils/customFetch";
 import { setListCategories } from "../../feature/masters/categorySlice";
 import { splitErrors } from "../../utils/showErrors";
 import CatNavImg from "../../assets/website/img/others/category.png";
+import { MdBikeScooter, MdCategory, MdLaptopChromebook, MdOutlineChair } from "react-icons/md";
+import { GiAmpleDress } from "react-icons/gi";
+import { FaBook, FaCar, FaMobile } from "react-icons/fa";
+
 
 const CategoryModal = ({ show, handleClose }) => {
   const { listCategories } = useSelector((store) => store.categories);
@@ -72,18 +76,27 @@ const CategoryModal = ({ show, handleClose }) => {
                     .map((i) => (
                       <div className="col-lg-4 mb-4" key={i.id} id={i.id}>
                         <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                          {i.category}
+                          {i.slug=='bikes' ?<MdBikeScooter />  : i.slug =='electronics-appliances'? <MdLaptopChromebook /> :
+                          i.slug =='furniture'? <MdOutlineChair /> :
+                          i.slug =='fashion'? <GiAmpleDress /> :
+                          i.slug =='books-sports-hobbies'? <FaBook /> :
+                          i.slug =='car'? <FaCar /> :
+                          i.slug =='mobiles'? <FaMobile /> :
+                          <MdCategory />}
+                          {` ${i.category}`}
                         </h4>
                         <nav className="category-nav">
-                        
                           <ul>
-                            {listCategories
-                            ?.filter((si) => si.parent_id === i.id)
-                            .map((si) => (
+                            {listCategories?.filter((si) => si.parent_id == i.id)
+                              .map((si) => (
+                                <>
                               <li>
-                                  <a href="#"> {si.category}</a>
-                                </li>
-                            ))}
+                                <a href="#">{si.category}</a>
+                              </li>
+                              </>
+                              ))}
+                            
+                            
                           </ul>
                         </nav>
                       </div>
