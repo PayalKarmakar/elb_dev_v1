@@ -16,7 +16,7 @@ const CategoryModal = ({ show, handleClose }) => {
 
   const fetchData = async () => {
     try {
-      const response = await customFetch.get(`/masters/categories/all`);
+      const response = await customFetch.get(`/website/all-categories`);
       dispatch(setListCategories(response?.data?.data?.rows));
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
@@ -27,7 +27,7 @@ const CategoryModal = ({ show, handleClose }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   return (
     <Modal show={show} size="xl" onHide={handleClose}>
       <div className="modal-content">
@@ -73,33 +73,35 @@ const CategoryModal = ({ show, handleClose }) => {
                 
                   {listCategories
                     ?.filter((i) => i.parent_id === null)
-                    .map((i) => (
-                      <div className="col-lg-4 mb-4" key={i.id} id={i.id}>
+                    .map((parentCategory) => (
+                      <div className="col-lg-4 mb-4" key={parentCategory.id} id={parentCategory.id}>
                         <h4 className="text-18 fw-semibold text-dark-300 mb-2">
-                          {i.slug=='bikes' ?<MdBikeScooter />  : i.slug =='electronics-appliances'? <MdLaptopChromebook /> :
-                          i.slug =='furniture'? <MdOutlineChair /> :
-                          i.slug =='fashion'? <GiAmpleDress /> :
-                          i.slug =='books-sports-hobbies'? <FaBook /> :
-                          i.slug =='car'? <FaCar /> :
-                          i.slug =='mobiles'? <FaMobile /> :
+                          {parentCategory.slug=='bikes' ?<MdBikeScooter />  : parentCategory.slug =='electronics-appliances'? <MdLaptopChromebook /> :
+                          parentCategory.slug =='furniture'? <MdOutlineChair /> :
+                          parentCategory.slug =='fashion'? <GiAmpleDress /> :
+                          parentCategory.slug =='books-sports-hobbies'? <FaBook /> :
+                          parentCategory.slug =='car'? <FaCar /> :
+                          parentCategory.slug =='mobiles'? <FaMobile /> :
                           <MdCategory />}
-                          {` ${i.category}`}
+                          {` ${parentCategory.category}`}
                         </h4>
                         <nav className="category-nav">
                           <ul>
-                            {listCategories?.filter((si) => si.parent_id == i.id)
-                              .map((si) => (
-                                <>
-                              <li>
-                                <a href="#">{si.category}</a>
-                              </li>
-                              </>
-                              ))}
-                            
-                            
+                            {listCategories
+                                .filter(
+                                  (subcategory) =>
+                                    subcategory.parent_id === parentCategory.id
+                                )
+                                .map((subcategory) => (
+                                  <li key={subcategory.id}>
+                                    <a href="#">{subcategory.category}</a>
+                                  </li>
+                                ))}
+                              
+                              
                           </ul>
                         </nav>
-                      </div>
+                    </div>
                     ))}
                 
               </div>
