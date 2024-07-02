@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
-        element: <Login />,     
+        element: <Login />,
         errorElement: <Elb.Error />,
         action: loginAction,
       },
@@ -88,6 +88,8 @@ const router = createBrowserRouter([
               { path: "form-fields", element: <Elb.FormFields /> },
             ],
           },
+          { path: "posts", element: <Elb.ListPost /> },
+          { path: "posts/add", element: <Elb.AddPost /> },
         ],
       },
       {

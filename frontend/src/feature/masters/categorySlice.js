@@ -5,6 +5,7 @@ const initialState = {
   allCategories: [],
   listCategories: [],
   parentCategories: [],
+  childCategories: [],
   editId: "",
   deleteId: "",
   deleteModal: false,
@@ -56,7 +57,6 @@ const categorySlice = createSlice({
       state.deleteModal = false;
       state.deleteId = "";
     },
-    
   },
 });
 
@@ -73,6 +73,6 @@ export const {
   setEditCategory,
   unsetEditCategory,
   setDeleteCategory,
-  unsetDeleteCategory, 
+  unsetDeleteCategory,
 } = categorySlice.actions;
 export default categorySlice.reducer;
