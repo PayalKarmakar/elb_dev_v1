@@ -1,4 +1,4 @@
-export { default as Layout } from "./admin/Layout";
+export { default as Layout } from "./Layout";
 export { default as LayoutAdmin } from "./admin/LayoutAdmin";
 export { default as LayoutUser } from "./admin/LayoutUser";
 export { default as Error } from "./admin/errors/Error";

@@ -135,10 +135,23 @@ export const getCategories = async (req, res) => {
 // ------
 export const getAllCategories = async (req, res) => {
   const data = await pool.query(
-    `select * from master_categories where is_active=true`,
+    `select cat1.id, cat1.category,cat1.slug,
+    json_agg(
+            json_build_object(
+              'id', cat2.id,
+              'category', cat2.category
+            )
+          ) AS sub_cat
+    from master_categories cat1
+    left join master_categories cat2 on cat1.id=cat2.parent_id  
+		
+    where cat1.parent_id is null and cat1.is_active=true  
+	and cat2.is_active=true
+    group by cat1.id`,
     []
   );
-
+  // text
+console.log(data);
   res.status(StatusCodes.OK).json({ data });
 };
 

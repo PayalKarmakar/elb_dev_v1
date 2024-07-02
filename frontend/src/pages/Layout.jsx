@@ -1,25 +1,26 @@
 import React from "react";
 import { Outlet, redirect, useNavigate } from "react-router-dom";
 
-import "../../assets/admin/dist/css/tabler.min.css";
-import "../../assets/admin/dist/css/demo.min.css";
+import "../assets/admin/dist/css/tabler.min.css";
+import "../assets/admin/dist/css/demo.min.css";
 
-import "../../assets/admin/dist/js/tabler.min.js";
-import "../../assets/admin/dist/js/demo.min.js";
+import "../assets/admin/dist/js/tabler.min.js";
+import "../assets/admin/dist/js/demo.min.js";
 
-import customFetch from "../../utils/customFetch.js";
-import { splitErrors } from "../../utils/showErrors.jsx";
+import customFetch from "../utils/customFetch.js";
+import { splitErrors } from "../utils/showErrors.jsx";
 import {
   setCurrentUser,
   unsetCurrentUser,
-} from "../../feature/currentUserSlice.js";
+} from "../feature/currentUserSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { AdminSidebar, UserSidebar, Topnav, Footer } from "../../components";
+import { AdminSidebar, UserSidebar, Topnav, Footer } from "../components";
 
 // Loader starts ------
 export const loader = (store) => async () => {
   const { currentUser } = store.getState().currentUser;
+  
   try {
     if (!currentUser.first_name) {
       const response = await customFetch.get(`/auth/current-user`);
