@@ -18,7 +18,7 @@ import { action as registerAction } from "./components/website/Signup";
 import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPassword";
 
 // Loaders ------
-import { loader as layoutLoader } from "./pages/admin/Layout";
+import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 

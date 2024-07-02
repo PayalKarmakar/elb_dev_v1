@@ -12,11 +12,13 @@ import { FaBook, FaCar, FaMobile } from "react-icons/fa";
 
 const CategoryModal = ({ show, handleClose }) => {
   const { listCategories } = useSelector((store) => store.categories);
+  // console.log(listCategories);
   const dispatch = useDispatch();
 
   const fetchData = async () => {
     try {
       const response = await customFetch.get(`/website/all-categories`);
+      
       dispatch(setListCategories(response?.data?.data?.rows));
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
@@ -72,7 +74,6 @@ const CategoryModal = ({ show, handleClose }) => {
               <div className="row">
                 
                   {listCategories
-                    ?.filter((i) => i.parent_id === null)
                     .map((parentCategory) => (
                       <div className="col-lg-4 mb-4" key={parentCategory.id} id={parentCategory.id}>
                         <h4 className="text-18 fw-semibold text-dark-300 mb-2">
@@ -87,11 +88,7 @@ const CategoryModal = ({ show, handleClose }) => {
                         </h4>
                         <nav className="category-nav">
                           <ul>
-                            {listCategories
-                                .filter(
-                                  (subcategory) =>
-                                    subcategory.parent_id === parentCategory.id
-                                )
+                            {parentCategory.sub_cat
                                 .map((subcategory) => (
                                   <li key={subcategory.id}>
                                     <a href="#">{subcategory.category}</a>
