@@ -7,6 +7,7 @@ const initialState = {
   deleteId: "",
   deleteModal: false,
   viewUser: "",
+ 
 };
 
 const userSlice = createSlice({
@@ -41,6 +42,7 @@ const userSlice = createSlice({
     unsetViewUser: (state) => {
       state.viewUser = "";
     },
+    
   },
 });
 
@@ -53,5 +55,6 @@ export const {
   unsetDeleteUser,
   setViewUser,
   unsetViewUser,
+  
 } = userSlice.actions;
 export default userSlice.reducer;
