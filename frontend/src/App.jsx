@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
-        element: <Login />,     
+        element: <Login />,
         errorElement: <Elb.Error />,
         action: loginAction,
       },
@@ -86,6 +86,14 @@ const router = createBrowserRouter([
               { path: "models", element: <Elb.BrandModels /> },
               { path: "locations", element: <Elb.Locations /> },
               { path: "form-fields", element: <Elb.FormFields /> },
+            ],
+          },
+          {
+            path: "posts",
+            children: [
+              { index: true, element: <Elb.PostList /> },
+              { path: "add", element: <Elb.PostAddEdit /> },
+              { path: "edit/:uuid", element: <Elb.PostAddEdit /> },
             ],
           },
         ],

@@ -18,6 +18,8 @@ export { default as Brands } from "./admin/masters/Brands";
 export { default as BrandModels } from "./admin/masters/BrandModels";
 export { default as Locations } from "./admin/masters/Locations";
 export { default as FormFields } from "./admin/formFields/FormFields";
+export { default as PostList } from "./admin/posts/PostList";
+export { default as PostAddEdit } from "./admin/posts/PostAddEdit";
 
 // Website pages ------
 export { default as LayoutWebsite } from "./website/LayoutWebsite";

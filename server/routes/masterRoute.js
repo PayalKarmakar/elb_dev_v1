@@ -7,6 +7,7 @@ import {
   deleteCategory,
   editCategory,
   allCategories,
+  getChildCategories,
 } from "../controllers/masters/categoryController.js";
 import { validateAddCategory } from "../middlewares/masters/categoryMiddleware.js";
 import {
@@ -56,6 +57,7 @@ router
   .delete(deleteCategory);
 
 router.get(`/categories/all`, allCategories);
+router.get(`/categories/sub/:id`, getChildCategories);
 
 // ------
 router.route(`/brands`).get(pageBrands).post(validateAddBrand, addBrand);
