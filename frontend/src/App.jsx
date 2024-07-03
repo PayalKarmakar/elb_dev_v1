@@ -42,6 +42,7 @@ const router = createBrowserRouter([
         errorElement: <Elb.Error />,
         action: registerAction,
       },
+      {path: ":catname/:subcat?", element: <Elb.ProductList />},
       { path: "" },
     ],
   },
