@@ -150,8 +150,6 @@ export const getAllCategories = async (req, res) => {
     group by cat1.id`,
     []
   );
-  // text
-console.log(data);
   res.status(StatusCodes.OK).json({ data });
 };
 
