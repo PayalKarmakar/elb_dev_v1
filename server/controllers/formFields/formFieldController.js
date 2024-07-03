@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import pool from "../../db.js";
 import dayjs from "dayjs";
 import slug from "slug";
-import { paginationLogic } from "../../utils/functions.js";
+import { paginationLogic, removeSpecialChars } from "../../utils/functions.js";
 
 // ------
 export const pageFormFields = async (req, res) => {
@@ -101,13 +101,29 @@ export const updateFormField = async (req, res) => {
   const { ffCatId, ffLabel, ffType, isRequired, fieldOptions } = req.body;
   const { id } = req.params;
   const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  let ffName = "";
+  ffLabel?.split(" ")?.map((i, index) => {
+    ffName +=
+      index === 0
+        ? removeSpecialChars(i?.toLowerCase())
+        : `_` + removeSpecialChars(i?.toLowerCase());
+  });
+  ffName = ffName + `_${ffCatId}`;
 
   try {
     await pool.query(`BEGIN`);
 
     const data = await pool.query(
-      `update master_form_fields set cat_id=$1, field_label=$2, field_type=$3, is_required=$4, updated_at=$5 where id=$6`,
-      [ffCatId, ffLabel.trim(), ffType.toLowerCase(), isRequired, timeStamp, id]
+      `update master_form_fields set cat_id=$1, field_label=$2, field_type=$3, is_required=$4, updated_at=$5, field_name=$7 where id=$6`,
+      [
+        ffCatId,
+        ffLabel.trim(),
+        ffType.toLowerCase(),
+        isRequired,
+        timeStamp,
+        id,
+        ffName,
+      ]
     );
 
     if (fieldOptions[0]) {
