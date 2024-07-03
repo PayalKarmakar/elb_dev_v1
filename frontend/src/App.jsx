@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import * as Elb from "./pages";
 import { store } from "./store";
-import { ThemeProvider } from "../contexts/theme";
 
 import Login from "./components/website/Login";
 import Signup from "./components/website/Signup";
@@ -33,7 +32,7 @@ const router = createBrowserRouter([
       { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
-        element: <Login />,     
+        element: <Login />,
         errorElement: <Elb.Error />,
         action: loginAction,
       },
@@ -89,12 +88,23 @@ const router = createBrowserRouter([
               { path: "form-fields", element: <Elb.FormFields /> },
             ],
           },
+          {
+            path: "posts",
+            children: [
+              { index: true, element: <Elb.PostList /> },
+              { path: "add", element: <Elb.PostAddEdit /> },
+              { path: "edit/:uuid", element: <Elb.PostAddEdit /> },
+            ],
+          },
         ],
       },
       {
         path: ":slug",
-        element: <Elb.LayoutUser />,
-        children: [{ path: "dashboard", element: <Elb.UserDashboard /> }],
+        element: <Elb.LayoutWebsite />,
+        children: [
+          { index: true, element: <Elb.Landing /> },
+          { path: "about", element: <Elb.WebsiteAbout /> },
+        ],
       },
       { path: "change-password", element: <Elb.ChangePassword /> },
       { path: "profile", element: <Elb.Profile /> },
@@ -104,25 +114,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [ThemeMode, setThemeMode] = useState("light");
-
-  const darkTheme = () => {
-    setThemeMode("dark");
-  };
-
-  const lightTheme = () => {
-    setThemeMode("light");
-  };
-
-  useEffect(() => {
-    document.querySelector("html").classList.remove("light", "dark");
-    document.querySelector("html").classList.add(ThemeMode);
-  }, [ThemeMode]);
-
-  return (
-    <ThemeProvider value={{ ThemeMode, darkTheme, lightTheme }}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 export default App;

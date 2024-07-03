@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Form, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import WbLogoSvg from "./WbLogoSvg";
-import { FaLocationDot, FaUser } from "react-icons/fa6";
-import { ThemeContext } from "../../../contexts/theme";
+import { FaUser } from "react-icons/fa6";
+
 import TopSearch from "./search/TopSearch";
 import Themeswitch from "./Themeswtich";
-
-const WbTopnav = () => {
+import { useSelector } from "react-redux";
+import UserProfile from "./UserProfile";
+import { MdOutlineSell } from "react-icons/md";
+//return redirect(`${path}`);
+const WbTopnav = ({ logout }) => {
   const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = () => {
@@ -20,7 +23,7 @@ const WbTopnav = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
+  const currentUser = useSelector((state) => state.currentUser);
   return (
     <header className={`header-primary ${isSticky ? "sticky" : ""}`}>
       <div className="container">
@@ -29,14 +32,29 @@ const WbTopnav = () => {
           <TopSearch />
           <div className="navbar-right d-flex align-items-center gap-4">
             <div className="align-items-center d-none d-lg-flex">
-              <Link
-                to={`/sign-in`}
-                className="w-btn-secondary-lg text-decoration-none"
-              >
-                <FaUser size={14} style={{ borderRadius: "50%" }} />
-                Login
-              </Link>
+              {!currentUser.currentUser.uuid ? (
+                <Link
+                  to="/sign-in"
+                  className="w-btn-secondary-lg text-decoration-none"
+                >
+                  <FaUser size={14} style={{ borderRadius: "50%" }} />
+                  Login
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  className="header-btn"
+                  onClick={"javascript:void(0);"}
+                >
+                  <MdOutlineSell
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  SELL
+                </button>
+              )}
             </div>
+            {currentUser.currentUser.uuid && <UserProfile logout={logout} />}
 
             <Themeswitch />
 
