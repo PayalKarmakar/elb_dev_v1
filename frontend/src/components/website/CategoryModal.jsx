@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
 import customFetch from "../../utils/customFetch";
@@ -8,12 +8,14 @@ import CatNavImg from "../../assets/website/img/others/category.png";
 import { MdBikeScooter, MdCategory, MdLaptopChromebook, MdOutlineChair } from "react-icons/md";
 import { GiAmpleDress } from "react-icons/gi";
 import { FaBook, FaCar, FaMobile } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const CategoryModal = ({ show, handleClose }) => {
   const { listCategories } = useSelector((store) => store.categories);
   // console.log(listCategories);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const fetchData = async () => {
     try {
@@ -25,6 +27,38 @@ const CategoryModal = ({ show, handleClose }) => {
       return error;
     }
   };
+
+  const handleModalClose = (parent, child) => {
+    let navigateUrl ='';
+    if(!child){
+      let pSlug = ''
+      
+      let sitem = listCategories.map((item)=>{
+       if(item.id === parent){
+        pSlug = item.slug
+       }
+        
+      })
+       navigateUrl = `/${pSlug}`
+    }else{
+      
+       let pSlug = ''
+      let cSlug = ''
+      let sitem = listCategories.map((item)=>{
+       if(item.id === parent){
+        pSlug = item.slug
+       }
+       
+        if (item?.sub_cat?.find((i)=> +i.id === +child)?.slug){
+          cSlug = item?.sub_cat?.find((i)=> +i.id === +child)?.slug
+        }
+      })
+       navigateUrl = `/${pSlug}/${cSlug}`
+    }
+    
+    handleClose()
+    navigate(navigateUrl)
+  }
 
   useEffect(() => {
     fetchData();
@@ -75,6 +109,7 @@ const CategoryModal = ({ show, handleClose }) => {
                 
                   {listCategories
                     .map((parentCategory) => (
+                      
                       <div className="col-lg-4 mb-4" key={parentCategory.id} id={parentCategory.id}>
                         <h4 className="text-18 fw-semibold text-dark-300 mb-2">
                           {parentCategory.slug=='bikes' ?<MdBikeScooter />  : parentCategory.slug =='electronics-appliances'? <MdLaptopChromebook /> :
@@ -84,21 +119,25 @@ const CategoryModal = ({ show, handleClose }) => {
                           parentCategory.slug =='car'? <FaCar /> :
                           parentCategory.slug =='mobiles'? <FaMobile /> :
                           <MdCategory />}
-                          {` ${parentCategory.category}`}
+                          <button type="button" className="btn btn-default btn-sm" onClick={() => handleModalClose(parentCategory.id)}>{parentCategory.category}</button>
+                         
                         </h4>
                         <nav className="category-nav">
                           <ul>
                             {parentCategory.sub_cat
                                 .map((subcategory) => (
+                                 
                                   <li key={subcategory.id}>
-                                    <a href="#">{subcategory.category}</a>
+                                    <button type="button" className="btn btn-default btn-sm" onClick={() => handleModalClose(parentCategory.id, subcategory.id)}>{subcategory.category}</button>
+                                    
                                   </li>
+                                  
                                 ))}
                               
                               
                           </ul>
                         </nav>
-                    </div>
+                      </div>
                     ))}
                 
               </div>
