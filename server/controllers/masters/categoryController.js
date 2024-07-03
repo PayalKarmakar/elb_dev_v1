@@ -125,7 +125,7 @@ export const deleteCategory = async (req, res) => {
 // ------
 export const getCategories = async (req, res) => {
   const data = await pool.query(
-    `select * from master_categories where parent_id is null and is_active=true`,
+    `select * from master_categories where parent_id is null and is_active=true order by category`,
     []
   );
 
@@ -139,17 +139,30 @@ export const getAllCategories = async (req, res) => {
     json_agg(
             json_build_object(
               'id', cat2.id,
-              'category', cat2.category
+              'category', cat2.category,
+              'slug', cat2.slug
             )
           ) AS sub_cat
     from master_categories cat1
     left join master_categories cat2 on cat1.id=cat2.parent_id  
 		
     where cat1.parent_id is null and cat1.is_active=true  
-	and cat2.is_active=true
+	  and cat2.is_active=true
     group by cat1.id`,
     []
   );
+
+  res.status(StatusCodes.OK).json({ data });
+};
+
+// ------
+export const getChildCategories = async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(
+    `select * from master_categories where parent_id=$1 and is_active=true order by category`,
+    [id]
+  );
+
   res.status(StatusCodes.OK).json({ data });
 };
 
@@ -158,6 +171,29 @@ export const parentCategories = async (req, res) => {
   const data = await pool.query(
     `select * from master_categories where parent_id is null and is_active=true order by category`,
     []
+  );
+  res.status(StatusCodes.OK).json({ data });
+};
+
+// ------
+export const getFormFieldWithOptions = async (req, res) => {
+  const { catid } = req.params;
+  const data = await pool.query(
+    `
+      select 
+        f.*,
+        json_agg(
+          json_build_object(
+            'option_id', o.id,
+            'option_value', o.option_value
+          )
+        ) as options
+      from master_form_fields f
+      left join master_form_field_options o on f.id = o.field_id
+      where f.cat_id = $1
+      group by f.id
+    `,
+    [catid]
   );
   res.status(StatusCodes.OK).json({ data });
 };

@@ -1,4 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import customFetch from "../../utils/customFetch";
+
+export const getChildCategory = createAsyncThunk(
+  "/categories/sub",
+  async (data) => {
+    try {
+      const response = await customFetch.get(`/masters/categories/sub/${data}`);
+      return response?.data?.data?.rows;
+    } catch (error) {
+      return error;
+    }
+  }
+);
 
 const initialState = {
   getCategories: [],
@@ -57,6 +70,14 @@ const categorySlice = createSlice({
       state.deleteModal = false;
       state.deleteId = "";
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getChildCategory.pending, (state) => {})
+      .addCase(getChildCategory.fulfilled, (state, action) => {
+        state.childCategories = action.payload;
+      })
+      .addCase(getChildCategory.rejected, (state) => {});
   },
 });
 

@@ -18,11 +18,12 @@ export { default as Brands } from "./admin/masters/Brands";
 export { default as BrandModels } from "./admin/masters/BrandModels";
 export { default as Locations } from "./admin/masters/Locations";
 export { default as FormFields } from "./admin/formFields/FormFields";
-export { default as ListPost } from "./admin/posts/ListPost";
-export { default as AddPost } from "./admin/posts/AddPost";
+export { default as PostList } from "./admin/posts/PostList";
+export { default as PostAddEdit } from "./admin/posts/PostAddEdit";
 
 // Website pages ------
 export { default as LayoutWebsite } from "./website/LayoutWebsite";
 export { default as Landing } from "./website/Landing";
 export { default as WebsiteAbout } from "./website/WebsiteAbout";
 export { default as WebsiteSignUp } from "./admin/auth/Register";
+export { default as ProductList } from "./website/ProductList";

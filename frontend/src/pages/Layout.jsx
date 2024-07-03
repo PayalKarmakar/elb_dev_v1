@@ -15,12 +15,19 @@ import {
 } from "../feature/currentUserSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { AdminSidebar, UserSidebar, Topnav, Footer } from "../components";
+import {
+  AdminSidebar,
+  UserSidebar,
+  Topnav,
+  Footer,
+  WbTopnav,
+} from "../components";
+import WbFooter from "../components/website/WbFooter.jsx";
 
 // Loader starts ------
 export const loader = (store) => async () => {
   const { currentUser } = store.getState().currentUser;
-  
+
   try {
     if (!currentUser.first_name) {
       const response = await customFetch.get(`/auth/current-user`);
@@ -57,15 +64,24 @@ const Layout = () => {
 
   return (
     <>
-      <Topnav logout={logout} />
       {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
-        <AdminSidebar />
+        <>
+          <Topnav logout={logout} />
+          <AdminSidebar />
+        </>
       ) : (
-        <UserSidebar />
+        <>
+          <WbTopnav logout={logout} />
+          {/* <UserSidebar /> */}
+        </>
       )}
       <div className="page-wrapper">
         <Outlet />
-        <Footer />
+        {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
+          <Footer />
+        ) : (
+          <WbFooter />
+        )}
       </div>
     </>
   );

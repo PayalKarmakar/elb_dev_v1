@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import * as Elb from "./pages";
 import { store } from "./store";
-import { ThemeProvider } from "../contexts/theme";
 
 import Login from "./components/website/Login";
 import Signup from "./components/website/Signup";
@@ -21,6 +20,7 @@ import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPasswor
 import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
+import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 
 const router = createBrowserRouter([
   // Website routes ------
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
         errorElement: <Elb.Error />,
         action: registerAction,
       },
+      {path: ":catname/:subcat?", element: <Elb.ProductList />},
       { path: "" },
     ],
   },
@@ -88,16 +89,29 @@ const router = createBrowserRouter([
               { path: "form-fields", element: <Elb.FormFields /> },
             ],
           },
-          { path: "posts", element: <Elb.ListPost /> },
-          { path: "posts/add", element: <Elb.AddPost /> },
+          {
+            path: "posts",
+            children: [
+              { index: true, element: <Elb.PostList /> },
+              { path: "add", element: <Elb.PostAddEdit /> },
+              { path: "edit/:uuid", element: <Elb.PostAddEdit /> },
+            ],
+          },
         ],
       },
       {
         path: ":slug",
-        element: <Elb.LayoutUser />,
-        children: [{ path: "dashboard", element: <Elb.UserDashboard /> }],
+        element: <Elb.LayoutWebsite />,
+        children: [
+          { index: true, element: <Elb.Landing /> },
+          { path: "about", element: <Elb.WebsiteAbout /> },
+        ],
       },
-      { path: "change-password", element: <Elb.ChangePassword /> },
+      {
+        path: "change-password",
+        element: <Elb.ChangePassword />,
+        action: Changepassaction,
+      },
       { path: "profile", element: <Elb.Profile /> },
       { path: "forbidden", element: <Elb.Forbidden /> },
     ],
@@ -105,25 +119,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [ThemeMode, setThemeMode] = useState("light");
-
-  const darkTheme = () => {
-    setThemeMode("dark");
-  };
-
-  const lightTheme = () => {
-    setThemeMode("light");
-  };
-
-  useEffect(() => {
-    document.querySelector("html").classList.remove("light", "dark");
-    document.querySelector("html").classList.add(ThemeMode);
-  }, [ThemeMode]);
-
-  return (
-    <ThemeProvider value={{ ThemeMode, darkTheme, lightTheme }}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 export default App;

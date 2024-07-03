@@ -7,7 +7,9 @@ import {
   deleteCategory,
   editCategory,
   allCategories,
+  getChildCategories,
   parentCategories,
+  getFormFieldWithOptions,
 } from "../controllers/masters/categoryController.js";
 import { validateAddCategory } from "../middlewares/masters/categoryMiddleware.js";
 import {
@@ -57,6 +59,7 @@ router
   .delete(deleteCategory);
 
 router.get(`/categories/all`, allCategories);
+router.get(`/categories/sub/:id`, getChildCategories);
 router.get(`/categories/parents`, parentCategories);
 
 // ------
@@ -93,5 +96,8 @@ router
   .route(`/formFields/:id`)
   .put(validateFormField, updateFormField)
   .delete(deleteFormField);
+
+// ------
+router.get(`/form-fields-with-options/:catid`, getFormFieldWithOptions);
 
 export default router;

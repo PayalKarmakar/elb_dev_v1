@@ -1,5 +1,15 @@
-import { nanoid } from "nanoid";
 import React, { useState } from "react";
+import {
+  ActivateUser,
+  PageHeader,
+  PageWrapper,
+  PaginationContainer,
+  TableLoader,
+} from "../../../components";
+import { Form, Link } from "react-router-dom";
+import { IoIosSearch } from "react-icons/io";
+import { IoReloadSharp } from "react-icons/io5";
+import { nanoid } from "nanoid";
 import {
   dateFormatFancy,
   serialNo,
@@ -7,19 +17,14 @@ import {
 } from "../../../utils/functions";
 import { MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
-import {
-  ActivateUser,
-  PageHeader,
-  PageWrapper,
-  TableLoader,
-} from "../../../components";
-import { Link } from "react-router-dom";
 
-const ListPost = () => {
+const PostList = () => {
   document.title = `List of All Posts | ${import.meta.env.VITE_APP_TITLE}`;
   const [isLoading, setIsLoading] = useState(false);
 
   const listPosts = [];
+  const totalPages = 100;
+  const currentPage = 1;
 
   return (
     <>
@@ -30,13 +35,11 @@ const ListPost = () => {
             <div className="col-auto ms-auto d-print-none">
               <div className="btn-list">
                 <span className="d-none d-sm-inline">
-                  <Link to={`/admin/posts/add`}>
-                    <button
-                      type="button"
-                      className="btn btn-success d-none d-sm-inline-block me-2"
-                    >
-                      Add new
-                    </button>
+                  <Link
+                    className="btn btn-success d-none d-sm-inline-block me-2"
+                    to={`/admin/posts/add`}
+                  >
+                    Add new
                   </Link>
                 </span>
               </div>
@@ -47,7 +50,51 @@ const ListPost = () => {
       <PageWrapper>
         <div className="col-12">
           <div className="card">
-            <div className="card-header">Total 10 users found</div>
+            <div className="card-header">
+              Total 100 posts found
+              <div className="col-auto ms-auto d-print-none">
+                <Form method="GET">
+                  <div className="btn-list">
+                    <span className="d-none d-sm-inline">
+                      <div className="input-icon">
+                        <select
+                          className="form-select"
+                          name="r"
+                          id="searchSelect"
+                          style={{ minWidth: "200px" }}
+                        >
+                          <option value="">Select</option>
+                        </select>
+                      </div>
+                    </span>
+                    <span className="d-none d-sm-inline">
+                      <div className="input-icon">
+                        <input
+                          type="text"
+                          name="s"
+                          className="form-control"
+                          placeholder="Search by name..."
+                        />
+                      </div>
+                    </span>
+                    <span className="d-none d-sm-inline">
+                      <button
+                        type="submit"
+                        className="btn btn-primary d-none d-sm-inline-block me-2"
+                      >
+                        <IoIosSearch className="fs-3" />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-default d-none d-sm-inline-block"
+                      >
+                        <IoReloadSharp className="fs-3" />
+                      </button>
+                    </span>
+                  </div>
+                </Form>
+              </div>
+            </div>
 
             <div className="card-body p-2">
               <div className="table-responsive">
@@ -74,6 +121,16 @@ const ListPost = () => {
                     ) : listPosts.length > 0 ? (
                       <>
                         {listPosts.map((i, index) => {
+                          const isActive = i?.is_active ? (
+                            <span className="badge bg-success-lt p-1">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="badge bg-danger-lt p-1">
+                              Inactive
+                            </span>
+                          );
+
                           return (
                             <tr key={nanoid()}>
                               <td>
@@ -141,9 +198,11 @@ const ListPost = () => {
             </div>
           </div>
         </div>
+
+        <PaginationContainer pageCount={totalPages} currentPage={currentPage} />
       </PageWrapper>
     </>
   );
 };
 
-export default ListPost;
+export default PostList;
