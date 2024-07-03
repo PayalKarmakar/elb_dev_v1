@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { PageHeader, PageWrapper } from "../../../components";
+import {
+  PageHeader,
+  PageWrapper,
+  PostRadio,
+  PostText,
+} from "../../../components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
@@ -13,7 +18,13 @@ const PostAddEdit = () => {
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const { allCategories, childCategories } = useSelector(
+  const [form, setForm] = useState({ title: "", description: "" });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const { allCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
   );
 
@@ -26,8 +37,9 @@ const PostAddEdit = () => {
 
   const onSubCategoryChange = (value) => {
     setSelectedSubCategory(value);
-    dispatch(getFormFields(+data));
+    dispatch(getFormFields(+value));
   };
+  console.log(formFields);
 
   return (
     <>
@@ -55,7 +67,9 @@ const PostAddEdit = () => {
           <div className="card-body">
             <div className="row row-cards">
               <div className="col-md-6">
-                <label htmlFor="category">Select category</label>
+                <label className="form-label required" htmlFor="category">
+                  Select category
+                </label>
                 <select
                   className="form-select"
                   name="category"
@@ -76,7 +90,9 @@ const PostAddEdit = () => {
 
               {childCategories.length > +0 && (
                 <div className="col-md-6">
-                  <label htmlFor="subCategory">Select sub-category</label>
+                  <label className="form-label required" htmlFor="subCategory">
+                    Select sub-category
+                  </label>
                   <select
                     className="form-select"
                     name="subCategory"
@@ -99,32 +115,56 @@ const PostAddEdit = () => {
 
             <div className="row row-cards">
               <div className="col-md-6">
-                <label htmlFor="category">Select category</label>
-                <select className="form-select" name="category" id="category">
-                  <option value="">Select</option>
-                </select>
+                <label className="form-label required" htmlFor="category">
+                  Enter a fitting title for your post
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="title"
+                  id="title"
+                  value={form.title}
+                  onChange={handleChange}
+                />
               </div>
+
               <div className="col-md-6">
-                <label htmlFor="category">Select sub-category</label>
-                <select className="form-select" name="category" id="category">
-                  <option value="">Select</option>
-                </select>
+                <label className="form-label required" htmlFor="category">
+                  A brief description would help the buyer
+                </label>
+                <textarea
+                  className="form-control"
+                  name="description"
+                  id="description"
+                  value={form.description}
+                  onChange={handleChange}
+                ></textarea>
               </div>
             </div>
-            <div className="row row-cards">
-              <div className="col-md-6">
-                <label htmlFor="category">Select category</label>
-                <select className="form-select" name="category" id="category">
-                  <option value="">Select</option>
-                </select>
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="category">Select sub-category</label>
-                <select className="form-select" name="category" id="category">
-                  <option value="">Select</option>
-                </select>
-              </div>
-            </div>
+
+            {formFields?.map((i) => {
+              return (
+                <div className="row row-cards" key={nanoid()}>
+                  <div className="col-md-6">
+                    <label
+                      className={`form-label ${
+                        i.is_required ? "required" : ""
+                      }`}
+                      htmlFor="category"
+                    >
+                      {i.field_label}
+                    </label>
+                    {(i.field_type === "text" || i.field_type === "number") && (
+                      <PostText name={i.field_name} type={i.field_type} />
+                    )}
+
+                    {i.field_type === "radio" && (
+                      <PostRadio name={i.field_name} options={i.options} />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </PageWrapper>
