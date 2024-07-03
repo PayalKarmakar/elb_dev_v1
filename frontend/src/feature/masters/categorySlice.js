@@ -8,7 +8,25 @@ export const getChildCategory = createAsyncThunk(
       const response = await customFetch.get(`/masters/categories/sub/${data}`);
       return response?.data?.data?.rows;
     } catch (error) {
-      return error;
+      console.log(error);
+      return [];
+    }
+  }
+);
+
+export const getFormFields = createAsyncThunk(
+  `/posts/form-fields`,
+  async (data) => {
+    if (data) {
+      try {
+        const response = await customFetch.get(
+          `/masters/form-fields-with-options/${data}`
+        );
+        return response?.data?.data?.rows;
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
     }
   }
 );
@@ -23,6 +41,7 @@ const initialState = {
   deleteId: "",
   deleteModal: false,
   searchCategory: "",
+  formFields: [],
 };
 
 const categorySlice = createSlice({
@@ -77,7 +96,12 @@ const categorySlice = createSlice({
       .addCase(getChildCategory.fulfilled, (state, action) => {
         state.childCategories = action.payload;
       })
-      .addCase(getChildCategory.rejected, (state) => {});
+      .addCase(getChildCategory.rejected, (state) => {})
+      .addCase(getFormFields.pending, (state) => {})
+      .addCase(getFormFields.fulfilled, (state, action) => {
+        state.formFields = action.payload;
+      })
+      .addCase(getFormFields.rejected, (state) => {});
   },
 });
 
