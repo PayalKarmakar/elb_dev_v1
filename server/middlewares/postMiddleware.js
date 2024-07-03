@@ -30,13 +30,21 @@ export const validateDynamic = async (req, res, next) => {
     `select field_name, field_label, is_required from master_form_fields where cat_id=$1 and is_active=true`,
     [+subCategory]
   );
+  let fieldNames = [];
+  data.rows.map((i) => {
+    fieldNames.push(i.field_name);
+  });
 
-  //   console.log(data.rows[0].field_name);
+  [...fieldNames] = req.body;
+  // console.log(req.body);
 
-  if (!req.data.rows[0].field_name) {
-    throw new BadRequestError(`${data.rows[0].field_label} is required`);
-  }
-  console.log(`next`);
+  // const fieldName = data.rows[0].field_name;
+  // console.log(req.body.fieldName);
+
+  // if (!req.data.rows[0].field_name) {
+  //   throw new BadRequestError(`${data.rows[0].field_label} is required`);
+  // }
+  // console.log(`next`);
 
   //   next();
 };
