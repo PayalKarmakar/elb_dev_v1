@@ -139,7 +139,8 @@ export const getAllCategories = async (req, res) => {
     json_agg(
             json_build_object(
               'id', cat2.id,
-              'category', cat2.category
+              'category', cat2.category,
+              'slug', cat2.slug
             )
           ) AS sub_cat
     from master_categories cat1

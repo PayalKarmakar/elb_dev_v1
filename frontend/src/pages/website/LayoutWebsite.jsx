@@ -12,6 +12,7 @@ import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
 import { setGetCategories } from "../../feature/masters/categorySlice";
+import { useSelector } from "react-redux";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
@@ -25,7 +26,7 @@ export const loader = (store) => async () => {
     if (getCategories.length === 0) {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
-     }
+    }
     return null;
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
@@ -34,9 +35,10 @@ export const loader = (store) => async () => {
 };
 
 const LayoutWebsite = () => {
+  const currentUser = useSelector((state) => state.currentUser);
   return (
     <>
-      <WbTopnav />
+      {!currentUser.currentUser.uuid ? <WbTopnav /> : ""}
       <WbSecondNav />
       <main>
         <Outlet />
