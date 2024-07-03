@@ -125,7 +125,7 @@ export const deleteCategory = async (req, res) => {
 // ------
 export const getCategories = async (req, res) => {
   const data = await pool.query(
-    `select * from master_categories where parent_id is null and is_active=true`,
+    `select * from master_categories where parent_id is null and is_active=true order by category`,
     []
   );
 
@@ -146,12 +146,22 @@ export const getAllCategories = async (req, res) => {
     left join master_categories cat2 on cat1.id=cat2.parent_id  
 		
     where cat1.parent_id is null and cat1.is_active=true  
-	and cat2.is_active=true
+	  and cat2.is_active=true
     group by cat1.id`,
     []
   );
-  // text
-console.log(data);
+
+  res.status(StatusCodes.OK).json({ data });
+};
+
+// ------
+export const getChildCategories = async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(
+    `select * from master_categories where parent_id=$1 and is_active=true order by category`,
+    [id]
+  );
+
   res.status(StatusCodes.OK).json({ data });
 };
 
