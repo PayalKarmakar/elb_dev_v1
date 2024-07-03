@@ -2,16 +2,17 @@ import { body } from "express-validator";
 import { withValidationErrors } from "./withErrorMiddleware.js";
 import pool from "../db.js";
 import { BadRequestError } from "../errors/customErrors.js";
+import { rtrim } from "../utils/functions.js";
 
 export const validatePostForm = withValidationErrors([
   body("category").notEmpty().withMessage(`Select a category`),
-  body("subCategory").custom(async ({ req }) => {
+  body("subCategory").custom(async (value, { req }) => {
     const { category } = req.body;
     const count = await pool.query(
       `select count(*) from master_categories where parent_id=$1 and is_active=true`,
       [Number(category)]
     );
-    if (+count.rows[0].count > 0) {
+    if (+count.rows[0].count > 0 && !value) {
       throw new BadRequestError(`Select a sub-category`);
     }
     return true;
@@ -27,24 +28,28 @@ export const validatePostForm = withValidationErrors([
 export const validateDynamic = async (req, res, next) => {
   const { subCategory } = req.body;
   const data = await pool.query(
-    `select field_name, field_label, is_required from master_form_fields where cat_id=$1 and is_active=true`,
+    `select field_name, field_label, is_required, field_type from master_form_fields where cat_id=$1 and is_active=true`,
     [+subCategory]
   );
-  let fieldNames = [];
-  data.rows.map((i) => {
-    fieldNames.push(i.field_name);
+
+  let errorMessages = "";
+
+  data.rows.forEach((field) => {
+    const value = req.body[field.field_name];
+
+    if (field.is_required && !value) {
+      errorMessages += `${field.field_label} is required,`;
+    }
+
+    if (field.field_type === "number" && +value < 0) {
+      errorMessages += `${field.field_label} cannot be negative,`;
+    }
   });
 
-  [...fieldNames] = req.body;
-  // console.log(req.body);
+  errorMessages = rtrim(errorMessages);
+  if (errorMessages) {
+    throw new BadRequestError(errorMessages);
+  }
 
-  // const fieldName = data.rows[0].field_name;
-  // console.log(req.body.fieldName);
-
-  // if (!req.data.rows[0].field_name) {
-  //   throw new BadRequestError(`${data.rows[0].field_label} is required`);
-  // }
-  // console.log(`next`);
-
-  //   next();
+  next();
 };

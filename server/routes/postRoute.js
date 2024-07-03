@@ -8,8 +8,7 @@ import { addPost, allPosts } from "../controllers/posts/postController.js";
 
 router
   .route(`/posts`)
-  //   .post([validatePostForm, validateDynamic], addPost)
-  .post(validateDynamic, addPost)
+  .post([validatePostForm, validateDynamic], addPost)
   .get(allPosts);
 
 export default router;
