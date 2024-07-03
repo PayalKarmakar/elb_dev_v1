@@ -3,12 +3,16 @@ import { PageHeader, PageWrapper } from "../../../components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
-import { getChildCategory } from "../../../feature/masters/categorySlice";
+import {
+  getChildCategory,
+  getFormFields,
+} from "../../../feature/masters/categorySlice";
 
 const PostAddEdit = () => {
   document.title = `Add New Post | ${import.meta.env.VITE_APP_TITLE}`;
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const { allCategories, childCategories } = useSelector(
     (store) => store.categories
   );
@@ -16,8 +20,13 @@ const PostAddEdit = () => {
   const parents = allCategories?.filter((i) => !i.parent_id);
 
   const onCategoryChange = (value) => {
-    setSelectedCategory(Number(value));
+    setSelectedCategory(value);
     dispatch(getChildCategory(Number(value)));
+  };
+
+  const onSubCategoryChange = (value) => {
+    setSelectedSubCategory(value);
+    dispatch(getFormFields(+data));
   };
 
   return (
@@ -67,8 +76,14 @@ const PostAddEdit = () => {
 
               {childCategories.length > +0 && (
                 <div className="col-md-6">
-                  <label htmlFor="category">Select sub-category</label>
-                  <select className="form-select" name="category" id="category">
+                  <label htmlFor="subCategory">Select sub-category</label>
+                  <select
+                    className="form-select"
+                    name="subCategory"
+                    id="subCategory"
+                    value={selectedSubCategory}
+                    onChange={(e) => onSubCategoryChange(e.target.value)}
+                  >
                     <option value="">Select</option>
                     {childCategories?.map((i) => {
                       return (
@@ -81,6 +96,7 @@ const PostAddEdit = () => {
                 </div>
               )}
             </div>
+
             <div className="row row-cards">
               <div className="col-md-6">
                 <label htmlFor="category">Select category</label>
