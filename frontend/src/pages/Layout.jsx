@@ -20,7 +20,7 @@ import { AdminSidebar, UserSidebar, Topnav, Footer } from "../components";
 // Loader starts ------
 export const loader = (store) => async () => {
   const { currentUser } = store.getState().currentUser;
-  
+
   try {
     if (!currentUser.first_name) {
       const response = await customFetch.get(`/auth/current-user`);
