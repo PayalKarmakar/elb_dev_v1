@@ -88,7 +88,6 @@ const router = createBrowserRouter([
               { path: "form-fields", element: <Elb.FormFields /> },
             ],
           },
-<<<<<<< HEAD
           {
             path: "posts",
             children: [
@@ -97,10 +96,6 @@ const router = createBrowserRouter([
               { path: "edit/:uuid", element: <Elb.PostAddEdit /> },
             ],
           },
-=======
-          { path: "posts", element: <Elb.ListPost /> },
-          { path: "posts/add", element: <Elb.AddPost /> },
->>>>>>> db070c708ed5fda4a89f872170b97c38f3eb8a4e
         ],
       },
       {
