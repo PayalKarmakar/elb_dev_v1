@@ -56,7 +56,7 @@ const categorySlice = createSlice({
       state.deleteModal = false;
       state.deleteId = "";
     },
-    
+   
   },
 });
 
