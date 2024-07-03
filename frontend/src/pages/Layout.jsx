@@ -22,6 +22,7 @@ import {
   Footer,
   WbTopnav,
 } from "../components";
+import WbFooter from "../components/website/WbFooter.jsx";
 
 // Loader starts ------
 export const loader = (store) => async () => {
@@ -76,7 +77,11 @@ const Layout = () => {
       )}
       <div className="page-wrapper">
         <Outlet />
-        <Footer />
+        {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
+          <Footer />
+        ) : (
+          <WbFooter />
+        )}
       </div>
     </>
   );

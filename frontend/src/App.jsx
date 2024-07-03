@@ -20,6 +20,7 @@ import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPasswor
 import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
+import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 
 const router = createBrowserRouter([
   // Website routes ------
@@ -106,7 +107,11 @@ const router = createBrowserRouter([
           { path: "about", element: <Elb.WebsiteAbout /> },
         ],
       },
-      { path: "change-password", element: <Elb.ChangePassword /> },
+      {
+        path: "change-password",
+        element: <Elb.ChangePassword />,
+        action: Changepassaction,
+      },
       { path: "profile", element: <Elb.Profile /> },
       { path: "forbidden", element: <Elb.Forbidden /> },
     ],

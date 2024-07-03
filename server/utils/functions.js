@@ -43,3 +43,7 @@ export const generateOtherSlug = async (table, value) => {
 
   return uniqueSlug;
 };
+
+export const removeSpecialChars = (str) => {
+  return str.replace(/[^a-zA-Z0-9 ]/g, "");
+};
