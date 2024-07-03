@@ -13,6 +13,7 @@ const PostRadio = ({ name, options }) => {
               className="form-check-input"
               type="radio"
               name={name}
+              value={option_id}
               // checked=""
             />
             <span className="form-check-label">{option_value}</span>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const PostText = ({ name, type }) => {
   return (
@@ -8,7 +8,7 @@ const PostText = ({ name, type }) => {
         className="form-control"
         name={name}
         id={name}
-        {...(type === "number" ? { min: 0 } : {})}
+        // {...(type === "number" ? { min: 0 } : {})}
       />
     </>
   );

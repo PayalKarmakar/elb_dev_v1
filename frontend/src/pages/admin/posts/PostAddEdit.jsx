@@ -12,12 +12,16 @@ import {
   getChildCategory,
   getFormFields,
 } from "../../../feature/masters/categorySlice";
+import { splitErrors } from "../../../utils/showErrors";
+import customFetch from "../../../utils/customFetch";
 
 const PostAddEdit = () => {
   document.title = `Add New Post | ${import.meta.env.VITE_APP_TITLE}`;
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [form, setForm] = useState({ title: "", description: "" });
 
   const handleChange = (e) => {
@@ -40,6 +44,21 @@ const PostAddEdit = () => {
     dispatch(getFormFields(+value));
   };
   console.log(formFields);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    try {
+      const response = await customFetch.post(`/posts/posts`, data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      splitErrors(error?.response?.data?.msg);
+      return error;
+    }
+  };
 
   return (
     <>
@@ -64,44 +83,22 @@ const PostAddEdit = () => {
       </div>
       <PageWrapper>
         <div className="card">
-          <div className="card-body">
-            <div className="row row-cards">
-              <div className="col-md-6">
-                <label className="form-label required" htmlFor="category">
-                  Select category
-                </label>
-                <select
-                  className="form-select"
-                  name="category"
-                  id="category"
-                  value={selectedCategory}
-                  onChange={(e) => onCategoryChange(e.target.value)}
-                >
-                  <option value="">Select</option>
-                  {parents?.map((i) => {
-                    return (
-                      <option key={nanoid()} value={i.id}>
-                        {i.category}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-
-              {childCategories.length > +0 && (
+          <form autoComplete="off" onSubmit={handleSubmit}>
+            <div className="card-body">
+              <div className="row row-cards">
                 <div className="col-md-6">
-                  <label className="form-label required" htmlFor="subCategory">
-                    Select sub-category
+                  <label className="form-label required" htmlFor="category">
+                    Select category
                   </label>
                   <select
                     className="form-select"
-                    name="subCategory"
-                    id="subCategory"
-                    value={selectedSubCategory}
-                    onChange={(e) => onSubCategoryChange(e.target.value)}
+                    name="category"
+                    id="category"
+                    value={selectedCategory}
+                    onChange={(e) => onCategoryChange(e.target.value)}
                   >
                     <option value="">Select</option>
-                    {childCategories?.map((i) => {
+                    {parents?.map((i) => {
                       return (
                         <option key={nanoid()} value={i.id}>
                           {i.category}
@@ -110,62 +107,98 @@ const PostAddEdit = () => {
                     })}
                   </select>
                 </div>
-              )}
-            </div>
 
-            <div className="row row-cards">
-              <div className="col-md-6">
-                <label className="form-label required" htmlFor="category">
-                  Enter a fitting title for your post
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="title"
-                  id="title"
-                  value={form.title}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label required" htmlFor="category">
-                  A brief description would help the buyer
-                </label>
-                <textarea
-                  className="form-control"
-                  name="description"
-                  id="description"
-                  value={form.description}
-                  onChange={handleChange}
-                ></textarea>
-              </div>
-            </div>
-
-            {formFields?.map((i) => {
-              return (
-                <div className="row row-cards" key={nanoid()}>
+                {childCategories.length > +0 && (
                   <div className="col-md-6">
                     <label
-                      className={`form-label ${
-                        i.is_required ? "required" : ""
-                      }`}
-                      htmlFor="category"
+                      className="form-label required"
+                      htmlFor="subCategory"
                     >
-                      {i.field_label}
+                      Select sub-category
                     </label>
-                    {(i.field_type === "text" || i.field_type === "number") && (
-                      <PostText name={i.field_name} type={i.field_type} />
-                    )}
-
-                    {i.field_type === "radio" && (
-                      <PostRadio name={i.field_name} options={i.options} />
-                    )}
+                    <select
+                      className="form-select"
+                      name="subCategory"
+                      id="subCategory"
+                      value={selectedSubCategory}
+                      onChange={(e) => onSubCategoryChange(e.target.value)}
+                    >
+                      <option value="">Select</option>
+                      {childCategories?.map((i) => {
+                        return (
+                          <option key={nanoid()} value={i.id}>
+                            {i.category}
+                          </option>
+                        );
+                      })}
+                    </select>
                   </div>
+                )}
+              </div>
+
+              <div className="row row-cards">
+                <div className="col-md-6">
+                  <label className="form-label required" htmlFor="category">
+                    Enter a fitting title for your post
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="title"
+                    id="title"
+                    value={form.title}
+                    onChange={handleChange}
+                  />
                 </div>
-              );
-            })}
-          </div>
+
+                <div className="col-md-6">
+                  <label className="form-label required" htmlFor="category">
+                    A brief description would help the buyer
+                  </label>
+                  <textarea
+                    className="form-control"
+                    name="description"
+                    id="description"
+                    value={form.description}
+                    onChange={handleChange}
+                  ></textarea>
+                </div>
+              </div>
+
+              {formFields?.map((i) => {
+                return (
+                  <div className="row row-cards" key={nanoid()}>
+                    <div className="col-md-6">
+                      <label
+                        className={`form-label ${
+                          i.is_required ? "required" : ""
+                        }`}
+                        htmlFor="category"
+                      >
+                        {i.field_label}
+                      </label>
+                      {(i.field_type === "text" ||
+                        i.field_type === "number") && (
+                        <PostText name={i.field_name} type={i.field_type} />
+                      )}
+
+                      {i.field_type === "radio" && (
+                        <PostRadio name={i.field_name} options={i.options} />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="card-footer">
+              <button type="submit" className="btn btn-success">
+                Submit
+              </button>
+              <button type="button" className="btn btn-secondary ms-3">
+                Reset
+              </button>
+            </div>
+          </form>
         </div>
       </PageWrapper>
     </>
