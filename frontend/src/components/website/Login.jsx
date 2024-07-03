@@ -31,7 +31,7 @@ export const action = async ({ request }) => {
         path = `/admin/dashboard`;
         break;
       case 3:
-        path = `/${slug}/dashboard`;
+        path = `/${slug}`;
         break;
       default:
         path = `/`;

@@ -15,7 +15,13 @@ import {
 } from "../feature/currentUserSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { AdminSidebar, UserSidebar, Topnav, Footer } from "../components";
+import {
+  AdminSidebar,
+  UserSidebar,
+  Topnav,
+  Footer,
+  WbTopnav,
+} from "../components";
 
 // Loader starts ------
 export const loader = (store) => async () => {
@@ -57,11 +63,16 @@ const Layout = () => {
 
   return (
     <>
-      <Topnav logout={logout} />
       {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
-        <AdminSidebar />
+        <>
+          <Topnav logout={logout} />
+          <AdminSidebar />
+        </>
       ) : (
-        <UserSidebar />
+        <>
+          <WbTopnav logout={logout} />
+          {/* <UserSidebar /> */}
+        </>
       )}
       <div className="page-wrapper">
         <Outlet />
