@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import profilepic from "../../assets/website/img/dashboard/heade-av.png";
 import { useSelector } from "react-redux";
 
@@ -69,9 +70,9 @@ function UserProfile({ logout }) {
             </a>
           </li>
           <li>
-            <a
+            <Link
               className="dashboard-profile-item dropdown-item d-flex gap-2"
-              href="#"
+              to="/change-password"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +89,7 @@ function UserProfile({ logout }) {
                 />
               </svg>
               Change Password
-            </a>
+            </Link>
           </li>
           <li>
             <a
