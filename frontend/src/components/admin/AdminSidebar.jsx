@@ -5,7 +5,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { FaCog } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { MdOutlineFormatIndentIncrease } from "react-icons/md";
-import { MdAdd } from "react-icons/md";
+import { MdOutlineAdd } from "react-icons/md";
 
 const AdminSidebar = () => {
   return (
@@ -138,7 +138,7 @@ const AdminSidebar = () => {
             <li className="nav-item">
               <NavLink className="nav-link" to={`/admin/posts`}>
                 <span className="nav-link-icon d-md-none d-lg-inline-block">
-                  <MdAdd size={18} />
+                  <MdOutlineAdd size={18} />
                 </span>
                 <span className="nav-link-title">Posts</span>
               </NavLink>

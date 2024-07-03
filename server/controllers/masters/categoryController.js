@@ -164,3 +164,12 @@ export const getChildCategories = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data });
 };
+
+// ------
+export const parentCategories = async (req, res) => {
+  const data = await pool.query(
+    `select * from master_categories where parent_id is null and is_active=true order by category`,
+    []
+  );
+  res.status(StatusCodes.OK).json({ data });
+};

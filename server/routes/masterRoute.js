@@ -8,6 +8,7 @@ import {
   editCategory,
   allCategories,
   getChildCategories,
+  parentCategories,
 } from "../controllers/masters/categoryController.js";
 import { validateAddCategory } from "../middlewares/masters/categoryMiddleware.js";
 import {
@@ -58,6 +59,7 @@ router
 
 router.get(`/categories/all`, allCategories);
 router.get(`/categories/sub/:id`, getChildCategories);
+router.get(`/categories/parents`, parentCategories);
 
 // ------
 router.route(`/brands`).get(pageBrands).post(validateAddBrand, addBrand);
