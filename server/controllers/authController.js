@@ -197,3 +197,25 @@ export const resetPassword = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ data: `failed` });
   }
 };
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword, uuid } = req.body;
+  console.log(
+    `---${currentPassword}---${newPassword}---${confirmPassword} ----${uuid}`
+  );
+  const currentPassword_data = await hashPassword(currentPassword);
+  console.log(currentPassword_data);
+  const getpasswordq = `SELECT id, password from master_users where uuid='1${uuid}'`;
+  try {
+    await pool.query(`BEGIN`);
+    const getpassword = await pool.query(getpasswordq);
+    console.log(getpassword.rowCount);
+    if (Number(getpassword.rowCount) === 0) {
+      throw new BadRequestError(`Incorrect username`);
+    }
+
+    await pool.query(`COMMIT`);
+  } catch (error) {
+    await pool.query(`ROLLBACK`);
+    res.status(StatusCodes.BAD_REQUEST).json({ data: `failed` });
+  }
+};

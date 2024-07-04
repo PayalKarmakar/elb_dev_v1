@@ -29,6 +29,16 @@ body,
   border: 0px none;
 }
 
+.secondary-nav a li {
+  text-decoration: none;
+  color: #fff;
+}
+
+/* .secondary-nav li a:hover {
+  text-decoration: none;
+  color: #fff;
+} */
+
 .header-primary .navbar .navbar-nav .nav-link,
 .header-primary .navbar .navbar-nav .nav-item:hover .nav-link {
   color: var(--white);
@@ -288,7 +298,7 @@ body,
   height: auto;
 }
 
-.social-login .social-login-item{
+.social-login .social-login-item {
   width: 42px;
   height: 42px;
 }

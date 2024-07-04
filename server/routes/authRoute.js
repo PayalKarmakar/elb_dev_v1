@@ -9,6 +9,7 @@ import {
   register,
   resetPassword,
   restrict,
+  changePassword,
 } from "../controllers/authController.js";
 import {
   checkAccess,
@@ -18,6 +19,7 @@ import {
   validateLogin,
   validateRegister,
   validateResetPass,
+  validateChangePass,
 } from "../middlewares/authMiddleware.js";
 
 router.post(`/register`, validateRegister, register);
@@ -28,5 +30,6 @@ router.post(`/reset-password`, validateResetPass, resetPassword);
 router.get(`/current-user`, protectRoute, currentUser);
 router.get(`/restrict/:slug`, mindUrOwnPage, restrict);
 router.get(`/access/:path`, checkAccess, access);
+router.post(`/change-password`, changePassword);
 
 export default router;
