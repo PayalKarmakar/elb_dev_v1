@@ -27,8 +27,12 @@ const WbSecondNav = () => {
           <nav className="secondary-nav-container position-absolute w-100 start-0 z-3">
             <ul className="secondary-nav d-flex justify-content-between align-items-center">
               {listCategories.map((i) => (
-                <Link to={i.slug} className="text-decoration-none">
-                  <li key={nanoid()}>{i.category}</li>
+                <Link
+                  key={nanoid()}
+                  to={i.slug}
+                  className="text-decoration-none"
+                >
+                  <li>{i.category}</li>
                 </Link>
               ))}
               <li>
