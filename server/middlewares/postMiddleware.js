@@ -23,6 +23,7 @@ export const validatePostForm = withValidationErrors([
     .bail()
     .isLength({ min: 3, max: 255 })
     .withMessage(`Title must be between 3 to 255 characters`),
+  body("price").notEmpty().withMessage(`Price is required`),
 ]);
 
 export const validateDynamic = async (req, res, next) => {

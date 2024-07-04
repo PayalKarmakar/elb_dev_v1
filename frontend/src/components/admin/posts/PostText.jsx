@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PostText = ({ name, type }) => {
+const PostText = ({ name, type, dbData, handleDbChange }) => {
   return (
     <>
       <input
@@ -8,6 +8,8 @@ const PostText = ({ name, type }) => {
         className="form-control"
         name={name}
         id={name}
+        value={dbData}
+        onChange={handleDbChange}
         // {...(type === "number" ? { min: 0 } : {})}
       />
     </>
