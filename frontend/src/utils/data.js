@@ -4,4 +4,5 @@ export const inputTypes = [
   { type: "checkbox" },
   { type: "radio" },
   { type: "dropdown" },
+  { type: "number" },
 ];

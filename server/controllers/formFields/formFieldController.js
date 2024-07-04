@@ -50,12 +50,20 @@ export const allFormFields = async (req, res) => {};
 export const addFormField = async (req, res) => {
   const { ffCatId, ffLabel, ffType, isRequired, fieldOptions } = req.body;
   const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  let ffName = "";
+  ffLabel?.split(" ")?.map((i, index) => {
+    ffName +=
+      index === 0
+        ? removeSpecialChars(i?.toLowerCase())
+        : `_` + removeSpecialChars(i?.toLowerCase());
+  });
+  ffName = ffName + `_${ffCatId}`;
 
   try {
     await pool.query(`BEGIN`);
 
     const data = await pool.query(
-      `insert into master_form_fields(cat_id, field_label, field_type, is_required, created_at, updated_at) values($1, $2, $3, $4, $5, $6) returning id`,
+      `insert into master_form_fields(cat_id, field_label, field_type, is_required, created_at, updated_at, field_name) values($1, $2, $3, $4, $5, $6, $7) returning id`,
       [
         ffCatId,
         ffLabel.trim(),
@@ -63,6 +71,7 @@ export const addFormField = async (req, res) => {
         isRequired,
         timeStamp,
         timeStamp,
+        ffName,
       ]
     );
 

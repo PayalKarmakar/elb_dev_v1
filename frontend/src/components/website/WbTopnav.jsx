@@ -44,7 +44,7 @@ const WbTopnav = ({ logout }) => {
                 <button
                   type="button"
                   className="header-btn"
-                  onClick={"javascript:void(0);"}
+                  //onClick={"javascript:void(0);"}
                 >
                   <MdOutlineSell
                     className="h-5 w-5 text-gray-400"
