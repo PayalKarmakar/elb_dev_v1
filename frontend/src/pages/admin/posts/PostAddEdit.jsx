@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PageHeader,
   PageWrapper,
@@ -20,9 +20,13 @@ const PostAddEdit = () => {
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
+  const [dbFields, setDbFields] = useState([]);
+  const [dbData, setDbData] = useState({});
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const [form, setForm] = useState({ title: "", description: "" });
+  const [form, setForm] = useState({ title: "", description: "", price: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -43,7 +47,6 @@ const PostAddEdit = () => {
     setSelectedSubCategory(value);
     dispatch(getFormFields(+value));
   };
-  console.log(formFields);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,6 +156,22 @@ const PostAddEdit = () => {
 
                 <div className="col-md-6">
                   <label className="form-label required" htmlFor="category">
+                    Price
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="price"
+                    id="price"
+                    value={form.price}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="row row-cards">
+                <div className="col-md-6">
+                  <label className="form-label required" htmlFor="category">
                     A brief description would help the buyer
                   </label>
                   <textarea
@@ -165,30 +184,31 @@ const PostAddEdit = () => {
                 </div>
               </div>
 
-              {formFields?.map((i) => {
-                return (
-                  <div className="row row-cards" key={nanoid()}>
-                    <div className="col-md-6">
-                      <label
-                        className={`form-label ${
-                          i.is_required ? "required" : ""
-                        }`}
-                        htmlFor="category"
-                      >
-                        {i.field_label}
-                      </label>
-                      {(i.field_type === "text" ||
-                        i.field_type === "number") && (
-                        <PostText name={i.field_name} type={i.field_type} />
-                      )}
+              {selectedSubCategory &&
+                formFields?.map((i) => {
+                  return (
+                    <div className="row row-cards" key={nanoid()}>
+                      <div className="col-md-6">
+                        <label
+                          className={`form-label ${
+                            i.is_required ? "required" : ""
+                          }`}
+                          htmlFor="category"
+                        >
+                          {i.field_label}
+                        </label>
+                        {(i.field_type === "text" ||
+                          i.field_type === "number") && (
+                          <PostText name={i.field_name} type={i.field_type} />
+                        )}
 
-                      {i.field_type === "radio" && (
-                        <PostRadio name={i.field_name} options={i.options} />
-                      )}
+                        {i.field_type === "radio" && (
+                          <PostRadio name={i.field_name} options={i.options} />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
             <div className="card-footer">
               <button type="submit" className="btn btn-success">
