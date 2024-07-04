@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Link,
   Route,
   RouterProvider,
   createBrowserRouter,
@@ -21,6 +22,7 @@ import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
+import { loader as postlayoutLoader } from "./pages/website/user/LayoutUser";
 
 const router = createBrowserRouter([
   // Website routes ------
@@ -116,6 +118,15 @@ const router = createBrowserRouter([
       { path: "forbidden", element: <Elb.Forbidden /> },
     ],
   },
+  {
+    path: ":slug",
+    element: <Elb.LayoutUserPost />,
+    errorElement: <Elb.Error />,
+    loader: postlayoutLoader(store),
+    children: [
+      { path: "create-post", element: <Elb.CreatePost />, handle: { crumb: <Link to="#">Dashboard</Link> }},
+    ]
+  }
 ]);
 
 function App() {
