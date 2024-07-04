@@ -1,8 +1,9 @@
 /* .header-primary, */
 
 :root {
-  --primary-color3: #5142fc;
-  --lime-300: #5142fc;
+  /* --primary-color3: #5142fc; */
+  --primary-color3: #821f8b;
+  --lime-300: #821f8b;
 }
 
 .pt-110 {
@@ -34,10 +35,9 @@ body,
   color: #fff;
 }
 
-/* .secondary-nav li a:hover {
-  text-decoration: none;
+.secondary-nav a li:hover {
   color: #fff;
-} */
+}
 
 .header-primary .navbar .navbar-nav .nav-link,
 .header-primary .navbar .navbar-nav .nav-item:hover .nav-link {
@@ -57,6 +57,10 @@ body,
 .header-primary.sticky,
 .hero-one {
   background: linear-gradient(227.3deg, #8a208c 0%, #181b81 100.84%);
+}
+
+.hero-form-btn:hover {
+  background-color: var(--primary-color3);
 }
 
 /* .secondary-nav{
@@ -306,4 +310,7 @@ body,
 .social-login .social-login-item:hover {
   background-color: var(--primary-color3);
   color: var(--white);
+}
+.footer-newsletter-btn:hover {
+  background-color: #821f8b;
 }
