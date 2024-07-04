@@ -27,3 +27,5 @@ export { default as Landing } from "./website/Landing";
 export { default as WebsiteAbout } from "./website/WebsiteAbout";
 export { default as WebsiteSignUp } from "./admin/auth/Register";
 export { default as ProductList } from "./website/ProductList";
+export { default as LayoutUserPost } from "./website/user/LayoutUser";
+export { default as CreatePost } from "./website/user/post/CreatePost"
