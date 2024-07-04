@@ -43,7 +43,7 @@ const LayoutWebsite = () => {
       <main>
         <Outlet />
       </main>
-      <WbFooter />
+      {/* <WbFooter /> */}
     </>
   );
 };

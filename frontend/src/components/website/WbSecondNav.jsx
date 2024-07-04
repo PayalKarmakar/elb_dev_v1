@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import CategoryModal from "./CategoryModal";
+import { useSelector } from "react-redux";
+import { nanoid } from "nanoid";
 
 const WbSecondNav = () => {
-
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -15,67 +16,21 @@ const WbSecondNav = () => {
     setShowModal(false);
   };
 
+  const { listCategories } = useSelector((store) => store.categories);
+  console.log("first");
+  console.log(listCategories);
+
   return (
     <div className="d-none d-xl-block secondary-nav-wrapper">
       <div className="container">
         <div className="position-relative">
           <nav className="secondary-nav-container position-absolute w-100 start-0 z-3">
             <ul className="secondary-nav d-flex justify-content-between align-items-center">
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Technology
+              {listCategories.map((i) => (
+                <Link to={i.slug} className="text-decoration-none">
+                  <li key={nanoid()}>{i.category}</li>
                 </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Graphics
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Marketing
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Writing
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Translation
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Animation
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Audio
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Branding
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Website
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Programming
-                </Link>
-              </li>
-              <li>
-                <Link to={`#`} className="text-decoration-none">
-                  Business
-                </Link>
-              </li>
+              ))}
               <li>
                 <button type="button" onClick={handleOpenModal}>
                   <svg
@@ -100,7 +55,11 @@ const WbSecondNav = () => {
                     />
                   </svg>
                 </button>
-                <CategoryModal show={showModal} handleClose={handleCloseModal} title="All Categories"/>
+                <CategoryModal
+                  show={showModal}
+                  handleClose={handleCloseModal}
+                  title="All Categories"
+                />
               </li>
             </ul>
           </nav>
