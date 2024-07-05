@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  PageHeader,
-  PageWrapper,
-  PostRadio,
-  PostText,
-} from "../../../components";
+import { PageHeader, PageWrapper } from "../../../components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
@@ -21,8 +16,8 @@ const PostAddEdit = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-  const [dbFields, setDbFields] = useState([]);
-  const [dbData, setDbData] = useState({});
+  const [dynamicFields, setDynamicFields] = useState([]);
+  const [dynamicData, setDynamicData] = useState({});
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,6 +41,14 @@ const PostAddEdit = () => {
   const onSubCategoryChange = (value) => {
     setSelectedSubCategory(value);
     dispatch(getFormFields(+value));
+  };
+
+  useEffect(() => {
+    setDynamicFields(formFields || []);
+  }, [formFields]);
+
+  const handleDbChange = (e) => {
+    setDynamicData({ ...dynamicData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -185,9 +188,9 @@ const PostAddEdit = () => {
               </div>
 
               {selectedSubCategory &&
-                formFields?.map((i) => {
+                dynamicFields?.map((i) => {
                   return (
-                    <div className="row row-cards" key={nanoid()}>
+                    <div className="row row-cards" key={i.field_name}>
                       <div className="col-md-6">
                         <label
                           className={`form-label ${
@@ -199,11 +202,40 @@ const PostAddEdit = () => {
                         </label>
                         {(i.field_type === "text" ||
                           i.field_type === "number") && (
-                          <PostText name={i.field_name} type={i.field_type} />
+                          <input
+                            type={i.field_type}
+                            className="form-control"
+                            name={i.field_name}
+                            id={i.field_name}
+                            value={dynamicData[i.field_name] || ""}
+                            onChange={handleDbChange}
+                          />
                         )}
 
                         {i.field_type === "radio" && (
-                          <PostRadio name={i.field_name} options={i.options} />
+                          <div>
+                            {i.options.map((option) => {
+                              const { option_id, option_value } = option;
+
+                              return (
+                                <label
+                                  key={option_id}
+                                  className="form-check form-check-inline"
+                                >
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name={i.field_name}
+                                    value={option_id}
+                                    // checked=""
+                                  />
+                                  <span className="form-check-label">
+                                    {option_value}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
                         )}
                       </div>
                     </div>

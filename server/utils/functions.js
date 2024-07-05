@@ -33,7 +33,7 @@ export const generateSlug = async (firstName, lastName) => {
 export const generateOtherSlug = async (table, value) => {
   let newSlug = slug(value);
   const check = await pool.query(
-    `select count(*) from ${table} where slug='$1'`,
+    `select count(*) from ${table} where slug=$1`,
     [newSlug]
   );
   const uniqueSlug =

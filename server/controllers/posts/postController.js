@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import pool from "../../db.js";
 import { verifyJWT } from "../../utils/tokenUtils.js";
-import { getUserId } from "../../utils/functions.js";
-import slug from "slug";
+import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
 
 export const addPost = async (req, res) => {
@@ -12,7 +11,7 @@ export const addPost = async (req, res) => {
   const uid = await getUserId(uuid);
   const subCat = subCategory ? +subCategory : null;
   const desc = description || null;
-  const postSlug = slug(title);
+  const postSlug = await generateOtherSlug("master_posts", title);
   const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
   try {
@@ -72,5 +71,28 @@ export const addPost = async (req, res) => {
 };
 
 export const allPosts = async (req, res) => {
-  res.status(StatusCodes.OK).json({ data: `ok` });
+  const data = await pool.query(
+    `select pm.*,
+    json_agg(
+      json_build_object(
+        'attr_id', pd.attr_id,
+        'attr_db_value', pd.attr_db_value,
+        'attr_entry', pd.attr_entry
+      )
+    ) AS attr,
+    json_build_object(
+      'user_id', um.id,
+      'first_name', um.first_name,
+      'last_name', um.last_name
+    ) AS user,
+    cat.category, scat.category as scat
+    from master_posts pm
+    left join details_posts pd on pm.id = pd.post_id
+    left join master_users um on pm.user_id = um.id
+    left join master_categories cat on pm.cat_id = cat.id
+    left join master_categories scat on pm.subcat_id = scat.id
+    group by pm.id, um.id, cat.category, scat.category`
+  );
+
+  res.status(StatusCodes.OK).json({ data });
 };
