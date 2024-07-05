@@ -9,11 +9,11 @@ const UserSidebar = () => {
 
   return (
     <aside
-      className="navbar navbar-vertical navbar-expand-lg"
+      className="navbar ad-navbar-vertical ad-navbar-expand-lg"
       data-bs-theme="dark"
     >
       <div className="container-fluid">
-        <h1 className="navbar-brand navbar-brand-autodark">
+        <h1 className="navbar-brand ad-navbar-brand-autodark">
           <Link to={`/${currentUser.slug}/dashboard`}>
             <img
               src={logo}
@@ -22,14 +22,14 @@ const UserSidebar = () => {
             />
           </Link>
         </h1>
-        <div className="collapse navbar-collapse" id="sidebar-menu">
-          <ul className="navbar-nav pt-lg-3">
+        <div className="collapse ad-navbar-collapse" id="sidebar-menu">
+          <ul className="navbar-nav ad-pt-lg-3">
             <li className="nav-item">
               <NavLink
                 className="nav-link"
                 to={`/${currentUser.slug}/dashboard`}
               >
-                <span className="nav-link-icon d-md-none d-lg-inline-block">
+                <span className="nav-link-icon ad-d-md-none ad-d-lg-inline-block">
                   <AiOutlineHome size={18} />
                 </span>
                 <span className="nav-link-title">Home</span>
