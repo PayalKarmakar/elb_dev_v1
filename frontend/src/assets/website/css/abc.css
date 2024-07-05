@@ -2,8 +2,10 @@
 
 :root {
   /* --primary-color3: #5142fc; */
-  --primary-color3: #821f8b;
-  --lime-300: #821f8b;
+  --primary-color3: #561e87;
+  /* #821f8b; */
+  --lime-300: #561e87;
+  /* #821f8b; */
 }
 
 .pt-110 {
