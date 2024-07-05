@@ -124,12 +124,23 @@ const router = createBrowserRouter([
     errorElement: <Elb.Error />,
     loader: postlayoutLoader(store),
     children: [
-      { path: "create-post", element: <Elb.CreatePost />, handle: { crumb: <Link to="#">Dashboard</Link> }},
-    ]
-  }
+      {
+        path: "create-post",
+        element: <Elb.CreatePost />,
+        handle: { crumb: <Link to="#">Dashboard</Link> },
+      },
+    ],
+  },
 ]);
 
 function App() {
   return <RouterProvider router={router} />;
 }
 export default App;
+
+/* ---
+
+Layout / path /
+LayoutWebsite   LayoutAdmin
+index: true     path: admin
+*/
