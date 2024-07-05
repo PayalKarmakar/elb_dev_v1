@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useOutletContext } from "react-router-dom";
 import customFetch from "../../utils/customFetch";
 import { setListRoles } from "../../feature/masters/roleSlice";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../feature/masters/categorySlice";
 import { setAllBrands } from "../../feature/masters/brandSlice";
 import { setAllStates } from "../../feature/masters/locationSlice";
+import { AdminSidebar, Footer, Topnav } from "../../components";
 
 // Loader starts ------
 export const loader = (store) => async () => {
@@ -47,9 +48,14 @@ export const loader = (store) => async () => {
 
 // Main component starts ------
 const LayoutAdmin = () => {
+  const { logout } = useOutletContext();
+
   return (
     <>
+      <Topnav logout={logout} />
+      <AdminSidebar />
       <Outlet />
+      <Footer />
     </>
   );
 };
