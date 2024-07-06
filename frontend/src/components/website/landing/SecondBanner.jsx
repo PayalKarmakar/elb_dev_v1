@@ -1,5 +1,7 @@
 import React from "react";
-import banner2Img from "../../../assets/website/img/cta/cta-bg.png";
+import banner2Img from "../../../assets/website/img/common/banner_scnd.jpeg";
+import secBannerImg from "../../../assets/website/img/common/men-women.png";
+
 
 const SecondBanner = () => {
   return (
@@ -17,14 +19,14 @@ const SecondBanner = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
                 data-aos-easing="linear"
-              >
+              ><h2 className="cta-subtitle fw-bold fw-bold mb-4">
+                Discover the Power of Connection
+                </h2>
                 <h2 className="section-title-light fw-bold mb-4">
-                  Find the talent needed to get your business growing.
+               Where Lending Meets Borrowing
                 </h2>
                 <p className="text-white mb-5">
-                  There are many variations of passages of Lorem Ipsum
-                  available, but the majority have suffered alteration in some
-                  form, by injected humour.
+                Empower your future on our trusted platform. Seamless lending, smart borrowing – where financial success and opportunities unite
                 </p>
                 <a href="contact.html" className="cta-btn-link">
                   Get Started
@@ -49,7 +51,7 @@ const SecondBanner = () => {
             <div className="col-lg-6">
               <div>
                 <img
-                  src="assets/img/cta/men-women.png"
+                  src={secBannerImg}
                   className="cta-people position-absolute d-none d-lg-block"
                   alt=""
                 />
