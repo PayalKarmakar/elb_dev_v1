@@ -95,8 +95,8 @@ const router = createBrowserRouter([
             path: "posts",
             children: [
               { index: true, element: <Elb.PostList /> },
-              { path: "add", element: <Elb.PostAddEdit /> },
-              { path: "edit/:uuid", element: <Elb.PostAddEdit /> },
+              { path: "add", element: <Elb.PostAdd /> },
+              { path: "edit/:id", element: <Elb.PostEdit /> },
             ],
           },
         ],
