@@ -6,12 +6,13 @@ import {
   PaginationContainer,
   TableLoader,
 } from "../../../components";
-import { Form, Link, useParams } from "react-router-dom";
+import { Form, Link, useNavigate, useParams } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import { IoReloadSharp } from "react-icons/io5";
 import { nanoid } from "nanoid";
 import {
   dateFormatFancy,
+  encParam,
   serialNo,
   switchColor,
 } from "../../../utils/functions";
@@ -26,6 +27,7 @@ import postImg from "../../../assets/admin/static/login-bg.jpg";
 const PostList = () => {
   document.title = `List of All Posts | ${import.meta.env.VITE_APP_TITLE}`;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { listPosts } = useSelector((store) => store.posts);
   const [isLoading, setIsLoading] = useState(false);
   const { search } = useParams();
@@ -45,7 +47,6 @@ const PostList = () => {
       return error;
     }
   };
-  console.log(listPosts);
 
   const totalPages = 100;
   const currentPage = 1;
@@ -53,6 +54,13 @@ const PostList = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const editPost = (value) => {
+    localStorage.removeItem("post");
+    const post = listPosts?.find((po) => po.id === value);
+    localStorage.setItem("post", JSON.stringify(post));
+    navigate(`/admin/posts/edit/${encParam(value.toString())}`);
+  };
 
   return (
     <>
@@ -178,6 +186,7 @@ const PostList = () => {
                                   <button
                                     type="button"
                                     className="btn btn-yellow btn-sm me-2"
+                                    onClick={() => editPost(i.id)}
                                   >
                                     <MdModeEdit size={14} />
                                   </button>

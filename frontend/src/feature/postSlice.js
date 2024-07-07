@@ -22,9 +22,21 @@ const postSlice = createSlice({
     unsetListPosts: (state) => {
       state.listPosts = [];
     },
+    setEditPost: (state, action) => {
+      state.editId = action.payload;
+    },
+    unsetEditPost: (state) => {
+      state.editId = "";
+    },
   },
 });
 
-export const { setAllPosts, unsetAllPosts, setListPosts, unsetListPosts } =
-  postSlice.actions;
+export const {
+  setAllPosts,
+  unsetAllPosts,
+  setListPosts,
+  unsetListPosts,
+  setEditPost,
+  unsetEditPost,
+} = postSlice.actions;
 export default postSlice.reducer;
