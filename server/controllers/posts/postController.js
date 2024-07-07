@@ -65,9 +65,10 @@ export const addPost = async (req, res) => {
   } catch (error) {
     console.log(error);
     await pool.query(`ROLLBACK`);
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ data: `something went wrong!!` });
   }
-
-  res.status(StatusCodes.OK).json({ data: `ok` });
 };
 
 export const allPosts = async (req, res) => {

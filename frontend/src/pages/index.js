@@ -19,7 +19,8 @@ export { default as BrandModels } from "./admin/masters/BrandModels";
 export { default as Locations } from "./admin/masters/Locations";
 export { default as FormFields } from "./admin/formFields/FormFields";
 export { default as PostList } from "./admin/posts/PostList";
-export { default as PostAddEdit } from "./admin/posts/PostAddEdit";
+export { default as PostAdd } from "./admin/posts/PostAdd";
+export { default as PostEdit } from "./admin/posts/PostEdit";
 
 // Website pages ------
 export { default as LayoutWebsite } from "./website/LayoutWebsite";
@@ -28,4 +29,4 @@ export { default as WebsiteAbout } from "./website/WebsiteAbout";
 export { default as WebsiteSignUp } from "./admin/auth/Register";
 export { default as ProductList } from "./website/ProductList";
 export { default as LayoutUserPost } from "./website/user/LayoutUser";
-export { default as CreatePost } from "./website/user/post/CreatePost"
+export { default as CreatePost } from "./website/user/post/CreatePost";

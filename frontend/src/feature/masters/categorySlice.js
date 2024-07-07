@@ -27,6 +27,8 @@ export const getFormFields = createAsyncThunk(
         console.log(error);
         return [];
       }
+    } else {
+      return [];
     }
   }
 );
