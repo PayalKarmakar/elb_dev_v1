@@ -5,6 +5,7 @@ import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import SocialSvg from "./landing/SocialSvg";
+import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png"
 import loginImage from "../../assets/website/img/others/1.png";
 
 // Action function for form submission
@@ -61,7 +62,7 @@ export default function Login() {
 
   return (
     <>
-      <section className="w-breadcrumb-area">
+      <section className="w-breadcrumb-area" style={{backgroundImage:`url(${LoginBanner})`}}>
         <div className="container">
           <div className="row">
             <div className="col-auto">
@@ -91,10 +92,10 @@ export default function Login() {
         <div className="container">
           <div className="bg-white rounded-3 p-3">
             <div className="row g-4">
-              <div className="col-lg-6 p-3 p-lg-5">
+              <div className="col-lg-6 p-3 p-lg-5 offset-lg-3">
                 <div className="mb-40">
                   <h2 className="section-title mb-2">Log in</h2>
-                  <p className="section-desc">Welcome to Work Zone</p>
+                  <p className="section-desc">Welcome to Easy Lending Buddy</p>
                 </div>
                 <Form method="post" autoComplete="off">
                   <div className="form-container d-flex flex-column gap-4">
@@ -178,8 +179,8 @@ export default function Login() {
                   <SocialSvg type="Google" className="social-login-item" />
                 </div>
                 <div className="mt-4">
-                  <p className="text-center form-text">
-                    Don’t have an account? <Link to="/sign-up">Sign up</Link>
+                  <p className="text-center form-text signup-text">
+                    Don’t have an account? <Link to="/sign-up" className="">Sign up</Link>
                   </p>
                 </div>
               </div>
