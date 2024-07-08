@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivateUser,
   PageHeader,
@@ -6,25 +6,61 @@ import {
   PaginationContainer,
   TableLoader,
 } from "../../../components";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate, useParams } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import { IoReloadSharp } from "react-icons/io5";
 import { nanoid } from "nanoid";
 import {
   dateFormatFancy,
+  encParam,
   serialNo,
   switchColor,
 } from "../../../utils/functions";
 import { MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { splitErrors } from "../../../utils/showErrors";
+import customFetch from "../../../utils/customFetch";
+import { setListPosts } from "../../../feature/postSlice";
+import postImg from "../../../assets/admin/static/login-bg.jpg";
 
 const PostList = () => {
   document.title = `List of All Posts | ${import.meta.env.VITE_APP_TITLE}`;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { listPosts } = useSelector((store) => store.posts);
   const [isLoading, setIsLoading] = useState(false);
+  const { search } = useParams();
+  const queryParams = new URLSearchParams(search);
 
-  const listPosts = [];
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await customFetch.get(`/posts/posts`);
+
+      dispatch(setListPosts(response?.data?.data?.rows));
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      splitErrors(error?.response?.data?.msg);
+      return error;
+    }
+  };
+
   const totalPages = 100;
   const currentPage = 1;
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const editPost = (value) => {
+    localStorage.removeItem("post");
+    const post = listPosts?.find((po) => po.id === value);
+    localStorage.setItem("post", JSON.stringify(post));
+    navigate(`/admin/posts/edit/${encParam(value.toString())}`);
+  };
 
   return (
     <>
@@ -102,12 +138,12 @@ const PostList = () => {
                   <thead>
                     <tr>
                       <th className="bg-dark text-white">SL. NO.</th>
-                      <th className="bg-dark text-white">Role</th>
-                      <th className="bg-dark text-white">Name</th>
-                      <th className="bg-dark text-white">Email</th>
-                      <th className="bg-dark text-white">Mobile</th>
-                      <th className="bg-dark text-white">Status</th>
-                      <th className="bg-dark text-white">Joined</th>
+                      <th className="bg-dark text-white">(Image)</th>
+                      <th className="bg-dark text-white">Posted By</th>
+                      <th className="bg-dark text-white">Category</th>
+                      <th className="bg-dark text-white">Sub-category</th>
+                      <th className="bg-dark text-white">Title</th>
+                      <th className="bg-dark text-white">Created At</th>
                       <th className="bg-dark text-white"></th>
                     </tr>
                   </thead>
@@ -121,63 +157,47 @@ const PostList = () => {
                     ) : listPosts.length > 0 ? (
                       <>
                         {listPosts.map((i, index) => {
-                          const isActive = i?.is_active ? (
-                            <span className="badge bg-success-lt p-1">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="badge bg-danger-lt p-1">
-                              Inactive
-                            </span>
-                          );
-
                           return (
                             <tr key={nanoid()}>
                               <td>
                                 {serialNo(queryParams.get("page")) + index}.
                               </td>
                               <td>
-                                <span
-                                  key={nanoid()}
-                                  className={`badge bg-${switchColor(
-                                    i.role_id
-                                  )}-lt me-1 my-1 fs-6`}
-                                >
-                                  {i?.role?.toUpperCase()}
-                                </span>
+                                <img src={postImg} alt="" className="avatar" />
                               </td>
-                              <td>{`${i?.first_name?.toUpperCase()} ${i?.last_name?.toUpperCase()}`}</td>
-                              <td>{i?.email}</td>
-                              <td>{i?.mobile}</td>
-                              <td>{isActive}</td>
+                              <td>{`${i?.user?.first_name?.toUpperCase()} ${i?.user?.last_name?.toUpperCase()}`}</td>
+                              <td>{i?.category}</td>
+                              <td>{i?.scat}</td>
+                              <td>
+                                {i?.title?.length > 20
+                                  ? i?.title?.slice(0, 20) + ` ...`
+                                  : i?.title}
+                              </td>
                               <td>{dateFormatFancy(i.created_at)}</td>
                               <td className="text-nowrap">
-                                {i?.is_active ? (
-                                  <>
-                                    <button
-                                      type="button"
-                                      className="btn btn-primary btn-sm me-2"
-                                    >
-                                      <MdRemoveRedEye size={14} />
-                                    </button>
+                                <>
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary btn-sm me-2"
+                                  >
+                                    <MdRemoveRedEye size={14} />
+                                  </button>
 
-                                    <button
-                                      type="button"
-                                      className="btn btn-yellow btn-sm me-2"
-                                    >
-                                      <MdModeEdit size={14} />
-                                    </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-yellow btn-sm me-2"
+                                    onClick={() => editPost(i.id)}
+                                  >
+                                    <MdModeEdit size={14} />
+                                  </button>
 
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger btn-sm"
-                                    >
-                                      <FaRegTrashAlt size={14} />
-                                    </button>
-                                  </>
-                                ) : (
-                                  <ActivateUser id={i?.id} />
-                                )}
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger btn-sm"
+                                  >
+                                    <FaRegTrashAlt size={14} />
+                                  </button>
+                                </>
                               </td>
                             </tr>
                           );

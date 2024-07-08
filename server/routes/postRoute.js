@@ -4,11 +4,18 @@ import {
   validateDynamic,
   validatePostForm,
 } from "../middlewares/postMiddleware.js";
-import { addPost, allPosts } from "../controllers/posts/postController.js";
+import {
+  addPost,
+  allPosts,
+  updatePost,
+} from "../controllers/posts/postController.js";
 
 router
   .route(`/posts`)
   .post([validatePostForm, validateDynamic], addPost)
   .get(allPosts);
+router
+  .route(`/posts/:id`)
+  .patch([validatePostForm, validateDynamic], updatePost);
 
 export default router;

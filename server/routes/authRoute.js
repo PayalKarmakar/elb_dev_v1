@@ -30,6 +30,6 @@ router.post(`/reset-password`, validateResetPass, resetPassword);
 router.get(`/current-user`, protectRoute, currentUser);
 router.get(`/restrict/:slug`, mindUrOwnPage, restrict);
 router.get(`/access/:path`, checkAccess, access);
-router.post(`/change-password`, changePassword);
+router.post(`/change-password`, validateChangePass, changePassword);
 
 export default router;

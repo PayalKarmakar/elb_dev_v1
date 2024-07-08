@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  PageHeader,
-  PageWrapper,
-  PostRadio,
-  PostText,
-} from "../../../components";
-import { Link } from "react-router-dom";
+import { PageHeader, PageWrapper } from "../../../components";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import {
@@ -14,40 +9,98 @@ import {
 } from "../../../feature/masters/categorySlice";
 import { splitErrors } from "../../../utils/showErrors";
 import customFetch from "../../../utils/customFetch";
+import { decParam } from "../../../utils/functions";
 
-const PostAddEdit = () => {
-  document.title = `Add New Post | ${import.meta.env.VITE_APP_TITLE}`;
+const getLocalData = () => {
+  const info = localStorage.getItem("post");
+  return JSON.parse(info);
+};
+
+const PostEdit = () => {
+  document.title = `Edit Details of ${getLocalData().title} | ${
+    import.meta.env.VITE_APP_TITLE
+  }`;
+
+  // ------
   const dispatch = useDispatch();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const postId = id && decParam(id);
 
-  const [dbFields, setDbFields] = useState([]);
-  const [dbData, setDbData] = useState({});
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [form, setForm] = useState({ title: "", description: "", price: "" });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
+  // Store ------
   const { allCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
   );
 
-  const parents = allCategories?.filter((i) => !i.parent_id);
+  // States ------
+  const [localData, setLocalData] = useState(postId ? getLocalData() : {});
+  const [selectedCategory, setSelectedCategory] = useState(
+    localData ? localData.cat_id : ""
+  );
+  const [selectedSubCategory, setSelectedSubCategory] = useState(
+    localData ? localData.subcat_id : ""
+  );
+  const [form, setForm] = useState({
+    title: localData ? localData.title : "",
+    description: localData ? localData?.description : "",
+    price: localData ? localData.price : "",
+  });
+
+  const [dynamicFields, setDynamicFields] = useState([]);
+  const [dynamicData, setDynamicData] = useState({});
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle on change ------
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const onCategoryChange = (value) => {
-    setSelectedCategory(value);
-    dispatch(getChildCategory(Number(value)));
+    const newCat = +value || localData.cat_id;
+    setSelectedCategory(newCat);
+    dispatch(getChildCategory(newCat));
   };
 
   const onSubCategoryChange = (value) => {
-    setSelectedSubCategory(value);
-    dispatch(getFormFields(+value));
+    const newSubCat = +value || localData.subcat_id;
+    setSelectedSubCategory(newSubCat);
+    dispatch(getFormFields(newSubCat));
   };
 
+  const parents = allCategories?.filter((i) => !i.parent_id);
+
+  // UseEffect ------
+  useEffect(() => {
+    dispatch(getChildCategory(selectedCategory));
+
+    const dbFormFields = async () => {
+      try {
+        const response = await customFetch.get(
+          `/masters/form-fields-with-options/${
+            selectedSubCategory || localData.subcat_id
+          }`
+        );
+        setDynamicFields(response?.data?.data?.rows || []);
+      } catch (error) {
+        splitErrors(error?.response?.data?.msg);
+        console.log(error);
+      }
+    };
+    dbFormFields();
+
+    const dbData = localData?.attr?.map((data) => {
+      return { [data.attr_id]: data.attr_db_value || data.attr_entry };
+    });
+
+    setDynamicData(dbData);
+  }, [formFields]);
+
+  const handleDbChange = (e) => {
+    setDynamicData({ ...dynamicData, [e.target.name]: e.target.value });
+  };
+
+  // Form Submit ------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -63,6 +116,11 @@ const PostAddEdit = () => {
     }
   };
 
+  const removeLocalPost = () => {
+    localStorage.removeItem("post");
+    navigate(`../`);
+  };
+
   return (
     <>
       <div className="page-header d-print-none">
@@ -72,12 +130,13 @@ const PostAddEdit = () => {
             <div className="col-auto ms-auto d-print-none">
               <div className="btn-list">
                 <span className="d-none d-sm-inline">
-                  <Link
+                  <button
+                    type="button"
                     className="btn btn-success d-none d-sm-inline-block me-2"
-                    to={`../`}
+                    onClick={removeLocalPost}
                   >
                     Back to list
-                  </Link>
+                  </button>
                 </span>
               </div>
             </div>
@@ -178,16 +237,16 @@ const PostAddEdit = () => {
                     className="form-control"
                     name="description"
                     id="description"
-                    value={form.description}
+                    value={form.description || ""}
                     onChange={handleChange}
                   ></textarea>
                 </div>
               </div>
 
               {selectedSubCategory &&
-                formFields?.map((i) => {
+                dynamicFields?.map((i, index) => {
                   return (
-                    <div className="row row-cards" key={nanoid()}>
+                    <div className="row row-cards" key={i.id}>
                       <div className="col-md-6">
                         <label
                           className={`form-label ${
@@ -199,11 +258,41 @@ const PostAddEdit = () => {
                         </label>
                         {(i.field_type === "text" ||
                           i.field_type === "number") && (
-                          <PostText name={i.field_name} type={i.field_type} />
+                          <input
+                            type={i.field_type}
+                            className="form-control"
+                            name={i.id}
+                            id={i.id}
+                            value={dynamicData[i.id] || ""}
+                            onChange={handleDbChange}
+                          />
                         )}
 
                         {i.field_type === "radio" && (
-                          <PostRadio name={i.field_name} options={i.options} />
+                          <div>
+                            {i.options.map((option) => {
+                              const { option_id, option_value } = option;
+
+                              return (
+                                <label
+                                  key={option_id}
+                                  className="form-check form-check-inline"
+                                >
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name={i.field_name}
+                                    value={option_id}
+                                    checked={dynamicData[i.id] || ""}
+                                    onChange={handleDbChange}
+                                  />
+                                  <span className="form-check-label">
+                                    {option_value}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -212,7 +301,7 @@ const PostAddEdit = () => {
             </div>
             <div className="card-footer">
               <button type="submit" className="btn btn-success">
-                Submit
+                Save changes
               </button>
               <button type="button" className="btn btn-secondary ms-3">
                 Reset
@@ -225,4 +314,4 @@ const PostAddEdit = () => {
   );
 };
 
-export default PostAddEdit;
+export default PostEdit;
