@@ -38,7 +38,7 @@ const LayoutWebsite = () => {
   const currentUser = useSelector((state) => state.currentUser);
   return (
     <>
-      {!currentUser.currentUser.uuid ? <WbTopnav /> : ""}
+      <WbTopnav />
       <WbSecondNav />
       <main>
         <Outlet />

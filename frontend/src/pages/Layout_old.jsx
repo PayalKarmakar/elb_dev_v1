@@ -64,7 +64,26 @@ const Layout = () => {
 
   return (
     <>
-      <Outlet context={{ logout }} />
+      {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
+        <>
+          {/* <Topnav logout={logout} /> */}
+          {/* <AdminSidebar /> */}
+        </>
+      ) : (
+        <>
+          <WbTopnav logout={logout} />
+          {/* <UserSidebar /> */}
+        </>
+      )}
+      <div className="page-wrapper">
+        <Outlet context={{ logout }} />
+        {currentUser.role_id === 1 || currentUser.role_id === 2 ? (
+          // <Footer />
+          <></>
+        ) : (
+          <WbFooter />
+        )}
+      </div>
     </>
   );
 };

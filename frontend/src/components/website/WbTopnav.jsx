@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import UserProfile from "./UserProfile";
 import { MdOutlineSell } from "react-icons/md";
 //return redirect(`${path}`);
-const WbTopnav = ({ logout }) => {
+const WbTopnav = () => {
   const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = () => {
@@ -23,6 +23,7 @@ const WbTopnav = ({ logout }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const currentUser = useSelector((state) => state.currentUser);
   return (
     <header className={`header-primary ${isSticky ? "sticky" : ""}`}>
@@ -54,7 +55,7 @@ const WbTopnav = ({ logout }) => {
                 </button>
               )}
             </div>
-            {currentUser.currentUser.uuid && <UserProfile logout={logout} />}
+            {currentUser.currentUser.uuid && <UserProfile />}
 
             <Themeswitch />
 
