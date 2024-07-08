@@ -7,6 +7,9 @@ import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 import SocialSvg from "./landing/SocialSvg";
 import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png";
 import loginImage from "../../assets/website/img/others/1.png";
+import WbTopnav from "./WbTopnav";
+import WbSecondNav from "./WbSecondNav";
+import WbFooter from "./WbFooter";
 
 // Action function for form submission
 export const action = async ({ request }) => {

@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import profilepic from "../../assets/website/img/dashboard/heade-av.png";
 import { useSelector } from "react-redux";
 
-function UserProfile({ logout }) {
+function UserProfile() {
   const currentUser = useSelector((state) => state.currentUser);
+  const { logout } = useOutletContext();
 
   return (
     <div className="dashboard-header-btns d-flex gap-3">
