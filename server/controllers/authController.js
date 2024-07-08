@@ -199,23 +199,33 @@ export const resetPassword = async (req, res) => {
 };
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword, confirmPassword, uuid } = req.body;
-  console.log(
-    `---${currentPassword}---${newPassword}---${confirmPassword} ----${uuid}`
-  );
-  const currentPassword_data = await hashPassword(currentPassword);
-  console.log(currentPassword_data);
-  const getpasswordq = `SELECT id, password from master_users where uuid='1${uuid}'`;
+  const getpasswordq = `SELECT id, password from master_users where uuid='${uuid}'`;
+  let data_found = 0;
   try {
     await pool.query(`BEGIN`);
     const getpassword = await pool.query(getpasswordq);
-    console.log(getpassword.rowCount);
-    if (Number(getpassword.rowCount) === 0) {
-      throw new BadRequestError(`Incorrect username`);
+    data_found = getpassword.rowCount;
+    const checkPass = await checkPassword(
+      currentPassword,
+      getpassword.rows[0].password
+    );
+    console.table([checkPass, data_found]);
+    if (Number(data_found) > 0 && checkPass == true) {
+      const updatePass = await hashPassword(newPassword);
+      console.log(
+        `update master_users set password='${updatePass}' where uuid=${uuid}`
+      );
+      const result = await pool.query(
+        `update master_users set password='${updatePass}' where uuid='${uuid}'`
+      );
+      res.status(StatusCodes.ACCEPTED).json({ data: "password Changed" });
+    } else {
+      res.status(StatusCodes.BAD_REQUEST).json({ data: "wrong Password" });
     }
-
     await pool.query(`COMMIT`);
   } catch (error) {
     await pool.query(`ROLLBACK`);
+
     res.status(StatusCodes.BAD_REQUEST).json({ data: `failed` });
   }
 };

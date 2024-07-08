@@ -3,9 +3,9 @@ import { Form, Link, redirect, useNavigation } from "react-router-dom";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 import SocialSvg from "./landing/SocialSvg";
-import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png"
+import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png";
 import loginImage from "../../assets/website/img/others/1.png";
 
 // Action function for form submission
@@ -49,7 +49,7 @@ export default function Login() {
   document.title = `Login | ${import.meta.env.VITE_APP_TITLE}`;
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
-  const [textType, setTextType] = useState("password");
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
@@ -57,12 +57,15 @@ export default function Login() {
   };
 
   const togglePasswordVisibility = () => {
-    setTextType((prevType) => (prevType === "password" ? "text" : "password"));
+    setShowPassword((prevShow) => !prevShow);
   };
 
   return (
     <>
-      <section className="w-breadcrumb-area" style={{backgroundImage:`url(${LoginBanner})`}}>
+      <section
+        className="w-breadcrumb-area"
+        style={{ backgroundImage: `url(${LoginBanner})` }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-auto">
@@ -118,7 +121,7 @@ export default function Login() {
                       </label>
                       <div className="input-group">
                         <input
-                          type={textType}
+                          type={showPassword ? "text" : "password"}
                           name="password"
                           value={form.password}
                           onChange={handleChange}
@@ -129,10 +132,17 @@ export default function Login() {
                           className="input-group-text cursor-pointer"
                           onClick={togglePasswordVisibility}
                         >
-                          <MdOutlineRemoveRedEye
-                            className="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
+                          {showPassword ? (
+                            <MdOutlineRemoveRedEye
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <MdOutlineVisibilityOff
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                          )}
                         </span>
                       </div>
                     </div>
@@ -174,13 +184,14 @@ export default function Login() {
                   </div>
                 </div>
                 <div className="d-flex gap-3 justify-content-center align-items-center social-login">
+                  {/* Replace with your SocialSvg component */}
                   <SocialSvg type="LinkedIn" className="social-login-item" />
                   <SocialSvg type="Twitter" className="social-login-item" />
                   <SocialSvg type="Google" className="social-login-item" />
                 </div>
                 <div className="mt-4">
                   <p className="text-center form-text signup-text">
-                    Don’t have an account? <Link to="/sign-up" className="">Sign up</Link>
+                    Don’t have an account? <Link to="/sign-up">Sign up</Link>
                   </p>
                 </div>
               </div>
