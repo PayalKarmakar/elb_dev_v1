@@ -14,17 +14,14 @@ const FirstBanner = () => {
                 data-aos-duration="1000"
                 data-aos-easing="linear"
               >
-                <p className="cta-subtitle fw-bold mb-2">Explore New Life</p>
+                <p className="cta-subtitle fw-bold mb-2">Transform your goals into achievements. </p>
                 <h2 className="section-title-light fw-bold mb-4">
-                  Don’t just find. Be found put your CV in front of great
-                  employers
+                Seamless lending and borrowing – your gateway to financial freedom!
                 </h2>
                 <p className="section-desc-light mb-40">
-                  There are many variations of passages of Lorem Ipsum
-                  available, but the majority have suffered alteration in some
-                  form, by injected humour, or randomised words.
+                Join our revolutionizing platform to connect lenders and borrowers. Achieve financial freedom and turn visions into reality!
                 </p>
-                <a href="buyer-dashboard.html" className="cta-btn-link">
+                {/* <a href="buyer-dashboard.html" className="cta-btn-link">
                   Job Post Now
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +38,7 @@ const FirstBanner = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
+                </a> */}
               </div>
               <div className="cta-counter mt-5">
                 <div className="cta-counter-item">

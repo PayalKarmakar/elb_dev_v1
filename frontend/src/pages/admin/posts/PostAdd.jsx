@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  PageHeader,
-  PageWrapper,
-  PostRadio,
-  PostText,
-} from "../../../components";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { PageHeader, PageWrapper } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import {
@@ -14,23 +8,31 @@ import {
 } from "../../../feature/masters/categorySlice";
 import { splitErrors } from "../../../utils/showErrors";
 import customFetch from "../../../utils/customFetch";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const PostAddEdit = () => {
+// Main component starts ------
+const PostAdd = () => {
   document.title = `Add New Post | ${import.meta.env.VITE_APP_TITLE}`;
   const dispatch = useDispatch();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [form, setForm] = useState({ title: "", description: "" });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const navigate = useNavigate();
 
   const { allCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
   );
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [form, setForm] = useState({ title: "", description: "", price: "" });
+
+  const [dynamicFields, setDynamicFields] = useState([]);
+  const [dynamicData, setDynamicData] = useState({});
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const parents = allCategories?.filter((i) => !i.parent_id);
 
@@ -43,7 +45,14 @@ const PostAddEdit = () => {
     setSelectedSubCategory(value);
     dispatch(getFormFields(+value));
   };
-  console.log(formFields);
+
+  useEffect(() => {
+    setDynamicFields(formFields || []);
+  }, [formFields]);
+
+  const handleDbChange = (e) => {
+    setDynamicData({ ...dynamicData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,13 +60,21 @@ const PostAddEdit = () => {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
     try {
-      const response = await customFetch.post(`/posts/posts`, data);
+      await customFetch.post(`/posts/posts`, data);
+
+      toast.success(`Post added`);
+      navigate(`/admin/posts`);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       splitErrors(error?.response?.data?.msg);
       return error;
     }
+  };
+
+  const removeLocalPost = () => {
+    localStorage.removeItem("post");
+    navigate(`../`);
   };
 
   return (
@@ -69,12 +86,13 @@ const PostAddEdit = () => {
             <div className="col-auto ms-auto d-print-none">
               <div className="btn-list">
                 <span className="d-none d-sm-inline">
-                  <Link
+                  <button
+                    type="button"
                     className="btn btn-success d-none d-sm-inline-block me-2"
-                    to={`../`}
+                    onClick={removeLocalPost}
                   >
                     Back to list
-                  </Link>
+                  </button>
                 </span>
               </div>
             </div>
@@ -153,42 +171,87 @@ const PostAddEdit = () => {
 
                 <div className="col-md-6">
                   <label className="form-label required" htmlFor="category">
+                    Price
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="price"
+                    id="price"
+                    value={form.price}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="row row-cards">
+                <div className="col-md-6">
+                  <label className="form-label required" htmlFor="category">
                     A brief description would help the buyer
                   </label>
                   <textarea
                     className="form-control"
                     name="description"
                     id="description"
-                    value={form.description}
+                    value={form.description || ""}
                     onChange={handleChange}
                   ></textarea>
                 </div>
               </div>
 
-              {formFields?.map((i) => {
-                return (
-                  <div className="row row-cards" key={nanoid()}>
-                    <div className="col-md-6">
-                      <label
-                        className={`form-label ${
-                          i.is_required ? "required" : ""
-                        }`}
-                        htmlFor="category"
-                      >
-                        {i.field_label}
-                      </label>
-                      {(i.field_type === "text" ||
-                        i.field_type === "number") && (
-                        <PostText name={i.field_name} type={i.field_type} />
-                      )}
+              {selectedSubCategory &&
+                dynamicFields?.map((i) => {
+                  return (
+                    <div className="row row-cards" key={i.field_name}>
+                      <div className="col-md-6">
+                        <label
+                          className={`form-label ${
+                            i.is_required ? "required" : ""
+                          }`}
+                          htmlFor="category"
+                        >
+                          {i.field_label}
+                        </label>
+                        {(i.field_type === "text" ||
+                          i.field_type === "number") && (
+                          <input
+                            type={i.field_type}
+                            className="form-control"
+                            name={i.field_name}
+                            id={i.field_name}
+                            value={dynamicData[i.field_name] || ""}
+                            onChange={handleDbChange}
+                          />
+                        )}
 
-                      {i.field_type === "radio" && (
-                        <PostRadio name={i.field_name} options={i.options} />
-                      )}
+                        {i.field_type === "radio" && (
+                          <div>
+                            {i.options.map((option) => {
+                              const { option_id, option_value } = option;
+
+                              return (
+                                <label
+                                  key={option_id}
+                                  className="form-check form-check-inline"
+                                >
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name={i.field_name}
+                                    value={option_id}
+                                  />
+                                  <span className="form-check-label">
+                                    {option_value}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
             <div className="card-footer">
               <button type="submit" className="btn btn-success">
@@ -205,4 +268,4 @@ const PostAddEdit = () => {
   );
 };
 
-export default PostAddEdit;
+export default PostAdd;

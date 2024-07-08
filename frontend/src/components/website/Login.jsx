@@ -3,8 +3,9 @@ import { Form, Link, redirect, useNavigation } from "react-router-dom";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 import SocialSvg from "./landing/SocialSvg";
+import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png";
 import loginImage from "../../assets/website/img/others/1.png";
 
 // Action function for form submission
@@ -48,7 +49,7 @@ export default function Login() {
   document.title = `Login | ${import.meta.env.VITE_APP_TITLE}`;
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
-  const [textType, setTextType] = useState("password");
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
@@ -56,12 +57,15 @@ export default function Login() {
   };
 
   const togglePasswordVisibility = () => {
-    setTextType((prevType) => (prevType === "password" ? "text" : "password"));
+    setShowPassword((prevShow) => !prevShow);
   };
 
   return (
     <>
-      <section className="w-breadcrumb-area">
+      <section
+        className="w-breadcrumb-area"
+        style={{ backgroundImage: `url(${LoginBanner})` }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-auto">
@@ -91,10 +95,10 @@ export default function Login() {
         <div className="container">
           <div className="bg-white rounded-3 p-3">
             <div className="row g-4">
-              <div className="col-lg-6 p-3 p-lg-5">
+              <div className="col-lg-6 p-3 p-lg-5 offset-lg-3">
                 <div className="mb-40">
                   <h2 className="section-title mb-2">Log in</h2>
-                  <p className="section-desc">Welcome to Work Zone</p>
+                  <p className="section-desc">Welcome to Easy Lending Buddy</p>
                 </div>
                 <Form method="post" autoComplete="off">
                   <div className="form-container d-flex flex-column gap-4">
@@ -117,7 +121,7 @@ export default function Login() {
                       </label>
                       <div className="input-group">
                         <input
-                          type={textType}
+                          type={showPassword ? "text" : "password"}
                           name="password"
                           value={form.password}
                           onChange={handleChange}
@@ -128,10 +132,17 @@ export default function Login() {
                           className="input-group-text cursor-pointer"
                           onClick={togglePasswordVisibility}
                         >
-                          <MdOutlineRemoveRedEye
-                            className="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
+                          {showPassword ? (
+                            <MdOutlineRemoveRedEye
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <MdOutlineVisibilityOff
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                          )}
                         </span>
                       </div>
                     </div>
@@ -173,12 +184,13 @@ export default function Login() {
                   </div>
                 </div>
                 <div className="d-flex gap-3 justify-content-center align-items-center social-login">
+                  {/* Replace with your SocialSvg component */}
                   <SocialSvg type="LinkedIn" className="social-login-item" />
                   <SocialSvg type="Twitter" className="social-login-item" />
                   <SocialSvg type="Google" className="social-login-item" />
                 </div>
                 <div className="mt-4">
-                  <p className="text-center form-text">
+                  <p className="text-center form-text signup-text">
                     Don’t have an account? <Link to="/sign-up">Sign up</Link>
                   </p>
                 </div>

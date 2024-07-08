@@ -21,12 +21,17 @@ const WbHeroSection = () => {
                 data-aos-duration="1000"
                 data-aos-easing="linear"
               >
-                Find Your Perfect
-                <span className="highlighted-text"> Freelancer </span>
-                Quick and Easy
+                Empowering Possibilities :
+                <span className="highlighted-text"> Lend </span>
+                with Trust,
+                <span className="highlighted-text"> Borrow </span>
+                with Ease!
               </h1>
-              {/* <div className="pt-5">
-                <form>
+              {/* 
+              Together We Thrive: Secure Lending, Smart Borrowing 
+              Empowering Possibilities: Lend with Trust, Borrow with Ease!
+              Your Trusted Platform for Lending and Borrowing!<div className="pt-5">
+                <form>Your Trusted Platform for Lending and Borrowing!
                   <div className="hero-form-wrapper bg-white d-flex position-relative">
                     <div>
                       <select className="form-select shadow-none">
@@ -50,7 +55,7 @@ const WbHeroSection = () => {
                 </form>
               </div> */}
               <div className="mt-60 d-flex flex-column flex-sm-row flex-wrap gap-4 align-items-center">
-                <div className="d-flex gap-3 align-items-center">
+                {/* <div className="d-flex gap-3 align-items-center">
                   <div className="hero-group-img-wrapper">
                     <img src={gp1} className="hero-group-img" alt="" />
                     <img src={gp2} className="hero-group-img" alt="" />
@@ -62,8 +67,8 @@ const WbHeroSection = () => {
                     </h3>
                     <p className="text-white">Happy Customers</p>
                   </div>
-                </div>
-                <div className="hero-rating">
+                </div> */}
+                {/* <div className="hero-rating">
                   <h3 className="text-white hero-counter-title fw-bold">4.9</h3>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +99,7 @@ const WbHeroSection = () => {
                       fill="white"
                     />
                   </svg>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

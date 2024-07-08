@@ -218,10 +218,10 @@ export const validateChangePass = withValidationErrors([
   body("confirmPassword")
     .notEmpty()
     .withMessage(`Re-enter password`)
-    .bail()
+    // .bail()
     .custom((value, { req }) => {
-      const { password } = req.body;
-      if (value !== password) {
+      const { newPassword } = req.body;
+      if (value !== newPassword) {
         throw new BadRequestError(`Passwords do not match`);
       }
       return true;

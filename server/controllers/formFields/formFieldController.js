@@ -3,6 +3,7 @@ import pool from "../../db.js";
 import dayjs from "dayjs";
 import slug from "slug";
 import { paginationLogic, removeSpecialChars } from "../../utils/functions.js";
+import { BadRequestError } from "../../errors/customErrors.js";
 
 // ------
 export const pageFormFields = async (req, res) => {
@@ -59,49 +60,58 @@ export const addFormField = async (req, res) => {
   });
   ffName = ffName + `_${ffCatId}`;
 
-  try {
-    await pool.query(`BEGIN`);
+  const checkName = await pool.query(
+    `select count(*) from master_form_fields where field_name=$1`,
+    [ffName]
+  );
 
-    const data = await pool.query(
-      `insert into master_form_fields(cat_id, field_label, field_type, is_required, created_at, updated_at, field_name) values($1, $2, $3, $4, $5, $6, $7) returning id`,
-      [
-        ffCatId,
-        ffLabel.trim(),
-        ffType.toLowerCase(),
-        isRequired,
-        timeStamp,
-        timeStamp,
-        ffName,
-      ]
-    );
+  if (+checkName.rows[0].count > 0) {
+    throw new BadRequestError(`Field exists`);
+  } else {
+    try {
+      await pool.query(`BEGIN`);
 
-    if (fieldOptions[0]) {
-      await pool.query(`delete from master_form_field_options where id=$1`, [
-        data.rows[0].id,
-      ]);
+      const data = await pool.query(
+        `insert into master_form_fields(cat_id, field_label, field_type, is_required, created_at, updated_at, field_name) values($1, $2, $3, $4, $5, $6, $7) returning id`,
+        [
+          ffCatId,
+          ffLabel.trim(),
+          ffType.toLowerCase(),
+          isRequired,
+          timeStamp,
+          timeStamp,
+          ffName,
+        ]
+      );
 
-      for (const option of fieldOptions) {
-        const optionSlug = slug(option.value);
+      if (fieldOptions[0]) {
+        await pool.query(`delete from master_form_field_options where id=$1`, [
+          data.rows[0].id,
+        ]);
 
-        await pool.query(
-          `insert into master_form_field_options(field_id, option_value, slug, created_at, updated_at) values($1, $2, $3, $4, $5)`,
-          [
-            data.rows[0].id,
-            option.value.trim(),
-            optionSlug,
-            timeStamp,
-            timeStamp,
-          ]
-        );
+        for (const option of fieldOptions) {
+          const optionSlug = slug(option.value);
+
+          await pool.query(
+            `insert into master_form_field_options(field_id, option_value, slug, created_at, updated_at) values($1, $2, $3, $4, $5)`,
+            [
+              data.rows[0].id,
+              option.value.trim(),
+              optionSlug,
+              timeStamp,
+              timeStamp,
+            ]
+          );
+        }
       }
+
+      await pool.query(`COMMIT`);
+
+      res.status(StatusCodes.CREATED).json({ data: `success` });
+    } catch (error) {
+      await pool.query(`ROLLBACK`);
+      console.log(error);
     }
-
-    await pool.query(`COMMIT`);
-
-    res.status(StatusCodes.CREATED).json({ data: `success` });
-  } catch (error) {
-    await pool.query(`ROLLBACK`);
-    console.log(error);
   }
 };
 
@@ -119,44 +129,53 @@ export const updateFormField = async (req, res) => {
   });
   ffName = ffName + `_${ffCatId}`;
 
-  try {
-    await pool.query(`BEGIN`);
+  const checkName = await pool.query(
+    `select count(*) from master_form_fields where field_name=$1 and id!=$2`,
+    [ffName, id]
+  );
 
-    const data = await pool.query(
-      `update master_form_fields set cat_id=$1, field_label=$2, field_type=$3, is_required=$4, updated_at=$5, field_name=$7 where id=$6`,
-      [
-        ffCatId,
-        ffLabel.trim(),
-        ffType.toLowerCase(),
-        isRequired,
-        timeStamp,
-        id,
-        ffName,
-      ]
-    );
+  if (+checkName.rows[0].count > 0) {
+    throw new BadRequestError(`Field exists`);
+  } else {
+    try {
+      await pool.query(`BEGIN`);
 
-    if (fieldOptions[0]) {
-      await pool.query(
-        `delete from master_form_field_options where field_id=$1`,
-        [id]
+      const data = await pool.query(
+        `update master_form_fields set cat_id=$1, field_label=$2, field_type=$3, is_required=$4, updated_at=$5, field_name=$7 where id=$6`,
+        [
+          ffCatId,
+          ffLabel.trim(),
+          ffType.toLowerCase(),
+          isRequired,
+          timeStamp,
+          id,
+          ffName,
+        ]
       );
 
-      for (const option of fieldOptions) {
-        const optionSlug = slug(option.value);
-
+      if (fieldOptions[0]) {
         await pool.query(
-          `insert into master_form_field_options(field_id, option_value, slug, created_at, updated_at) values($1, $2, $3, $4, $5)`,
-          [id, option.value.trim(), optionSlug, timeStamp, timeStamp]
+          `delete from master_form_field_options where field_id=$1`,
+          [id]
         );
+
+        for (const option of fieldOptions) {
+          const optionSlug = slug(option.value);
+
+          await pool.query(
+            `insert into master_form_field_options(field_id, option_value, slug, created_at, updated_at) values($1, $2, $3, $4, $5)`,
+            [id, option.value.trim(), optionSlug, timeStamp, timeStamp]
+          );
+        }
       }
+
+      await pool.query(`COMMIT`);
+
+      res.status(StatusCodes.CREATED).json({ data: `success` });
+    } catch (error) {
+      await pool.query(`ROLLBACK`);
+      console.log(error);
     }
-
-    await pool.query(`COMMIT`);
-
-    res.status(StatusCodes.CREATED).json({ data: `success` });
-  } catch (error) {
-    await pool.query(`ROLLBACK`);
-    console.log(error);
   }
 };
 
