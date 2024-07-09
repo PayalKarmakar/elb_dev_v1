@@ -15,14 +15,6 @@ import {
 } from "../feature/currentUserSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  AdminSidebar,
-  UserSidebar,
-  Topnav,
-  Footer,
-  WbTopnav,
-} from "../components";
-import WbFooter from "../components/website/WbFooter.jsx";
 
 // Loader starts ------
 export const loader = (store) => async () => {

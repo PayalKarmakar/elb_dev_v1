@@ -12,7 +12,6 @@ import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
 import { setGetCategories } from "../../feature/masters/categorySlice";
-import { useSelector } from "react-redux";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
@@ -34,14 +33,29 @@ export const loader = (store) => async () => {
   }
 };
 
+const logoutWebsite = async () => {
+  try {
+    await customFetch.get(`/auth/logout`);
+
+    dispatch(unsetCurrentUser());
+    localStorage.removeItem("token");
+
+    toast.success(`Thank you for visiting`);
+
+    navigate(`/`);
+  } catch (error) {
+    splitErrors(error?.response?.data?.msg);
+    return error;
+  }
+};
+
 const LayoutWebsite = () => {
-  const currentUser = useSelector((state) => state.currentUser);
   return (
     <>
       <WbTopnav />
       <WbSecondNav />
       <main>
-        <Outlet />
+        <Outlet context={{ logoutWebsite }} />
       </main>
       <WbFooter />
     </>

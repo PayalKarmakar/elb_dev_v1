@@ -17,8 +17,6 @@ const WbSecondNav = () => {
   };
 
   const { listCategories } = useSelector((store) => store.categories);
-  console.log("first");
-  console.log(listCategories);
 
   return (
     <div className="d-none d-xl-block secondary-nav-wrapper">

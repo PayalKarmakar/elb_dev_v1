@@ -11,14 +11,11 @@ export const Changepassaction = async ({ request }) => {
   let data = Object.fromEntries(formData);
   try {
     const response = await customFetch.post(`/auth/change-password`, data);
-    console.log(response?.data?.data?.rows);
 
     toast.success(`Password Changed `);
     request.preventDefault();
   } catch (error) {
     splitErrors(error?.response?.data?.data);
-    splitErrors(error?.response?.data?.msg);
-    //  console.log(error?.response?.data?.msg);
     return error;
   }
 };

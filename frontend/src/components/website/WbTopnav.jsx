@@ -8,6 +8,7 @@ import Themeswitch from "./Themeswtich";
 import { useSelector } from "react-redux";
 import UserProfile from "./UserProfile";
 import { MdOutlineSell } from "react-icons/md";
+
 //return redirect(`${path}`);
 const WbTopnav = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -33,7 +34,7 @@ const WbTopnav = () => {
           <TopSearch />
           <div className="navbar-right d-flex align-items-center gap-4">
             <div className="align-items-center d-none d-lg-flex">
-              {!currentUser.currentUser.uuid ? (
+              {!currentUser.uuid ? (
                 <Link
                   to="/sign-in"
                   className="w-btn-secondary-lg text-decoration-none"
@@ -55,7 +56,7 @@ const WbTopnav = () => {
                 </button>
               )}
             </div>
-            {currentUser.currentUser.uuid && <UserProfile />}
+            {currentUser.uuid && <UserProfile />}
 
             <Themeswitch />
 

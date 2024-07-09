@@ -3,8 +3,8 @@ import profilepic from "../../assets/website/img/dashboard/heade-av.png";
 import { useSelector } from "react-redux";
 
 function UserProfile() {
-  const currentUser = useSelector((state) => state.currentUser);
-  const { logout } = useOutletContext();
+  const { currentUser } = useSelector((state) => state.currentUser);
+  const { logoutWebsite } = useOutletContext();
 
   return (
     <div className="dashboard-header-btns d-flex gap-3">
@@ -45,7 +45,7 @@ function UserProfile() {
         </button>
         <ul className="dashboard-profile dropdown-menu">
           <li style={{ fontWeight: "bold" }}>
-            {`${currentUser.currentUser.first_name} ${currentUser.currentUser.last_name}`.toUpperCase()}
+            {`${currentUser.first_name} ${currentUser.last_name}`.toUpperCase()}
           </li>
 
           <li>
@@ -117,7 +117,7 @@ function UserProfile() {
           <li>
             <a
               className="dashboard-profile-item dropdown-item d-flex gap-2"
-              onClick={logout}
+              onClick={logoutWebsite}
             >
               <svg
                 width="20"
