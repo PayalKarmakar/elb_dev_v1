@@ -17,7 +17,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CategoryModal = ({ show, handleClose }) => {
   const { listCategories } = useSelector((store) => store.categories);
-  // console.log(listCategories);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
