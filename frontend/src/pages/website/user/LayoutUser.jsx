@@ -7,6 +7,9 @@ import { setAllCategories, setParentCategories } from "../../../feature/masters/
 import { setCurrentUser } from "../../../feature/currentUserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { splitErrors } from "../../../utils/showErrors";
+import Sidebar from "../../../components/website/user/UserSidebar";
+import UserHeader from "../../../components/website/user/UserHeader";
+import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
 
 
 
@@ -44,7 +47,32 @@ export const loader = (store) => async () => {
 const LayoutUser = () => {
   return (
     <>
-      <Outlet />
+    <div className="d-xl-flex">
+      <Sidebar/>
+      <div class="flex-grow-1 align-items-center position-relative">
+        <UserHeader/>
+        <main class="dashboard-main min-vh-100">
+          <div class="d-flex flex-column gap-4">
+          {/* <!-- Page Header --> */}
+          <div class="d-flex gap-4 flex-column flex-md-row align-items-md-center justify-content-between">
+              <div>
+                <h3 class="text-24 fw-bold text-dark-300 mb-2">Dashboard</h3>
+                <ul class="d-flex align-items-center gap-2">
+                  <li class="text-dark-200 fs-6">Dashboard</li>
+                </ul>
+              </div>
+              <div>
+                <a href="seller-create-gig.html" class="w-btn-secondary-lg">
+                  Post Ad</a>
+              </div>
+          </div>
+          {/* <!-- Page Header --> */}
+          <UserDashHighlights/>
+           <Outlet />
+          </div>
+        </main>
+      </div>
+     </div>     
     </>
   );
 };

@@ -33,23 +33,22 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Elb.Landing /> },
       { path: "about", element: <Elb.WebsiteAbout /> },
-      {
-        path: "sign-in",
-        element: <Login />,
-        errorElement: <Elb.Error />,
-        action: loginAction,
-      },
-      {
-        path: "sign-up",
-        element: <Signup />,
-        errorElement: <Elb.Error />,
-        action: registerAction,
-      },
-      { path: ":catname/:subcat?", element: <Elb.ProductList /> },
-      { path: "" },
+      { path: "sign-in", element: <Login />,errorElement: <Elb.Error />,action: loginAction,},
+      { path: "sign-up",element: <Signup />,errorElement: <Elb.Error />,action: registerAction,},
+      { path: ":catname/:subcat?", element: <Elb.ProductList /> },      
     ],
-  },
+  }, 
+  {
+    path:":slug/",
+    element:<Elb.LayoutWebsiteUser/>,
+    errorElement: <Elb.Error />,
+    loader: postlayoutLoader(store),
+    children: [
+      {path: "create-post",  element: <Elb.CreatePost />, handle: { crumb: <Link to="#">Dashboard</Link> }, },
+      {path:"profile", element:<Elb.WebsiteUserProfile/>}
 
+    ],
+  }, 
   // Admin routes ------
   {
     path: "sign-in-dev",
@@ -119,19 +118,7 @@ const router = createBrowserRouter([
       { path: "forbidden", element: <Elb.Forbidden /> },
     ],
   },
-  {
-    path: ":slug",
-    element: <Elb.LayoutUserPost />,
-    errorElement: <Elb.Error />,
-    loader: postlayoutLoader(store),
-    children: [
-      {
-        path: "create-post",
-        element: <Elb.CreatePost />,
-        handle: { crumb: <Link to="#">Dashboard</Link> },
-      },
-    ],
-  },
+  
 ]);
 
 function App() {

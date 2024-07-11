@@ -1,6 +1,6 @@
 import React from 'react'
 import PostCreate from '../../../../components/website/user/post/PostCreate'
-import PostSidebar from '../../../../components/website/user/post/PostSidebar'
+import Sidebar from '../../../../components/website/user/UserSidebar'
 import PostNav from '../../../../components/website/user/post/PostNav'
 
 const CreatePost = () => {
@@ -8,7 +8,7 @@ const CreatePost = () => {
   return (
     <>
         <div className="d-flex">
-            <PostSidebar />
+            <Sidebar />
             {/* <PostNav /> */}
             <PostCreate />
         </div>
