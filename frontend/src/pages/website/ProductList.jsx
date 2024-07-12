@@ -11,6 +11,7 @@ const ProductList = (props) => {
   return (
     <>
       <CategoryHero catSlug={{ catname: catname, subcat: subcat }} />
+      
       <ProductListByCat catSlug={{ catname: catname, subcat: subcat }} />
     </>
   )
