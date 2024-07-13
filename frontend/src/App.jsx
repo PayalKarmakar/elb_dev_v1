@@ -14,6 +14,7 @@ import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
+import UserProfile from "./pages/website/user/UserProfile";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,13 @@ const router = createBrowserRouter([
             path: ":slug?/cat/:catname/:subcat?",
             element: <Elb.ProductList />,
           },
+        ],
+      },
+      {
+        element: <Elb.LayoutUser />,
+        children: [
+          { path: ":slug/create-post", element: <Elb.CreatePost /> },
+          { path: ":slug/profile", element: <UserProfile /> },
         ],
       },
     ],

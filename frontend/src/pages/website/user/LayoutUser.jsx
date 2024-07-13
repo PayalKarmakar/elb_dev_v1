@@ -1,14 +1,6 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import customFetch from "../../../utils/customFetch";
-import {
-  setAllCategories,
-  setParentCategories,
-} from "../../../feature/masters/categorySlice";
-import { setCurrentUser } from "../../../feature/currentUserSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { splitErrors } from "../../../utils/showErrors";
 import Sidebar from "../../../components/website/user/UserSidebar";
 import UserHeader from "../../../components/website/user/UserHeader";
 import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
