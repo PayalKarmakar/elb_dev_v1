@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  Link,
-  Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import * as Elb from "./pages";
 import { store } from "./store";
 
@@ -15,23 +8,19 @@ import Signup from "./components/website/Signup";
 // Actions ------
 import { action as loginAction } from "./components/website/Login";
 import { action as registerAction } from "./components/website/Signup";
-import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPassword";
 
 // Loaders ------
 import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
-import { loader as postlayoutLoader } from "./pages/website/user/LayoutUser";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: `/`,
     element: <Elb.LayoutWebsite />,
     loader: websiteLoader(store),
     children: [
-      { index: true, element: <Elb.Landing /> },
-      { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
         element: <Login />,
@@ -42,21 +31,19 @@ const router = createBrowserRouter([
         element: <Signup />,
         action: registerAction,
       },
-      { path: ":catname/:subcat?", element: <Elb.ProductList /> },
+      {
+        element: <Elb.LayoutWebsiteUser />,
+        children: [
+          { path: ":slug?", element: <Elb.Landing /> },
+          { path: ":slug?/about", element: <Elb.WebsiteAbout /> },
+          {
+            path: ":slug?/cat/:catname/:subcat?",
+            element: <Elb.ProductList />,
+          },
+        ],
+      },
     ],
   },
-  // {
-  //   path: ":slug/",
-  //   element: <Elb.LayoutWebsiteUser />,
-  //   loader: postlayoutLoader(store),
-  //   children: [
-  //     {
-  //       path: "create-post",
-  //       element: <Elb.CreatePost />,
-  //     },
-  //     { path: "profile", element: <Elb.WebsiteUserProfile /> },
-  //   ],
-  // },
   // Admin routes ------
   {
     path: "sign-in-dev",

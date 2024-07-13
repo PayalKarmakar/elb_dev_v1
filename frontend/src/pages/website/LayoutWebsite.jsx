@@ -12,10 +12,16 @@ import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
 import { setGetCategories } from "../../feature/masters/categorySlice";
+import {
+  setCurrentUser,
+  unsetCurrentUser,
+} from "../../feature/currentUserSlice";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
   const { getCategories } = store.getState().categories;
+  const { currentUser } = store.getState().currentUser;
+
   try {
     if (topLocations.length === 0) {
       const tLoc = await customFetch.get(`/website/top-locations`);
@@ -26,26 +32,18 @@ export const loader = (store) => async () => {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
     }
+
+    if (localStorage.getItem("token")) {
+      if (!currentUser.first_name) {
+        const cuser = await customFetch.get(`/auth/current-user`);
+        store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
+      }
+    }
+
     return null;
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
     return null;
-  }
-};
-
-const logoutWebsite = async () => {
-  try {
-    await customFetch.get(`/auth/logout`);
-
-    dispatch(unsetCurrentUser());
-    localStorage.removeItem("token");
-
-    toast.success(`Thank you for visiting`);
-
-    navigate(`/`);
-  } catch (error) {
-    splitErrors(error?.response?.data?.msg);
-    return error;
   }
 };
 
@@ -55,7 +53,7 @@ const LayoutWebsite = () => {
       <WbTopnav />
       <WbSecondNav />
       <main>
-        <Outlet context={{ logoutWebsite }} />
+        <Outlet />
       </main>
       <WbFooter />
     </>

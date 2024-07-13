@@ -17,6 +17,7 @@ const WbSecondNav = () => {
   };
 
   const { listCategories } = useSelector((store) => store.categories);
+  const { currentUser } = useSelector((store) => store.currentUser);
 
   return (
     <div className="d-none d-xl-block secondary-nav-wrapper">
@@ -28,7 +29,11 @@ const WbSecondNav = () => {
                 return (
                   <Link
                     key={nanoid()}
-                    to={`/${cat.slug}`}
+                    to={`${
+                      currentUser.slug
+                        ? `/${currentUser.slug}/cat/${cat.slug}`
+                        : `/cat/${cat.slug}`
+                    }`}
                     className="text-decoration-none"
                   >
                     <li>{cat.category}</li>

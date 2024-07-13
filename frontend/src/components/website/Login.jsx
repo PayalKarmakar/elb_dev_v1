@@ -6,10 +6,6 @@ import { toast } from "react-toastify";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 import SocialSvg from "./landing/SocialSvg";
 import LoginBanner from "../../assets/website/img/common/breadcrumb-bg.png";
-import loginImage from "../../assets/website/img/others/1.png";
-import WbTopnav from "./WbTopnav";
-import WbSecondNav from "./WbSecondNav";
-import WbFooter from "./WbFooter";
 
 // Action function for form submission
 export const action = async ({ request }) => {
@@ -25,6 +21,7 @@ export const action = async ({ request }) => {
     const name = response?.data?.data?.first_name;
     const slug = response?.data?.data?.slug;
     const role = response?.data?.data?.role_id;
+    localStorage.setItem("token", response?.data?.token);
 
     toast.success(`Welcome ${name}`);
 

@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const WbLogoSvg = () => {
+const WbLogoSvg = ({ currentUser }) => {
+  const redirect = currentUser?.slug ? `/${currentUser.slug}` : `/`;
+
   return (
-    <Link to={`/`}>
+    <Link to={redirect}>
       <svg
         width="167"
         height="58"
