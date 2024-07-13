@@ -24,7 +24,7 @@ const ProductCard = ({catCard}) => {
               id="nav-grid"
               role="tabpanel"
               aria-labelledby="nav-grid-tab"
-              tabindex="0">
+              tabIndex="0">
               <div className="row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
                 {listCategories.map((parentCategory) =>(
                     

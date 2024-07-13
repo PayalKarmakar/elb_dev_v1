@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 
 import customFetch from "../../../utils/customFetch";
@@ -44,30 +44,44 @@ export const loader = (store) => async () => {
 };
 
 
+
 const LayoutUser = () => {
+
+  const location = useLocation();
+  const url = location.pathname; // Get the current URL path
+  const parts = url.split('/'); // Split the URL by '/'
+  const lastPart = parts[parts.length - 1]; // Get the last part of the URL
+  //const newLink = `/dashboard/${lastPart}`; // Form the new link
+  console.log('hgfghfgh');
+  console.log(lastPart);
+
+
   return (
     <>
     <div className="d-xl-flex">
       <Sidebar/>
-      <div class="flex-grow-1 align-items-center position-relative">
+      <div className="flex-grow-1 align-items-center position-relative">
         <UserHeader/>
-        <main class="dashboard-main min-vh-100">
-          <div class="d-flex flex-column gap-4">
+        <main className="dashboard-main min-vh-100">
+          <div className="d-flex flex-column gap-4">
           {/* <!-- Page Header --> */}
-          <div class="d-flex gap-4 flex-column flex-md-row align-items-md-center justify-content-between">
+          {lastPart == "dashboard" && 
+          <>
+          <div className="d-flex gap-4 flex-column flex-md-row align-items-md-center justify-content-between">
               <div>
-                <h3 class="text-24 fw-bold text-dark-300 mb-2">Dashboard</h3>
-                <ul class="d-flex align-items-center gap-2">
-                  <li class="text-dark-200 fs-6">Dashboard</li>
+                <h3 className="text-24 fw-bold text-dark-300 mb-2">Dashboard</h3>
+                <ul className="d-flex align-items-center gap-2">
+                  <li className="text-dark-200 fs-6">Dashboard</li>
                 </ul>
               </div>
               <div>
-                <a href="seller-create-gig.html" class="w-btn-secondary-lg">
+                <a href="seller-create-gig.html" className="w-btn-secondary-lg">
                   Post Ad</a>
               </div>
-          </div>
-          {/* <!-- Page Header --> */}
-          <UserDashHighlights/>
+            </div>
+            <UserDashHighlights/>
+            </>
+            }           
            <Outlet />
           </div>
         </main>

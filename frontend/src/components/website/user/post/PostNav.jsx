@@ -5,7 +5,7 @@ const PostNav = () => {
     <>
       <div
         class="offcanvas offcanvas-start"
-        tabindex="-1"
+        tabIndex="-1"
         id="offcanvasTop"
         aria-labelledby="offcanvasTopLabel"
       >

@@ -45,18 +45,20 @@ const router = createBrowserRouter([
       { path: ":catname/:subcat?", element: <Elb.ProductList /> },
     ],
   },
-  // {
-  //   path: ":slug/",
-  //   element: <Elb.LayoutWebsiteUser />,
-  //   loader: postlayoutLoader(store),
-  //   children: [
-  //     {
-  //       path: "create-post",
-  //       element: <Elb.CreatePost />,
-  //     },
-  //     { path: "profile", element: <Elb.WebsiteUserProfile /> },
-  //   ],
-  // },
+
+  {
+    path: ":slug/",
+    element: <Elb.LayoutWebsiteUser />,
+    loader: postlayoutLoader(store),
+    children: [
+      {
+        path: "create-post",
+        element: <Elb.CreatePost />,
+      },
+      { path: "profile", element: <Elb.WebsiteUserProfile /> },
+    ],
+  },
+
   // Admin routes ------
   {
     path: "sign-in-dev",
