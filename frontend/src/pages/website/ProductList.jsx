@@ -4,13 +4,14 @@ import CategoryHero from "../../components/website/product/CategoryHero";
 import ProductListByCat from "../../components/website/product/ProductListByCat";
 
 const ProductList = () => {
-  const { catname, subcat } = useParams();
+  const { slug, catname, subcat } = useParams();
+  console.log(`${slug}, ${catname}, ${subcat}`);
 
   return (
     <>
-      {/* <CategoryHero catSlug={{ catname: catname, subcat: subcat }} /> */}
+      <CategoryHero catSlug={{ catname: catname, subcat: subcat }} />
 
-      {/* <ProductListByCat catSlug={{ catname: catname, subcat: subcat }} /> */}
+      <ProductListByCat catSlug={{ catname: catname, subcat: subcat }} />
     </>
   );
 };

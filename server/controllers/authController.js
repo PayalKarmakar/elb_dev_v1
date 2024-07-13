@@ -76,7 +76,7 @@ export const login = async (req, res) => {
     secure: process.env.APP_ENV === "production",
   });
 
-  res.status(StatusCodes.ACCEPTED).json({ data: user.rows[0] });
+  res.status(StatusCodes.ACCEPTED).json({ data: user.rows[0], token: token });
 };
 
 // ------

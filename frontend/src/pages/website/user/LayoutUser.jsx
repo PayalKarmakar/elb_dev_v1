@@ -11,50 +11,13 @@ import Sidebar from "../../../components/website/user/UserSidebar";
 import UserHeader from "../../../components/website/user/UserHeader";
 import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
 
-
-
-export const loader = (store) => async () => {
-    const { currentUser } = store.getState().currentUser;
-//   const { allCategories, parentCategories } = store.getState().categories;
-//   const { allBrands } = store.getState().brands;
-//   const { allStates } = store.getState().locations;
- 
-  try {
-    if (!currentUser.first_name) {
-        const response = await customFetch.get(`/auth/current-user`);
-        store.dispatch(setCurrentUser(response.data.data.rows[0]));
-        
-      }
-      
-    // if (allCategories.length === 0) {
-    //   const acategories = await customFetch.get(`/masters/categories/all`);
-    //   store.dispatch(setAllCategories(acategories.data.data.rows));
-
-    //   const pcategories = await customFetch.get(`/masters/categories/parents`);
-    //   store.dispatch(setParentCategories(pcategories.data.data.rows));
-    // }
-
-    
-    return null;
-  } catch (error) {
-    splitErrors(error?.response?.data?.msg);
-    return redirect("/sign-in");
-  }
-  
-};
-
-
-
 const LayoutUser = () => {
 
-  const location = useLocation();
+  const {location} = useLocation();
   const url = location.pathname; // Get the current URL path
   const parts = url.split('/'); // Split the URL by '/'
   const lastPart = parts[parts.length - 1]; // Get the last part of the URL
   //const newLink = `/dashboard/${lastPart}`; // Form the new link
-  console.log('hgfghfgh');
-  console.log(lastPart);
-
 
   return (
     <>
