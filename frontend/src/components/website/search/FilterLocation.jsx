@@ -21,10 +21,7 @@ const FilterLocation = () => {
   };
 
   return (
-    <Modal show={locationModal} size="xl" centered onHide={handleClose}>
-      {/* <Modal.Header closeButton>
-        <Modal.Title>Search by Location</Modal.Title>
-      </Modal.Header> */}
+    <Modal show={locationModal} size="xl" centered onHide={handleClose}>      
       <Modal.Body>
         <div className="row justify-content-center cursor-pointer">
           {topLocations.map((i) => {
@@ -32,29 +29,16 @@ const FilterLocation = () => {
               <div
                 className="col-lg-3 col-sm-4 col-md-6 py-4"
                 key={nanoid()}
-                onClick={() => setSearch(i.id)}
-              >
+                onClick={() => setSearch(i.id)}>
+                <div className="grid-cat">
                 <img src={city} className="mx-auto d-block" alt="" />
-                <p className="text-center fs-6 text-muted">{i.city}</p>
+                <p className="text-center fs-6 text-muted cat-text">{i.city}</p>
+                </div>
               </div>
             );
           })}
         </div>
-      </Modal.Body>
-      {/* <Modal.Footer>
-          <SubmitBtn
-            className={`btn btn-warning me-2`}
-            text={`Search`}
-            isLoading={isLoading}
-          />
-          <button
-            type="button"
-            className="btn btn-default"
-            onClick={handleClose}
-          >
-            Close
-          </button>
-        </Modal.Footer> */}
+      </Modal.Body>     
     </Modal>
   );
 };

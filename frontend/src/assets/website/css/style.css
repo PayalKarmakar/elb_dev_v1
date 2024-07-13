@@ -22,6 +22,45 @@
   /* Blue */
   --blue-300: #4b83fc;
 }
+
+html.dark{
+  --main-font-family: "IBM Plex Sans", sans-serif;
+  --body-font-family: "Roboto", sans-serif;
+
+  /* Dark */
+  --dark-50: #14141F;
+  --dark-100: red;
+  --dark-200: red;
+  --dark-300: red;
+  --dark-400: red;
+
+  /* Light */
+  --off-white: #343444;
+  --white: #fff;
+
+  /* lime */
+  --lime-300: red;
+  --green-300: red;
+
+  /* Blue */
+  --blue-300:red;
+
+
+  
+}
+
+/* .is_dark {
+  --primary-color: #343444;
+  --primary-color2 : #fff;
+  --primary-color4: #EBEBEB;
+  --primary-color5: #030303;
+  --primary-color6: #ffffff;
+  --primary-color7: #343444;
+  --bg-section: #14141F;
+  --bg-section2 : #14141F;
+  --primary-color8: #fff;
+} */
+
 * {
   margin: 0;
   padding: 0;
