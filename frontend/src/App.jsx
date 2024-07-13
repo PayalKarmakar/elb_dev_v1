@@ -14,6 +14,7 @@ import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
+import UserProfile from "./pages/website/user/UserProfile";
 
 const router = createBrowserRouter([
   {
@@ -42,25 +43,15 @@ const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-<<<<<<< HEAD
-
-  {
-    path: ":slug/",
-    element: <Elb.LayoutWebsiteUser />,
-    loader: postlayoutLoader(store),
-    children: [
       {
-        path: "create-post",
-        element: <Elb.CreatePost />,
+        element: <Elb.LayoutUser />,
+        children: [
+          { path: ":slug/create-post", element: <Elb.CreatePost /> },
+          { path: ":slug/profile", element: <UserProfile /> },
+        ],
       },
-      { path: "profile", element: <Elb.WebsiteUserProfile /> },
     ],
   },
-
-=======
->>>>>>> 7e1838888bb0ec8221ed58ceee27c9936fb0d5fd
   // Admin routes ------
   {
     path: "sign-in-dev",
