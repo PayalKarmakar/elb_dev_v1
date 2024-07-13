@@ -4,7 +4,6 @@ import { Modal } from "react-bootstrap";
 import customFetch from "../../utils/customFetch";
 import { setListCategories } from "../../feature/masters/categorySlice";
 import { splitErrors } from "../../utils/showErrors";
-import CatNavImg from "../../assets/website/img/others/category.png";
 import {
   MdBikeScooter,
   MdCategory,

@@ -5,7 +5,7 @@ const UserProfile = () => {
     <>
    
               <div className="row justify-content-center">
-                <div className="col-xl-8">
+                <div className="col-xl-12">
                   <form>
                     <div className="d-flex flex-column gap-4">
                       {/* <!-- Profile Info --> */}
@@ -103,9 +103,9 @@ const UserProfile = () => {
                                   autocomplete="off"
                                   className="form-select shadow-none"
                                 >
-                                  <option value="0">USA</option>
-                                  <option value="1">UK</option>
-                                  <option value="2">BD</option>
+                                  {/* <option value="0">USA</option> */}
+                                  <option value="1" selected>INDIA</option>
+                                  {/* <option value="2">BD</option> */}
                                 </select>
                               </div>
                             </div>
