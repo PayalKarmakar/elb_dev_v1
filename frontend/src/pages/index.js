@@ -1,6 +1,6 @@
 export { default as Layout } from "./Layout";
 export { default as LayoutAdmin } from "./admin/LayoutAdmin";
-export { default as LayoutUser } from "./admin/LayoutUser";
+//export { default as LayoutUser } from "./admin/LayoutUser";
 export { default as Error } from "./admin/errors/Error";
 export { default as Forbidden } from "./admin/errors/Forbidden";
 export { default as Login } from "./admin/auth/Login";
@@ -29,5 +29,7 @@ export { default as WebsiteAbout } from "./website/WebsiteAbout";
 export { default as WebsiteSignUp } from "./admin/auth/Register";
 export { default as ProductList } from "./website/ProductList";
 export { default as LayoutWebsiteUser } from "./website/user/LayoutWebsiteUser";
-export { default as CreatePost } from "./website/user/post/CreatePost";
+export { default as LayoutUser } from "./website/user/LayoutUser";
+export { default as UserPostAd } from "./website/user/post/PostAd";
 export { default as WebsiteUserProfile } from "./website/user/UserProfile";
+export { default as WebsiteUserDashboard } from "./website/user/UserDashboard";

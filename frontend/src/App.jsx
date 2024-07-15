@@ -46,12 +46,21 @@ const router = createBrowserRouter([
       {
         element: <Elb.LayoutUser />,
         children: [
-          { path: ":slug/create-post", element: <Elb.CreatePost /> },
-          { path: ":slug/profile", element: <UserProfile /> },
+          { path: ":slug/dashboard", element: <Elb.WebsiteUserDashboard /> },
+          { path: ":slug/post-ad", element: <Elb.UserPostAd /> },
+          { path: ":slug/profile", element: <Elb.WebsiteUserProfile /> },
         ],
       },
     ],
   },
+  // {
+  //   path: `:slug/`,
+  //   element: <Elb.LayoutUser />,
+  //   children: [
+  //     { path: "create-post", element: <Elb.CreatePost /> },
+  //     { path: "profile", element: <Elb.WebsiteUserProfile /> },
+  //   ],
+  // },
   // Admin routes ------
   {
     path: "sign-in-dev",
