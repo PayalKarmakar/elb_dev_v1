@@ -32,7 +32,7 @@ export const action = async ({ request }) => {
         path = `/admin/dashboard`;
         break;
       case 3:
-        path = `/${slug}`;
+        path = `/`;
         break;
       default:
         path = `/`;

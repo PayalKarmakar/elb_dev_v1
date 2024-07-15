@@ -33,7 +33,7 @@ const CategoryModal = ({ show, handleClose }) => {
 
   const handleModalClose = (parent, child) => {
     let navigateUrl = "";
-    navigateUrl = currentUser?.slug ? `/${currentUser.slug}/cat` : `/cat`;
+    navigateUrl = `/cat`;
 
     if (!child) {
       let pSlug = "";

@@ -29,11 +29,7 @@ const WbSecondNav = () => {
                 return (
                   <Link
                     key={nanoid()}
-                    to={`${
-                      currentUser.slug
-                        ? `/${currentUser.slug}/cat/${cat.slug}`
-                        : `/cat/${cat.slug}`
-                    }`}
+                    to={`/cat/${cat.slug}`}
                     className="text-decoration-none"
                   >
                     <li>{cat.category}</li>
