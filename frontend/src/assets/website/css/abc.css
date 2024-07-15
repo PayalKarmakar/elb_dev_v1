@@ -1,7 +1,7 @@
 /* .header-primary, */
 
-:root {  
-  --primary-color3: #561e87; 
+:root {
+  --primary-color3: #561e87;
   --lime-300: #561e87;
 }
 
@@ -337,19 +337,23 @@ body,
   background-color: #521e87;
 }
 
-.grid-cat{
+.grid-cat {
   border: 1px solid #aaa;
   border-radius: 10px;
   padding: 25px 15px;
 }
 
-.cat-text{
-  
-  text-align: center; 
-  color: #000 ;
+.cat-text {
+  text-align: center;
+  color: #000;
   font-weight: bold;
-  padding:25px 0 0;
+  padding: 25px 0 0;
 }
 
-
-
+.gig-info-header,
+.profile-info-header {
+  background-color: #491e81;
+}
+.header-text {
+  color: var(--white);
+}
