@@ -1,18 +1,12 @@
 import React from "react";
-import PostCreate from "../../../../components/website/user/post/PostCreate";
-import Sidebar from "../../../../components/website/user/UserSidebar";
-import PostNav from "../../../../components/website/user/post/PostNav";
+import UserPostAdForm from "../../../../components/website/user/post/UserPostAdForm";
 
-const UserPostAd = () => {
+const PostAd = () => {
   return (
     <>
-      <div className="d-flex">
-        <Sidebar />
-        {/* <PostNav /> */}
-        <PostCreate />
-      </div>
+      <UserPostAdForm />
     </>
   );
 };
 
-export default UserPostAd;
+export default PostAd;
