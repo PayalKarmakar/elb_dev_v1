@@ -31,7 +31,7 @@ const WbTopnav = () => {
     <header className={`header-primary ${isSticky ? "sticky" : ""}`}>
       <div className="container">
         <nav className="navbar navbar-expand-xl justify-content-between headertop">
-          <WbLogoSvg currentUser={currentUser} />
+          <WbLogoSvg />
           <TopSearch />
           <div className="navbar-right d-flex align-items-center gap-4">
             <div className="align-items-center d-none d-lg-flex">

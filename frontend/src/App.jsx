@@ -35,10 +35,10 @@ const router = createBrowserRouter([
       {
         element: <Elb.LayoutWebsiteUser />,
         children: [
-          { path: ":slug?", element: <Elb.Landing /> },
-          { path: ":slug?/about", element: <Elb.WebsiteAbout /> },
+          { path: "", element: <Elb.Landing /> },
+          { path: "about", element: <Elb.WebsiteAbout /> },
           {
-            path: ":slug?/cat/:catname/:subcat?",
+            path: "/cat/:catname/:subcat?",
             element: <Elb.ProductList />,
           },
         ],
