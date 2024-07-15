@@ -44,17 +44,13 @@ const WbTopnav = () => {
                   Login
                 </Link>
               ) : (
-                <button
-                  type="button"
-                  className="header-btn"
-                  //onClick={"javascript:void(0);"}
-                >
+                <Link to={currentUser.slug + "/post-ad"} className="header-btn">
                   <MdOutlineSell
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
                   POST AD
-                </button>
+                </Link>
               )}
             </div>
             {currentUser.uuid && <UserProfile />}
