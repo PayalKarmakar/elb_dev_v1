@@ -160,7 +160,17 @@ export const updatePost = async (req, res) => {
   }
 };
 
-export const getFeaturedPosts = async (req, res) => {}; // Jyoti
+export const getFeaturedPosts = async (req, res) => {
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      where feature_product=true order by post.title`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+}; // Jyoti
 
 export const getRecentPosts = async (req, res) => {}; // Jyoti
 
