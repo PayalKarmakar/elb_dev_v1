@@ -11,7 +11,10 @@ import WbFooter from "../../components/website/WbFooter";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
-import { setGetCategories } from "../../feature/masters/categorySlice";
+import {
+  setGetCategories,
+  setParentCategories,
+} from "../../feature/masters/categorySlice";
 import {
   setCurrentUser,
   unsetCurrentUser,
@@ -31,6 +34,9 @@ export const loader = (store) => async () => {
     if (getCategories.length === 0) {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
+
+      const pcategories = await customFetch.get(`/masters/categories/parents`);
+      store.dispatch(setParentCategories(pcategories.data.data.rows));
     }
 
     if (localStorage.getItem("token")) {

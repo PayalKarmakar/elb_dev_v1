@@ -44,12 +44,14 @@ const WbTopnav = () => {
                   Login
                 </Link>
               ) : (
-                <Link to={currentUser.slug + "/post-ad"} className="header-btn">
-                  <MdOutlineSell
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  POST AD
+                <Link to={`/${currentUser.slug}/post-ad`}>
+                  <button type="button" className="header-btn">
+                    <MdOutlineSell
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    POST AD
+                  </button>
                 </Link>
               )}
             </div>
