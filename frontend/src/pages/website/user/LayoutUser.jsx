@@ -6,7 +6,44 @@ import UserHeader from "../../../components/website/user/UserHeader";
 import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
 import { capitalizeFirstLetter } from "../../../utils/functions";
 import { useSelector } from "react-redux";
+import {
+  setGetCategories,
+  setParentCategories,
+} from "../../../feature/masters/categorySlice";
+import { setCurrentUser } from "../../../feature/currentUserSlice";
+import { toast } from "react-toastify";
+import { splitErrors } from "../../../utils/showErrors";
+import customFetch from "../../../utils/customFetch";
 
+// Loader starts ------
+export const loader = (store) => async () => {
+  const { getCategories } = store.getState().categories;
+  const { currentUser } = store.getState().currentUser;
+
+  try {
+    if (getCategories.length === 0) {
+      const sCat = await customFetch.get(`/website/get-categories`);
+      store.dispatch(setGetCategories(sCat?.data?.data?.rows));
+
+      const pcategories = await customFetch.get(`/masters/categories/parents`);
+      store.dispatch(setParentCategories(pcategories.data.data.rows));
+    }
+
+    if (localStorage.getItem("token")) {
+      if (!currentUser.first_name) {
+        const cuser = await customFetch.get(`/auth/current-user`);
+        store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
+      }
+    }
+
+    return null;
+  } catch (error) {
+    splitErrors(error?.response?.data?.msg);
+    return null;
+  }
+};
+
+// Main component starts ------
 const LayoutUser = () => {
   const location = useLocation();
   const url = location.pathname; // Get the current URL path
