@@ -16,6 +16,7 @@ import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 import UserProfile from "./pages/website/user/UserProfile";
+import ProductDetails from "./pages/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
         element: <Login />,
         action: loginAction,
       },
+      {
+      path: "product-details/:id",
+      element: <ProductDetails />,
+     
+    },
       {
         path: "sign-up",
         element: <Signup />,
