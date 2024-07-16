@@ -10,11 +10,9 @@ import {
   updatePost,
 } from "../controllers/posts/postController.js";
 
-router
-  .route(`/posts`)
-  // .post([validatePostForm, validateDynamic], addPost)
-  .post(addPost)
-  .get(allPosts);
+// router.post(`/posts`, addPost);
+router.post([validatePostForm, validateDynamic], addPost);
+router.get(`/posts`, allPosts);
 router
   .route(`/posts/:id`)
   .patch([validatePostForm, validateDynamic], updatePost);
