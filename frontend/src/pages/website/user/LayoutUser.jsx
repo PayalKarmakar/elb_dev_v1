@@ -11,7 +11,6 @@ import {
   setParentCategories,
 } from "../../../feature/masters/categorySlice";
 import { setCurrentUser } from "../../../feature/currentUserSlice";
-import { toast } from "react-toastify";
 import { splitErrors } from "../../../utils/showErrors";
 import customFetch from "../../../utils/customFetch";
 

@@ -3,6 +3,7 @@ import pool from "../../db.js";
 import { verifyJWT } from "../../utils/tokenUtils.js";
 import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
+import multer from "multer";
 
 export const addPost = async (req, res) => {
   const { category, subCategory, title, description, price } = req.body;
@@ -13,6 +14,8 @@ export const addPost = async (req, res) => {
   const desc = description || null;
   const postSlug = await generateOtherSlug("master_posts", title);
   const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  console.log(req.body);
+  console.log(req.file);
 
   try {
     await pool.query(`BEGIN`);
@@ -58,6 +61,17 @@ export const addPost = async (req, res) => {
         [postId, +field.id, dbData, entryData]
       );
     }
+
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, `/uploads/posts/${postId}`);
+      },
+      filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+      },
+    });
+
+    const upload = multer({ storage: storage });
 
     await pool.query(`COMMIT`);
 
