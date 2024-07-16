@@ -12,7 +12,8 @@ import {
 
 router
   .route(`/posts`)
-  .post([validatePostForm, validateDynamic], addPost)
+  // .post([validatePostForm, validateDynamic], addPost)
+  .post(addPost)
   .get(allPosts);
 router
   .route(`/posts/:id`)

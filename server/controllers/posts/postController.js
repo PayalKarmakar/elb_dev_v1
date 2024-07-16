@@ -159,3 +159,9 @@ export const updatePost = async (req, res) => {
       .json({ data: `something went wrong!!` });
   }
 };
+
+export const getFeaturedPosts = async (req, res) => {}; // Jyoti
+
+export const getRecentPosts = async (req, res) => {}; // Jyoti
+
+export const getPostDetails = async (req, res) => {}; // Arko
