@@ -35,32 +35,34 @@ const router = createBrowserRouter([
       {
         element: <Elb.LayoutWebsiteUser />,
         children: [
-          { path: "", element: <Elb.Landing /> },
-          { path: "about", element: <Elb.WebsiteAbout /> },
+          { path: ":slug?", element: <Elb.Landing /> },
+          { path: ":slug?/about", element: <Elb.WebsiteAbout /> },
           {
-            path: "/cat/:catname/:subcat?",
+            path: ":slug?/cat/:catname/:subcat?",
             element: <Elb.ProductList />,
           },
         ],
       },
-      {
-        element: <Elb.LayoutUser />,
-        children: [
-          { path: ":slug/dashboard", element: <Elb.WebsiteUserDashboard /> },
-          { path: ":slug/post-ad", element: <Elb.UserPostAd /> },
-          { path: ":slug/profile", element: <Elb.WebsiteUserProfile /> },
-        ],
-      },
+      // {
+      //   element: <Elb.LayoutUser />,
+      //   children: [
+      //     { path: ":slug/dashboard", element: <Elb.WebsiteUserDashboard /> },
+      //     { path: ":slug/post-ad", element: <Elb.UserPostAd /> },
+      //     { path: ":slug/profile", element: <Elb.WebsiteUserProfile /> },
+      //   ],
+      // },
     ],
   },
-  // {
-  //   path: `:slug/`,
-  //   element: <Elb.LayoutUser />,
-  //   children: [
-  //     { path: "create-post", element: <Elb.CreatePost /> },
-  //     { path: "profile", element: <Elb.WebsiteUserProfile /> },
-  //   ],
-  // },
+  {
+    path: `:slug/`,
+    element: <Elb.LayoutUser />,
+    children: [
+      { path: "dashboard", element: <Elb.WebsiteUserDashboard /> },
+      { path: "profile", element: <Elb.WebsiteUserProfile /> },
+      { path: "post-ad", element: <Elb.UserPostAd /> },
+    ],
+  },
+
   // Admin routes ------
   {
     path: "sign-in-dev",

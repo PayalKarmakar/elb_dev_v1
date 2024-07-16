@@ -1,7 +1,11 @@
 import React from "react";
 import WbLogoSvg from "../WbLogoSvg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UserSidebar = () => {
+  const { currentUser } = useSelector((state) => state.currentUser);
+  const path = `/${currentUser.slug}`;
   return (
     <>
       <aside className="dashboard-sidebar d-none d-xl-block">
@@ -10,7 +14,7 @@ const UserSidebar = () => {
         </div>
         <ul className="sidebar-nav p-3 overflow-y-auto">
           <li className="sidebar-nav-item">
-            <a href="seller-dashboard.html" className="sidebar-nav-link">
+            <Link to={path + "/dashboard"} className="sidebar-nav-link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -26,13 +30,10 @@ const UserSidebar = () => {
                 />
               </svg>
               Dashboard
-            </a>
+            </Link>
           </li>
           <li className="sidebar-nav-item">
-            <a
-              href="seller-create-gig.html"
-              className="sidebar-nav-link active"
-            >
+            <Link to={path + "/post-ad"} className="sidebar-nav-link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -49,8 +50,27 @@ const UserSidebar = () => {
                   fill="currentColor"
                 />
               </svg>
-              Create a Gig
-            </a>
+              Post Ad
+            </Link>
+          </li>
+          <li className="sidebar-nav-item">
+            <Link to={path + "/profile"} className="sidebar-nav-link">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="19"
+                height="20"
+                viewBox="0 0 19 20"
+                fill="none"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M15.2001 0H3.80012C1.70144 0 0.00012207 1.79086 0.00012207 4V16C0.00012207 17.8642 1.21167 19.4306 2.85117 19.8743C3.1545 19.9563 3.47247 20 3.80012 20H15.2001C15.5278 20 15.8458 19.9563 16.1491 19.8743C17.7886 19.4306 19.0001 17.8642 19.0001 16V4C19.0001 1.79086 17.2988 0 15.2001 0ZM12.3501 7C12.3501 5.34315 11.0741 4 9.50012 4C7.92611 4 6.65012 5.34315 6.65012 7C6.65012 8.65685 7.92611 10 9.50012 10C11.0741 10 12.3501 8.65685 12.3501 7ZM4.89507 15.0155C5.41593 13.2824 7.28019 12 9.50012 12C11.7201 12 13.5843 13.2824 14.1052 15.0155C14.2634 15.5421 13.8248 16 13.3001 16H5.70012C5.17545 16 4.73681 15.5421 4.89507 15.0155Z"
+                  fill="currentColor"
+                />
+              </svg>
+              Profile Settings
+            </Link>
           </li>
           <li className="sidebar-nav-item">
             <a href="seller-my-orders.html" className="sidebar-nav-link">
@@ -197,25 +217,7 @@ const UserSidebar = () => {
               Messages
             </a>
           </li>
-          <li className="sidebar-nav-item">
-            <a href="seller-profile-settings.html" className="sidebar-nav-link">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="20"
-                viewBox="0 0 19 20"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M15.2001 0H3.80012C1.70144 0 0.00012207 1.79086 0.00012207 4V16C0.00012207 17.8642 1.21167 19.4306 2.85117 19.8743C3.1545 19.9563 3.47247 20 3.80012 20H15.2001C15.5278 20 15.8458 19.9563 16.1491 19.8743C17.7886 19.4306 19.0001 17.8642 19.0001 16V4C19.0001 1.79086 17.2988 0 15.2001 0ZM12.3501 7C12.3501 5.34315 11.0741 4 9.50012 4C7.92611 4 6.65012 5.34315 6.65012 7C6.65012 8.65685 7.92611 10 9.50012 10C11.0741 10 12.3501 8.65685 12.3501 7ZM4.89507 15.0155C5.41593 13.2824 7.28019 12 9.50012 12C11.7201 12 13.5843 13.2824 14.1052 15.0155C14.2634 15.5421 13.8248 16 13.3001 16H5.70012C5.17545 16 4.73681 15.5421 4.89507 15.0155Z"
-                  fill="currentColor"
-                />
-              </svg>
-              Profile Settings
-            </a>
-          </li>
+
           <li className="sidebar-nav-item">
             <a href="seller-manage-gigs.html" className="sidebar-nav-link">
               <svg

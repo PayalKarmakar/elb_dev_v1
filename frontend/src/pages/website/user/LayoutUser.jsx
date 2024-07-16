@@ -1,10 +1,11 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Sidebar from "../../../components/website/user/UserSidebar";
 import UserHeader from "../../../components/website/user/UserHeader";
 import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
 import { capitalizeFirstLetter } from "../../../utils/functions";
+import { useSelector } from "react-redux";
 
 const LayoutUser = () => {
   const location = useLocation();
@@ -13,6 +14,8 @@ const LayoutUser = () => {
   const lastPart = parts[parts.length - 1]; // Get the last part of the URL
 
   const capitalized = capitalizeFirstLetter(lastPart);
+  const { currentUser } = useSelector((state) => state.currentUser);
+  const path = `/${currentUser.slug}`;
 
   return (
     <>
@@ -34,12 +37,9 @@ const LayoutUser = () => {
                 </div>
                 {lastPart == "dashboard" && (
                   <div>
-                    <a
-                      href="seller-create-gig.html"
-                      className="w-btn-secondary-lg"
-                    >
+                    <Link to={path + "/post-ad"} className="w-btn-secondary-lg">
                       Post Ad
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
