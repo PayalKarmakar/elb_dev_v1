@@ -89,7 +89,11 @@ const PostCreate = () => {
     console.log(data);
     return;
     try {
-      // const response = await customFetch.post()
+      const response = await customFetch.post(`/posts`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
