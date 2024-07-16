@@ -18,7 +18,7 @@ import UserProfile from "./pages/website/user/UserProfile";
 
 const router = createBrowserRouter([
   {
-    path: `/`,
+    path: "/",
     element: <Elb.LayoutWebsite />,
     loader: websiteLoader(store),
     children: [
@@ -41,6 +41,7 @@ const router = createBrowserRouter([
             path: ":slug?/cat/:catname/:subcat?",
             element: <Elb.ProductList />,
           },
+          { path: "/post/:id", element: <Elb.PostView /> },
         ],
       },
       // {
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: `:slug/`,
+    path: ":slug/",
     element: <Elb.LayoutUser />,
     children: [
       { path: "dashboard", element: <Elb.WebsiteUserDashboard /> },

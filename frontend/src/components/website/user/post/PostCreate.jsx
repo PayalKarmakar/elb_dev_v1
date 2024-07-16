@@ -59,11 +59,11 @@ const PostCreate = () => {
   };
 
   const handleImageChange = (img) => {
-    if (!img.type.startsWith("image/")) {
+    if (img && !img.type.startsWith("image/")) {
       toast.error(`Not an image`);
       return;
     }
-    if (+img.size > 500 * 1024) {
+    if (img && +img.size > 500 * 1024) {
       toast.error(`Image size cannot be more than 500 KB`);
       return;
     }
@@ -88,12 +88,9 @@ const PostCreate = () => {
     data = { ...data, images: postImages };
     console.log(data);
     return;
+
     try {
-      const response = await customFetch.post(`/posts`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await customFetch.post(`/posts/posts`, data);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
