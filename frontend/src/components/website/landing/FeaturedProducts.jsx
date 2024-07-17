@@ -25,7 +25,9 @@ const FeaturedProducts = () => {
 
   const renderFeaturedPosts = () => {
     return featuredPosts.map((i) => {
-      let imgSrc = i.image_path ? i.image_path : product1;
+      const imgSrc = i.image_path
+        ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
+        : product1;
 
       return (
         <SwiperSlide key={nanoid()}>
@@ -43,7 +45,9 @@ const FeaturedProducts = () => {
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
                   <h3 className="job-post-title fw-semibold">
                     <span className="text-decoration-none">
-                      {i.description}
+                      {i.description && i.description.length > 20
+                        ? i.description.substr(0, 20) + ` ...`
+                        : i.description}
                     </span>
                   </h3>
                 </div>
