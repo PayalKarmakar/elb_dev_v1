@@ -20,7 +20,7 @@ export const validateDynamic = async (req, res, next) => {
   const { subCategory } = req.body;
   const data = await pool.query(
     `select field_name, field_label, is_required, field_type from master_form_fields where cat_id=$1 and is_active=true`,
-    [+subCategory]
+    [subCategory]
   );
 
   let errorMessages = "";
@@ -44,3 +44,7 @@ export const validateDynamic = async (req, res, next) => {
 
   next();
 };
+
+export const testUploadMiddleware = withValidationErrors([
+  body("name").notEmpty().withMessage(`Name is required`),
+]);

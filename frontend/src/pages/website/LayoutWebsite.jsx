@@ -34,9 +34,6 @@ export const loader = (store) => async () => {
     if (getCategories.length === 0) {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
-
-      const pcategories = await customFetch.get(`/masters/categories/parents`);
-      store.dispatch(setParentCategories(pcategories.data.data.rows));
     }
 
     if (localStorage.getItem("token")) {
