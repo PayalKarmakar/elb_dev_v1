@@ -197,7 +197,11 @@ export const getRecentPosts = async (req, res) => {
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-  const query = `SELECT * from master_posts where id=${req.params.id}`;
+  const query = `select post.*,img.image_path,img.is_cover,cat.category
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      left join master_categories cat on post.cat_id = cat.id
+      where post.id=${req.params.id}`;
 
   try {
     await pool.query(`BEGIN`);
