@@ -165,14 +165,24 @@ export const getFeaturedPosts = async (req, res) => {
     `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id
-      where feature_product=true order by post.title`,
+      where is_feature=true order by post.title`,
     []
   );
 
   res.status(StatusCodes.OK).json({ data });
 }; // Jyoti
 
-export const getRecentPosts = async (req, res) => {}; // Jyoti
+export const getRecentPosts = async (req, res) => {
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      where is_feature=true order by post.created_at desc limit 5`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+}; // Jyoti
 
 export const getPostDetails = async (req, res) => {
   const query = `SELECT * from master_posts where id=${req.params.id}`;
@@ -186,3 +196,15 @@ export const getPostDetails = async (req, res) => {
     await pool.query(`ROLLBACK`);
   }
 };
+
+export const getAllPosts = async (req, res) => {
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      where is_feature=true order by post.created_at desc limit 5`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+}; // Jyoti

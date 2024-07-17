@@ -5,6 +5,7 @@ const initialValue = {
   listPosts: [],
   editId: "",
   featuredPosts: [],
+  recentPosts: [],
 };
 
 const postSlice = createSlice({
@@ -35,6 +36,12 @@ const postSlice = createSlice({
     unsetFeaturedPosts: (state) => {
       state.featuredPosts = [];
     },
+    setRecentPosts: (state, action) => {
+      state.recentPosts = action.payload;
+    },
+    unsetRecentPosts: (state) => {
+      state.recentPosts = [];
+    },
   },
 });
 
@@ -47,5 +54,7 @@ export const {
   unsetEditPost,
   setFeaturedPosts,
   unsetFeaturedPosts,
+  setRecentPosts,
+  unsetRecentPosts,
 } = postSlice.actions;
 export default postSlice.reducer;
