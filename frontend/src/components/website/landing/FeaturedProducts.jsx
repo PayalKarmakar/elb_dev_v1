@@ -16,20 +16,20 @@ const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
   const sliderRef = useRef(null);
 
-  const dispatch = useDispatch();
-  const fetchData = async () => {
-    try {
-      const response = await customFetch.get(`/website/featured-posts`);
-      dispatch(setFeaturedPosts(response?.data?.data?.rows));
-    } catch (error) {
-      splitErrors(error?.response?.data?.msg);
-      return error;
-    }
-  };
+  // const dispatch = useDispatch();
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await customFetch.get(`/website/featured-posts`);
+  //     dispatch(setFeaturedPosts(response?.data?.data?.rows));
+  //   } catch (error) {
+  //     splitErrors(error?.response?.data?.msg);
+  //     return error;
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;

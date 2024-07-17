@@ -23,18 +23,17 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.resolve(__dirname, "./public")));
+// app.use(express.static(path.resolve(__dirname, "./frontend/dist")));
+
 if (process.env.APP_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
-// app.use(express.static(path.resolve(__dirname, "./public/forntend")));
-app.use(express.static(path.resolve(__dirname, "./frontend/dist")));
 
 app.use(cookieParser());
 app.use(express.json());
