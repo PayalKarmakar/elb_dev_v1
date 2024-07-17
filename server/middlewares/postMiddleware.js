@@ -44,3 +44,7 @@ export const validateDynamic = async (req, res, next) => {
 
   next();
 };
+
+export const testUploadMiddleware = withValidationErrors([
+  body("name").notEmpty().withMessage(`Name is required`),
+]);

@@ -4,10 +4,13 @@ import { store } from "./store";
 
 import Login from "./components/website/Login";
 import Signup from "./components/website/Signup";
+import TestUpload from "./pages/website/user/post/TestUpload";
 
 // Actions ------
 import { action as loginAction } from "./components/website/Login";
 import { action as registerAction } from "./components/website/Signup";
+import { action as testUploadAction } from "./pages/website/user/post/TestUpload";
+import { action as createPostAction } from "./pages/website/user/post/PostAd";
 
 // Loaders ------
 import { loader as layoutLoader } from "./pages/Layout";
@@ -67,7 +70,16 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <Elb.WebsiteUserDashboard /> },
       { path: "profile", element: <Elb.WebsiteUserProfile /> },
-      { path: "post-ad", element: <Elb.UserPostAd /> },
+      {
+        path: "post-ad",
+        element: <Elb.UserPostAd />,
+        action: createPostAction,
+      },
+      {
+        path: "test-upload",
+        element: <TestUpload />,
+        action: testUploadAction,
+      },
     ],
   },
 
