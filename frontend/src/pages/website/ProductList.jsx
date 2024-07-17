@@ -5,7 +5,6 @@ import ProductListByCat from "../../components/website/product/ProductListByCat"
 
 const ProductList = () => {
   const { slug, catname, subcat } = useParams();
-  console.log(`${slug}, ${catname}, ${subcat}`);
 
   return (
     <>
