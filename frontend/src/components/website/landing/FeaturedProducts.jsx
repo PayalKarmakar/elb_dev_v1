@@ -7,29 +7,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { setFeaturedPosts } from "../../../feature/postSlice";
-import { splitErrors } from "../../../utils/showErrors";
-import customFetch from "../../../utils/customFetch";
+import { useSelector } from "react-redux";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
   const sliderRef = useRef(null);
-
-  // const dispatch = useDispatch();
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await customFetch.get(`/website/featured-posts`);
-  //     dispatch(setFeaturedPosts(response?.data?.data?.rows));
-  //   } catch (error) {
-  //     splitErrors(error?.response?.data?.msg);
-  //     return error;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;

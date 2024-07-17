@@ -6,6 +6,7 @@ import {
   getCategories,
 } from "../controllers/masters/categoryController.js";
 import {
+  getAllPosts,
   getFeaturedPosts,
   getPostDetails,
   getRecentPosts,
@@ -17,5 +18,5 @@ router.get(`/all-categories`, getAllCategories);
 router.get(`/featured-posts`, getFeaturedPosts); // Jyoti
 router.get(`/recent-posts`, getRecentPosts); // Jyoti
 router.get(`/post/:id`, getPostDetails); // Arko
-
+router.get(`/all-post`, getAllPosts); // Jyoti
 export default router;

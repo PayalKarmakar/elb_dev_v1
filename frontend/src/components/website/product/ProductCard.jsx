@@ -1,21 +1,37 @@
 import { nanoid } from "nanoid";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import customFetch from "../../../utils/customFetch";
+import { splitErrors } from "../../../utils/showErrors";
+import { setAllPosts } from "../../../feature/postSlice";
 
 const ProductCard = ({ catCard }) => {
-  const { listCategories } = useSelector((store) => store.categories);
+  const { allPosts } = useSelector((store) => store.posts);
 
-  // let parentCategory = ''
-  // let subcategory = ''
-  // let sitem = listCategories.map((item)=>{
-  // if(item.slug === catSlug.catname){
-  //     parentCategory = item.category
-  // }
+  const dispatch = useDispatch();
 
-  // if (item?.sub_cat?.find((i)=> i.slug === catSlug.subcat)?.category){
-  //     subcategory = item?.sub_cat?.find((i)=> i.slug === catSlug.subcat)?.category
-  // }
-  // })
+  const fetchData = async () => {
+    try {
+      if (catCard.catname == "all") {
+        const response = await customFetch.get(`/website/all-post`);
+        dispatch(setAllPosts(response?.data?.data?.rows));
+      } else {
+        if (catCard.subcat) {
+          const response = await customFetch.get(
+            `/website/all-post/${catCard.catname}/${catCard.subcat}`
+          );
+          dispatch(setAllPosts(response?.data?.data?.rows));
+        }
+      }
+    } catch (error) {
+      splitErrors(error?.response?.data?.msg);
+      return error;
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -29,7 +45,7 @@ const ProductCard = ({ catCard }) => {
             tabIndex="0"
           >
             <div className="row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
-              {listCategories.map((parentCategory) => {
+              {allPosts.map((parentCategory) => {
                 return (
                   <article key={nanoid()} className="col mb-4">
                     <div className="service-card bg-white">

@@ -6,17 +6,21 @@ const CategoryHero = ({ catSlug }) => {
 
   let parentCategory = "";
   let subcategory = "";
-  let sitem = listCategories.map((item) => {
-    if (item.slug === catSlug.catname) {
-      parentCategory = item.category;
-    }
+  if (catSlug.catname == "all") {
+    parentCategory = "All Posts";
+  } else {
+    let sitem = listCategories.map((item) => {
+      if (item.slug === catSlug.catname) {
+        parentCategory = item.category;
+      }
 
-    if (item?.sub_cat?.find((i) => i.slug === catSlug.subcat)?.category) {
-      subcategory = item?.sub_cat?.find(
-        (i) => i.slug === catSlug.subcat
-      )?.category;
-    }
-  });
+      if (item?.sub_cat?.find((i) => i.slug === catSlug.subcat)?.category) {
+        subcategory = item?.sub_cat?.find(
+          (i) => i.slug === catSlug.subcat
+        )?.category;
+      }
+    });
+  }
 
   return (
     <>
@@ -36,9 +40,16 @@ const CategoryHero = ({ catSlug }) => {
                     <li className="breadcrumb-item">
                       <a href="#">Home</a>
                     </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {subcategory}
-                    </li>
+                    {subcategory ? (
+                      <li
+                        className="breadcrumb-item active"
+                        aria-current="page"
+                      >
+                        {subcategory}
+                      </li>
+                    ) : (
+                      ""
+                    )}
                   </ol>
                 </nav>
               </div>
