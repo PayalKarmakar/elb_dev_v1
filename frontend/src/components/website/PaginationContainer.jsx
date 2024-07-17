@@ -1,6 +1,11 @@
-import React from 'react';
+import React from "react";
 
-const PaginationContainer = ({ pageCount, currentPage, onPageChange }) => {
+const PaginationContainer = ({
+  pageCount,
+  currentPage,
+  onPageChange,
+  currentOffset,
+}) => {
   const renderList = () => {
     const listItems = [];
 
@@ -8,7 +13,12 @@ const PaginationContainer = ({ pageCount, currentPage, onPageChange }) => {
     if (currentPage > 1) {
       listItems.push(
         <li key="prev" className="custom-page-item page-item">
-          <button className="custom-page-link page-link" onClick={() => onPageChange(currentPage - 1)}>Previous</button>
+          <button
+            className="custom-page-link page-link"
+            onClick={() => onPageChange(currentPage - 1, currentOffset - 5)}
+          >
+            Previous
+          </button>
         </li>
       );
     }
@@ -16,8 +26,18 @@ const PaginationContainer = ({ pageCount, currentPage, onPageChange }) => {
     // Page Numbers
     for (let i = 1; i <= pageCount; i++) {
       listItems.push(
-        <li key={i} className={`custom-page-item page-item ${i === currentPage ? 'active' : ''}`}>
-          <button className="custom-page-link page-link" onClick={() => onPageChange(i)}>{i}</button>
+        <li
+          key={i}
+          className={`custom-page-item page-item ${
+            i === currentPage ? "active" : ""
+          }`}
+        >
+          <button
+            className="custom-page-link page-link"
+            onClick={() => onPageChange(i, (i - 1) * 5)}
+          >
+            {i}
+          </button>
         </li>
       );
     }
@@ -26,7 +46,12 @@ const PaginationContainer = ({ pageCount, currentPage, onPageChange }) => {
     if (currentPage < pageCount) {
       listItems.push(
         <li key="next" className="custom-page-item page-item">
-          <button className="custom-page-link page-link" onClick={() => onPageChange(currentPage + 1)}>Next</button>
+          <button
+            className="custom-page-link page-link"
+            onClick={() => onPageChange(currentPage + 1, currentOffset + 5)}
+          >
+            Next
+          </button>
         </li>
       );
     }
@@ -38,9 +63,7 @@ const PaginationContainer = ({ pageCount, currentPage, onPageChange }) => {
     <div className="row justify-content-center mt-3">
       <div className="col-auto">
         <nav aria-label="Page navigation example">
-          <ul className="custom-pagination pagination">
-            {renderList()}
-          </ul>
+          <ul className="custom-pagination pagination">{renderList()}</ul>
         </nav>
       </div>
     </div>

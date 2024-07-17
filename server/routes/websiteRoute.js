@@ -18,5 +18,5 @@ router.get(`/all-categories`, getAllCategories);
 router.get(`/featured-posts`, getFeaturedPosts); // Jyoti
 router.get(`/recent-posts`, getRecentPosts); // Jyoti
 router.get(`/post/:id`, getPostDetails); // Arko
-router.get(`/all-post`, getAllPosts); // Jyoti
+router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 export default router;

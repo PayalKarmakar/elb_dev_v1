@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import ProductCard from "./ProductCard";
-import ListPagination from "../PaginationContainer";
-import PaginationContainer from "../PaginationContainer";
 
 const ProductListByCat = ({ catSlug }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageCount = 10;
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
   return (
     <>
       <section className="py-110 bg-offWhite">
@@ -104,11 +95,6 @@ const ProductListByCat = ({ catSlug }) => {
           </div>
           <ProductCard
             catCard={{ catname: catSlug.catname, subcat: catSlug.subcat }}
-          />
-          <PaginationContainer
-            pageCount={pageCount}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
           />
         </div>
       </section>
