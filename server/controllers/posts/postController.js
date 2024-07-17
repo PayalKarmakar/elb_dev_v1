@@ -7,82 +7,17 @@ import multer from "multer";
 
 export const addPost = async (req, res) => {
   const { category, subCategory, title, description, price } = req.body;
-  const { token } = req.cookies;
-  const { uuid } = verifyJWT(token);
-  const uid = await getUserId(uuid);
-  const subCat = subCategory ? +subCategory : null;
-  const desc = description || null;
-  const postSlug = await generateOtherSlug("master_posts", title);
-  const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
-  console.log(req.body);
-  console.log(req.file);
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, `/uploads/posts/${postId}`);
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + "-" + file.originalname);
+    },
+  });
 
-  try {
-    await pool.query(`BEGIN`);
-
-    const master = await pool.query(
-      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at) values($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id`,
-      [
-        uid,
-        title.trim(),
-        +category,
-        subCat,
-        desc,
-        +price,
-        postSlug,
-        timeStamp,
-        timeStamp,
-      ]
-    );
-
-    const postId = master.rows[0].id;
-
-    const formFields = await pool.query(
-      `select id, field_name, field_type from master_form_fields where cat_id=$1`,
-      [+subCategory]
-    );
-
-    for (const field of formFields.rows) {
-      const value = req.body[field.field_name];
-
-      const dbData =
-        field.field_type === "radio" || field.field_type === "dropdown"
-          ? +value
-          : null;
-      const entryData =
-        field.field_type === "text" ||
-        field.field_type === "textarea" ||
-        field.field_type === "number"
-          ? value
-          : null;
-
-      await pool.query(
-        `insert into details_posts(post_id, attr_id, attr_db_value, attr_entry) values($1, $2, $3, $4)`,
-        [postId, +field.id, dbData, entryData]
-      );
-    }
-
-    const storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, `/uploads/posts/${postId}`);
-      },
-      filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
-      },
-    });
-
-    const upload = multer({ storage: storage });
-
-    await pool.query(`COMMIT`);
-
-    res.status(StatusCodes.CREATED).json({ data: `success` });
-  } catch (error) {
-    console.log(error);
-    await pool.query(`ROLLBACK`);
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ data: `something went wrong!!` });
-  }
+  const upload = multer({ storage: storage }).array("images", 10);
+  return;
 };
 
 export const allPosts = async (req, res) => {
@@ -189,19 +124,14 @@ export const getFeaturedPosts = async (req, res) => {
 export const getRecentPosts = async (req, res) => {}; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-
   const query = `SELECT * from master_posts where id=${req.params.id}`;
- 
-  
 
   try {
     await pool.query(`BEGIN`);
     const details = await pool.query(query);
     res.status(StatusCodes.ACCEPTED).json({ data: details });
     await pool.query(`COMMIT`);
-
-} catch (error) {
-  await pool.query(`ROLLBACK`);
-}
-}
-
+  } catch (error) {
+    await pool.query(`ROLLBACK`);
+  }
+};

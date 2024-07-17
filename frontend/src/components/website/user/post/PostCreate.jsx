@@ -86,15 +86,19 @@ const PostCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
     let formData = new FormData(e.currentTarget);
+    let images = [];
     postImages &&
       postImages.forEach((img, index) => {
-        formData.append(`images[${index}]`, img);
+        formData.append("images", [...images, img]);
       });
     let data = Object.fromEntries(formData);
+    console.log(data);
     try {
-      const response = await customFetch.post(`/posts/posts`, data);
+      const response = await customFetch.post(`/posts/posts`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setPostImages([]);
       setForm({ ...form, title: "", description: "", price: "" });

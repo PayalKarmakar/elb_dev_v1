@@ -15,15 +15,14 @@ import {
   setGetCategories,
   setParentCategories,
 } from "../../feature/masters/categorySlice";
-import {
-  setCurrentUser,
-  unsetCurrentUser,
-} from "../../feature/currentUserSlice";
+import { setCurrentUser } from "../../feature/currentUserSlice";
+import { setFeaturedPosts } from "../../feature/postSlice";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
   const { getCategories } = store.getState().categories;
   const { currentUser } = store.getState().currentUser;
+  const { featuredPosts } = store.getState().posts;
 
   try {
     if (topLocations.length === 0) {
@@ -44,6 +43,11 @@ export const loader = (store) => async () => {
         const cuser = await customFetch.get(`/auth/current-user`);
         store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
       }
+    }
+
+    if (featuredPosts.length === 0) {
+      const fPosts = await customFetch.get(`/website/featured-posts`);
+      store.dispatch(setFeaturedPosts(fPosts?.data?.data?.rows));
     }
 
     return null;
