@@ -17,9 +17,10 @@ import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
+import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 import UserProfile from "./pages/website/user/UserProfile";
-import ProductDetails from "./pages/ProductDetails";
+
 
 const router = createBrowserRouter([
   {
@@ -32,10 +33,7 @@ const router = createBrowserRouter([
         element: <Login />,
         action: loginAction,
       },
-      {
-        path: "product-details/:id",
-        element: <ProductDetails />,
-      },
+     
       {
         path: "sign-up",
         element: <Signup />,
@@ -43,6 +41,7 @@ const router = createBrowserRouter([
       },
       {
         element: <Elb.LayoutWebsiteUser />,
+        loader: LayoutWebsiteUser(store),
         children: [
           { path: "", element: <Elb.Landing /> },
           { path: "about", element: <Elb.WebsiteAbout /> },
@@ -50,7 +49,8 @@ const router = createBrowserRouter([
             path: "cat/:catname/:subcat?",
             element: <Elb.ProductList />,
           },
-          { path: "/post/:id", element: <Elb.PostView /> },
+          { path: "/post/:id",
+            element: <Elb.PostView /> },
         ],
       },
       // {

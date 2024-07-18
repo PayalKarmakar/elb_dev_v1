@@ -197,7 +197,11 @@ export const getRecentPosts = async (req, res) => {
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-  const query = `SELECT * from master_posts where id=${req.params.id}`;
+  const query = `select post.*,img.image_path,img.is_cover,cat.category
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      left join master_categories cat on post.cat_id = cat.id
+      where post.id=${req.params.id}`;
 
   try {
     await pool.query(`BEGIN`);
@@ -210,15 +214,34 @@ export const getPostDetails = async (req, res) => {
 };
 
 export const getAllPosts = async (req, res) => {
+  let cat = "";
+  if (req.params.cat) {
+    if (req.params.subcat) {
+      cat = `and cat_id =${req.params.cat} and subcat_id =${req.params.subcat}`;
+    } else {
+      cat = `and cat_id =${req.params.cat}`;
+    }
+  } else {
+    cat = "";
+  }
   const data = await pool.query(
     `select post.*,img.image_path,img.is_cover
-      from  master_posts post 
+      from  master_posts post
       left join image_posts img on post.id = img.post_id
-      where is_feature=true order by post.created_at desc limit 5`,
+      where is_active=true ${cat}
+      offset ${req.params.offset} limit 5`,
     []
   );
 
-  res.status(StatusCodes.OK).json({ data });
+  const result = await pool.query(
+    `select count(post.id) countId
+      from  master_posts post
+      left join image_posts img on post.id = img.post_id
+      where is_active=true ${cat}`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data, result });
 }; // Jyoti
 
 export const testUpload = (req, res) => {
