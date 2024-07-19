@@ -50,7 +50,7 @@ const Layout = () => {
     try {
       await customFetch.get(`/auth/logout`);
 
-      dispatch(unsetCurrentUser());
+      // dispatch(unsetCurrentUser());
       localStorage.removeItem("token");
 
       toast.success(`Thank you for visiting`);
