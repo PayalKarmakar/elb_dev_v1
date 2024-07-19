@@ -17,7 +17,10 @@ const WbSecondNav = () => {
   };
 
   const { listCategories } = useSelector((store) => store.categories);
+<<<<<<< HEAD
+=======
   const { currentUser } = useSelector((store) => store.currentUser);
+>>>>>>> c9484f4c679310593c9de8b93ca44e55079dfda0
 
   return (
     <div className="d-none d-xl-block secondary-nav-wrapper">
