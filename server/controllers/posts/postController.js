@@ -5,11 +5,17 @@ import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
 
 export const addPost = async (req, res) => {
-  const { category, subCategory, title, description, price } = req.body;
+  const obj = { ...req.body };
+  const { category, subCategory, title, description, price } = obj;
+  const { destination, filename } = req.file;
+  const arr = destination.split(`/`);
+  const suffix = arr[1] + "/" + arr[2];
+  const imgPath = `${suffix}/${filename}`;
+
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
   const uid = await getUserId(uuid);
-  const subCat = subCategory ? +subCategory : null;
+  const subCat = subCategory ? subCategory : null;
   const desc = description || null;
   const postSlug = await generateOtherSlug("master_posts", title);
   const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
@@ -22,10 +28,10 @@ export const addPost = async (req, res) => {
       [
         uid,
         title.trim(),
-        +category,
+        category,
         subCat,
         desc,
-        +price,
+        price,
         postSlug,
         timeStamp,
         timeStamp,
@@ -36,15 +42,16 @@ export const addPost = async (req, res) => {
 
     const formFields = await pool.query(
       `select id, field_name, field_type from master_form_fields where cat_id=$1`,
-      [+subCategory]
+      [subCategory]
     );
 
     for (const field of formFields.rows) {
-      const value = req.body[field.field_name];
+      // const value = req.body[field.field_name];
+      const value = obj[field.field_name];
 
       const dbData =
         field.field_type === "radio" || field.field_type === "dropdown"
-          ? +value
+          ? value
           : null;
       const entryData =
         field.field_type === "text" ||
@@ -58,6 +65,11 @@ export const addPost = async (req, res) => {
         [postId, +field.id, dbData, entryData]
       );
     }
+
+    await pool.query(
+      `insert into image_posts(post_id, image_path) values($1, $2)`,
+      [+postId, imgPath]
+    );
 
     await pool.query(`COMMIT`);
 
@@ -158,4 +170,82 @@ export const updatePost = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ data: `something went wrong!!` });
   }
+};
+
+export const getFeaturedPosts = async (req, res) => {
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      where is_feature=true order by post.title`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+}; // Jyoti
+
+export const getRecentPosts = async (req, res) => {
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      where is_feature=true order by post.created_at desc limit 5`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+}; // Jyoti
+
+export const getPostDetails = async (req, res) => {
+  const query = `select post.*,img.image_path,img.is_cover,cat.category
+      from  master_posts post 
+      left join image_posts img on post.id = img.post_id
+      left join master_categories cat on post.cat_id = cat.id
+      where post.id=${req.params.id}`;
+
+  try {
+    await pool.query(`BEGIN`);
+    const details = await pool.query(query);
+    res.status(StatusCodes.ACCEPTED).json({ data: details });
+    await pool.query(`COMMIT`);
+  } catch (error) {
+    await pool.query(`ROLLBACK`);
+  }
+};
+
+export const getAllPosts = async (req, res) => {
+  let cat = "";
+  if (req.params.cat) {
+    if (req.params.subcat) {
+      cat = `and cat_id =${req.params.cat} and subcat_id =${req.params.subcat}`;
+    } else {
+      cat = `and cat_id =${req.params.cat}`;
+    }
+  } else {
+    cat = "";
+  }
+  const data = await pool.query(
+    `select post.*,img.image_path,img.is_cover
+      from  master_posts post
+      left join image_posts img on post.id = img.post_id
+      where is_active=true ${cat}
+      offset ${req.params.offset} limit 5`,
+    []
+  );
+
+  const result = await pool.query(
+    `select count(post.id) countId
+      from  master_posts post
+      left join image_posts img on post.id = img.post_id
+      where is_active=true ${cat}`,
+    []
+  );
+
+  res.status(StatusCodes.OK).json({ data, result });
+}; // Jyoti
+
+export const testUpload = (req, res) => {
+  const obj = { ...req.body };
+  console.log(obj);
+  console.log(req.file);
 };

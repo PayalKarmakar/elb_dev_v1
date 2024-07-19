@@ -11,12 +11,20 @@ import WbFooter from "../../components/website/WbFooter";
 import { splitErrors } from "../../utils/showErrors";
 import customFetch from "../../utils/customFetch";
 import { setTopLocations } from "../../feature/masters/locationSlice";
-import { setGetCategories } from "../../feature/masters/categorySlice";
-import { useSelector } from "react-redux";
+import {
+  setGetCategories,
+  setParentCategories,
+} from "../../feature/masters/categorySlice";
+import { setCurrentUser } from "../../feature/currentUserSlice";
+import { setFeaturedPosts, setRecentPosts } from "../../feature/postSlice";
 
 export const loader = (store) => async () => {
   const { topLocations } = store.getState().locations;
   const { getCategories } = store.getState().categories;
+  const { currentUser } = store.getState().currentUser;
+  const { featuredPosts } = store.getState().posts;
+  const { recentPosts } = store.getState().posts;
+
   try {
     if (topLocations.length === 0) {
       const tLoc = await customFetch.get(`/website/top-locations`);
@@ -27,6 +35,23 @@ export const loader = (store) => async () => {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
     }
+
+    if (localStorage.getItem("token")) {
+      if (!currentUser.first_name) {
+        const cuser = await customFetch.get(`/auth/current-user`);
+        store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
+      }
+    }
+
+    if (featuredPosts.length === 0) {
+      const fPosts = await customFetch.get(`/website/featured-posts`);
+      store.dispatch(setFeaturedPosts(fPosts?.data?.data?.rows));
+    }
+    if (recentPosts.length === 0) {
+      const rPosts = await customFetch.get(`/website/recent-posts`);
+      store.dispatch(setRecentPosts(rPosts?.data?.data?.rows));
+    }
+
     return null;
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
@@ -35,7 +60,6 @@ export const loader = (store) => async () => {
 };
 
 const LayoutWebsite = () => {
-  const currentUser = useSelector((state) => state.currentUser);
   return (
     <>
       <WbTopnav />

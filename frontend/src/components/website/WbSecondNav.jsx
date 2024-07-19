@@ -17,6 +17,10 @@ const WbSecondNav = () => {
   };
 
   const { listCategories } = useSelector((store) => store.categories);
+<<<<<<< HEAD
+=======
+  const { currentUser } = useSelector((store) => store.currentUser);
+>>>>>>> c9484f4c679310593c9de8b93ca44e55079dfda0
 
   return (
     <div className="d-none d-xl-block secondary-nav-wrapper">
@@ -24,15 +28,17 @@ const WbSecondNav = () => {
         <div className="position-relative">
           <nav className="secondary-nav-container position-absolute w-100 start-0 z-3">
             <ul className="secondary-nav d-flex justify-content-between align-items-center">
-              {listCategories.map((i) => (
-                <Link
-                  key={nanoid()}
-                  to={i.slug}
-                  className="text-decoration-none"
-                >
-                  <li>{i.category}</li>
-                </Link>
-              ))}
+              {listCategories?.map((cat) => {
+                return (
+                  <Link
+                    key={nanoid()}
+                    to={`/cat/${cat.slug}`}
+                    className="text-decoration-none"
+                  >
+                    <li>{cat.category}</li>
+                  </Link>
+                );
+              })}
               <li>
                 <button type="button" onClick={handleOpenModal}>
                   <svg

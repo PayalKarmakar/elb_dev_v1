@@ -4,7 +4,6 @@ import { Modal } from "react-bootstrap";
 import customFetch from "../../utils/customFetch";
 import { setListCategories } from "../../feature/masters/categorySlice";
 import { splitErrors } from "../../utils/showErrors";
-import CatNavImg from "../../assets/website/img/others/category.png";
 import {
   MdBikeScooter,
   MdCategory,
@@ -17,14 +16,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CategoryModal = ({ show, handleClose }) => {
   const { listCategories } = useSelector((store) => store.categories);
-  // console.log(listCategories);
+  const { currentUser } = useSelector((store) => store.currentUser);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
       const response = await customFetch.get(`/website/all-categories`);
-
       dispatch(setListCategories(response?.data?.data?.rows));
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
@@ -34,6 +33,8 @@ const CategoryModal = ({ show, handleClose }) => {
 
   const handleModalClose = (parent, child) => {
     let navigateUrl = "";
+    navigateUrl = `/cat`;
+
     if (!child) {
       let pSlug = "";
 
@@ -42,7 +43,7 @@ const CategoryModal = ({ show, handleClose }) => {
           pSlug = item.slug;
         }
       });
-      navigateUrl = `/${pSlug}`;
+      navigateUrl = navigateUrl + `/${pSlug}`;
     } else {
       let pSlug = "";
       let cSlug = "";
@@ -55,7 +56,7 @@ const CategoryModal = ({ show, handleClose }) => {
           cSlug = item?.sub_cat?.find((i) => +i.id === +child)?.slug;
         }
       });
-      navigateUrl = `/${pSlug}/${cSlug}`;
+      navigateUrl = navigateUrl + `/${pSlug}/${cSlug}`;
     }
 
     handleClose();
@@ -142,22 +143,24 @@ const CategoryModal = ({ show, handleClose }) => {
                     </h4>
                     <nav className="category-nav">
                       <ul>
-                        {parentCategory.sub_cat.map((subcategory) => (
-                          <li key={subcategory.id}>
-                            <button
-                              type="button"
-                              className="btn btn-default btn-sm"
-                              onClick={() =>
-                                handleModalClose(
-                                  parentCategory.id,
-                                  subcategory.id
-                                )
-                              }
-                            >
-                              {subcategory.category}
-                            </button>
-                          </li>
-                        ))}
+                        {parentCategory.sub_cat.map((subcategory) => {
+                          return (
+                            <li key={subcategory.id}>
+                              <button
+                                type="button"
+                                className="btn btn-default btn-sm"
+                                onClick={() =>
+                                  handleModalClose(
+                                    parentCategory.id,
+                                    subcategory.id
+                                  )
+                                }
+                              >
+                                {subcategory.category}
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </nav>
                   </div>

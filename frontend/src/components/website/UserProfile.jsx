@@ -1,10 +1,28 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import profilepic from "../../assets/website/img/dashboard/heade-av.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { unsetCurrentUser } from "../../feature/currentUserSlice";
+import customFetch from "../../utils/customFetch";
+import { toast } from "react-toastify";
+import { splitErrors } from "../../utils/showErrors";
 
 function UserProfile() {
-  const currentUser = useSelector((state) => state.currentUser);
-  const { logout } = useOutletContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.currentUser);
+
+  const logoutWebsite = async () => {
+    try {
+      await customFetch.get(`/auth/logout`);
+      dispatch(unsetCurrentUser());
+      localStorage.removeItem("token");
+      toast.success(`Thank you for visiting`);
+      navigate(`/`);
+    } catch (error) {
+      splitErrors(error?.response?.data?.msg);
+      return error;
+    }
+  };
 
   return (
     <div className="dashboard-header-btns d-flex gap-3">
@@ -45,7 +63,7 @@ function UserProfile() {
         </button>
         <ul className="dashboard-profile dropdown-menu">
           <li style={{ fontWeight: "bold" }}>
-            {`${currentUser.currentUser.first_name} ${currentUser.currentUser.last_name}`.toUpperCase()}
+            {`${currentUser.first_name} ${currentUser.last_name}`.toUpperCase()}
           </li>
 
           <li>
@@ -116,8 +134,8 @@ function UserProfile() {
           </li>
           <li>
             <a
-              className="dashboard-profile-item dropdown-item d-flex gap-2"
-              onClick={logout}
+              className="dashboard-profile-item dropdown-item d-flex gap-2 cursor-pointer"
+              onClick={logoutWebsite}
             >
               <svg
                 width="20"

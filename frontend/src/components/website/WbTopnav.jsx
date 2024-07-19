@@ -8,6 +8,7 @@ import Themeswitch from "./Themeswtich";
 import { useSelector } from "react-redux";
 import UserProfile from "./UserProfile";
 import { MdOutlineSell } from "react-icons/md";
+
 //return redirect(`${path}`);
 const WbTopnav = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -24,7 +25,8 @@ const WbTopnav = () => {
     };
   }, []);
 
-  const currentUser = useSelector((state) => state.currentUser);
+  const { currentUser } = useSelector((state) => state.currentUser);
+
   return (
     <header className={`header-primary ${isSticky ? "sticky" : ""}`}>
       <div className="container">
@@ -33,7 +35,7 @@ const WbTopnav = () => {
           <TopSearch />
           <div className="navbar-right d-flex align-items-center gap-4">
             <div className="align-items-center d-none d-lg-flex">
-              {!currentUser.currentUser.uuid ? (
+              {!currentUser.uuid ? (
                 <Link
                   to="/sign-in"
                   className="w-btn-secondary-lg text-decoration-none"
@@ -42,20 +44,18 @@ const WbTopnav = () => {
                   Login
                 </Link>
               ) : (
-                <button
-                  type="button"
-                  className="header-btn"
-                  //onClick={"javascript:void(0);"}
-                >
-                  <MdOutlineSell
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  SELL
-                </button>
+                <Link to={`/${currentUser.slug}/post-ad`}>
+                  <button type="button" className="header-btn">
+                    <MdOutlineSell
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    POST AD
+                  </button>
+                </Link>
               )}
             </div>
-            {currentUser.currentUser.uuid && <UserProfile />}
+            {currentUser.uuid && <UserProfile />}
 
             <Themeswitch />
 

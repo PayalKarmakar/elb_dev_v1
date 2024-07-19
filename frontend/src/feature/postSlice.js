@@ -4,6 +4,8 @@ const initialValue = {
   allPosts: [],
   listPosts: [],
   editId: "",
+  featuredPosts: [],
+  recentPosts: [],
 };
 
 const postSlice = createSlice({
@@ -28,6 +30,18 @@ const postSlice = createSlice({
     unsetEditPost: (state) => {
       state.editId = "";
     },
+    setFeaturedPosts: (state, action) => {
+      state.featuredPosts = action.payload;
+    },
+    unsetFeaturedPosts: (state) => {
+      state.featuredPosts = [];
+    },
+    setRecentPosts: (state, action) => {
+      state.recentPosts = action.payload;
+    },
+    unsetRecentPosts: (state) => {
+      state.recentPosts = [];
+    },
   },
 });
 
@@ -38,5 +52,9 @@ export const {
   unsetListPosts,
   setEditPost,
   unsetEditPost,
+  setFeaturedPosts,
+  unsetFeaturedPosts,
+  setRecentPosts,
+  unsetRecentPosts,
 } = postSlice.actions;
 export default postSlice.reducer;

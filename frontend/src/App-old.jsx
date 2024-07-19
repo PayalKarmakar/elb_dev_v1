@@ -1,85 +1,52 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 import * as Elb from "./pages";
 import { store } from "./store";
 
 import Login from "./components/website/Login";
 import Signup from "./components/website/Signup";
-import TestUpload from "./pages/website/user/post/TestUpload";
 
 // Actions ------
 import { action as loginAction } from "./components/website/Login";
 import { action as registerAction } from "./components/website/Signup";
-import { action as testUploadAction } from "./pages/website/user/post/TestUpload";
-import { action as createPostAction } from "./pages/website/user/post/PostAd";
+import { action as forgotPasswordAction } from "./pages/admin/auth/ForgotPassword";
 
 // Loaders ------
 import { loader as layoutLoader } from "./pages/Layout";
 import { loader as adminLoader } from "./pages/admin/LayoutAdmin";
 import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
-import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
-import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
-import UserProfile from "./pages/website/user/UserProfile";
-
+import { loader as postlayoutLoader } from "./pages/website/user/LayoutUser";
 
 const router = createBrowserRouter([
+  // Website routes ------
   {
     path: "/",
     element: <Elb.LayoutWebsite />,
     loader: websiteLoader(store),
     children: [
+      { index: true, element: <Elb.Landing /> },
+      { path: "about", element: <Elb.WebsiteAbout /> },
       {
         path: "sign-in",
         element: <Login />,
+        errorElement: <Elb.Error />,
         action: loginAction,
       },
-     
       {
         path: "sign-up",
         element: <Signup />,
+        errorElement: <Elb.Error />,
         action: registerAction,
       },
-      {
-        element: <Elb.LayoutWebsiteUser />,
-        loader: LayoutWebsiteUser(store),
-        children: [
-          { path: "", element: <Elb.Landing /> },
-          { path: "about", element: <Elb.WebsiteAbout /> },
-          {
-            path: "cat/:catname/:subcat?",
-            element: <Elb.ProductList />,
-          },
-          { path: "/post/:id",
-            element: <Elb.PostView /> },
-        ],
-      },
-      // {
-      //   element: <Elb.LayoutUser />,
-      //   children: [
-      //     { path: ":slug/dashboard", element: <Elb.WebsiteUserDashboard /> },
-      //     { path: ":slug/post-ad", element: <Elb.UserPostAd /> },
-      //     { path: ":slug/profile", element: <Elb.WebsiteUserProfile /> },
-      //   ],
-      // },
-    ],
-  },
-  {
-    path: ":slug/",
-    element: <Elb.LayoutUser />,
-    loader: layoutUserLoader(store),
-    children: [
-      { path: "dashboard", element: <Elb.WebsiteUserDashboard /> },
-      { path: "profile", element: <Elb.WebsiteUserProfile /> },
-      {
-        path: "post-ad",
-        element: <Elb.UserPostAd />,
-        action: createPostAction,
-      },
-      {
-        path: "test-upload",
-        element: <TestUpload />,
-        action: testUploadAction,
-      },
+      { path: ":catname/:subcat?", element: <Elb.ProductList /> },
+      { path: "" },
     ],
   },
 
@@ -87,17 +54,24 @@ const router = createBrowserRouter([
   {
     path: "sign-in-dev",
     element: <Elb.Login />,
+    errorElement: <Elb.Error />,
     action: loginAction,
   },
-  {
-    path: "sign-up",
-    element: <Signup />,
-    action: registerAction,
-  },
 
-  // Admin Routes
+  {
+    path: "forgot-password",
+    element: <Elb.ForgotPassword />,
+    errorElement: <Elb.Error />,
+    action: forgotPasswordAction,
+  },
+  {
+    path: "/reset-password/:email/:token",
+    element: <Elb.ResetPassword />,
+    errorElement: <Elb.Error />,
+  },
   {
     element: <Elb.Layout />,
+    errorElement: <Elb.Error />,
     loader: layoutLoader(store),
     children: [
       {
@@ -129,6 +103,14 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: ":slug",
+        element: <Elb.LayoutWebsite />,
+        children: [
+          { index: true, element: <Elb.Landing /> },
+          { path: "about", element: <Elb.WebsiteAbout /> },
+        ],
+      },
+      {
         path: "change-password",
         element: <Elb.ChangePassword />,
         action: Changepassaction,
@@ -137,9 +119,29 @@ const router = createBrowserRouter([
       { path: "forbidden", element: <Elb.Forbidden /> },
     ],
   },
+  {
+    path: ":slug",
+    element: <Elb.LayoutUserPost />,
+    errorElement: <Elb.Error />,
+    loader: postlayoutLoader(store),
+    children: [
+      {
+        path: "create-post",
+        element: <Elb.CreatePost />,
+        handle: { crumb: <Link to="#">Dashboard</Link> },
+      },
+    ],
+  },
 ]);
 
 function App() {
   return <RouterProvider router={router} />;
 }
 export default App;
+
+/* ---
+
+Layout / path /
+LayoutWebsite   LayoutAdmin
+index: true     path: admin
+*/

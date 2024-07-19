@@ -1,4 +1,7 @@
 {
-    "diffEditor.wordWrap": "on",
-    "interactiveSession.editor.wordWrap": "on"
+  "diffEditor.wordWrap": "on",
+  "interactiveSession.editor.wordWrap": "on",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true
 }

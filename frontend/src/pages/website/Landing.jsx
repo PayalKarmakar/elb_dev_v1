@@ -7,6 +7,10 @@ import SecondBanner from "../../components/website/landing/SecondBanner";
 import Testimonial from "../../components/website/Testimonial";
 
 const Landing = () => {
+  document.title = `Welcome to Easy Lending Buddy | ${
+    import.meta.env.VITE_APP_TITLE
+  }`;
+
   return (
     <>
       <WbHeroSection />
