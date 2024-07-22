@@ -43,13 +43,13 @@ const FeaturedProducts = () => {
                   </div>
                   <p className="job-post-subtitle fw-bold">{i.title}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
-                  <h3 className="job-post-title fw-semibold">
+                  {/* <h3 className="job-post-title fw-semibold">
                     <span className="text-decoration-none">
                       {i.description && i.description.length > 20
                         ? i.description.substr(0, 20) + ` ...`
                         : i.description}
                     </span>
-                  </h3>
+                  </h3> */}
                 </div>
               </div>
             </article>
