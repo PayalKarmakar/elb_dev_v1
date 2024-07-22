@@ -197,15 +197,20 @@ export const getRecentPosts = async (req, res) => {
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-  const query = `select post.*,img.image_path,img.is_cover,cat.category
-      from  master_posts post 
-      left join image_posts img on post.id = img.post_id
-      left join master_categories cat on post.cat_id = cat.id
-      where post.id=${req.params.id}`;
+  const query = `select post.*,
+    json_agg(
+      json_build_object(
+        'image_path', img.image_path,
+        'is_cover', img.is_cover
+      )
+    ) AS image
+    from master_posts post
+    left join image_posts img on post.id = img.post_id 
+    where post.id=${req.params.id} group by post.id`;
 
   try {
     await pool.query(`BEGIN`);
-    const details = await pool.query(query);
+    const details = await pool.query(query, []);
     res.status(StatusCodes.ACCEPTED).json({ data: details });
     await pool.query(`COMMIT`);
   } catch (error) {
@@ -228,7 +233,7 @@ export const getAllPosts = async (req, res) => {
     `select post.*,img.image_path,img.is_cover
       from  master_posts post
       left join image_posts img on post.id = img.post_id
-      where is_active=true ${cat}
+      where is_active=true and img.is_cover=true ${cat} order by id
       offset ${req.params.offset} limit 5`,
     []
   );
@@ -237,7 +242,7 @@ export const getAllPosts = async (req, res) => {
     `select count(post.id) countId
       from  master_posts post
       left join image_posts img on post.id = img.post_id
-      where is_active=true ${cat}`,
+      where is_active=true and img.is_cover=true ${cat}`,
     []
   );
 

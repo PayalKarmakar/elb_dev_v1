@@ -15,7 +15,7 @@ import upload from "../middlewares/multerMiddleware.js";
 
 router.post(
   `/posts`,
-  upload.single("image"),
+  upload.array("image"),
   [validatePostForm, validateDynamic],
   addPost
 );

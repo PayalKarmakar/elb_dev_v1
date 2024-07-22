@@ -15,7 +15,8 @@ import { toast } from "react-toastify";
 // // Action starts ------
 export const action = async ({ request }) => {
   let formData = await request.formData();
-
+  // console.log(...formData);
+  // return null;
   try {
     const response = await customFetch.post(`/posts/posts`, formData);
     toast.success(`Post created`);
@@ -75,7 +76,7 @@ const PostAd = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files;
 
     if (file) {
       if (file?.name && !file?.type.startsWith("image/")) {
@@ -91,7 +92,9 @@ const PostAd = () => {
         return;
       }
     }
+
     const arr = [...postImages, file];
+
     setPostImages(arr);
   };
 
@@ -293,6 +296,7 @@ const PostAd = () => {
                           <input
                             className="d-none"
                             type="file"
+                            multiple
                             name="image"
                             id="gig-img"
                             onChange={(e) => handleImageChange(e ? e : null)}

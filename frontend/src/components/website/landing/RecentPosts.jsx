@@ -34,54 +34,44 @@ const RecentPosts = () => {
               : product1;
             return (
               <article key={index}>
-                <div
-                  className="service-card bg-white"
-                  data-aos="fade-up"
-                  data-aos-duration="1000"
-                  data-aos-easing="linear"
+                <Link
+                  to={`/product-details/${post.id}`}
+                  className="text-decoration-none"
                 >
-                  <div className="position-relative">
-                    <img
-                      src={imgSrc}
-                      className="recently-view-card-img w-100"
-                      alt={post.title || "Post Image"}
-                    />
-                    <button className="service-card-wishlist-btn">
-                      <FaRegHeart />
-                    </button>
-                  </div>
-                  <div className="service-card-content">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div>
-                        <h3 className="job-post-subtitle fw-bold">
-                          {`₹${post.price}`}
-                        </h3>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <FaStar />
-                        <span className="service-card-rating">4.8 (2k)</span>
-                      </div>
-                    </div>
-                    <h3 className="service-card-title fw-semibold">
-                      <Link href="service-details.html">
-                        {post.title || "Brote - Cleaning Service Elementor"}
-                      </Link>
-                    </h3>
-                    <div className="d-flex align-items-center service-card-author">
+                  <div
+                    className="service-card bg-white"
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                    data-aos-easing="linear"
+                  >
+                    <div className="position-relative">
                       <img
-                        src={post.authorImage || "assets/img/avatar/u-sm-1.png"}
-                        className="service-card-author-img"
-                        alt={post.author || "Author Image"}
+                        src={imgSrc}
+                        className="recently-view-card-img w-100"
+                        alt={post.title || "Post Image"}
                       />
-                      <Link
-                        href="freelancer-details.html"
-                        className="service-card-author-name"
-                      >
-                        {post.author || "Post BY"}
-                      </Link>
+                      <button className="service-card-wishlist-btn">
+                        <FaRegHeart />
+                      </button>
+                    </div>
+                    <div className="service-card-content">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <h3 className="job-post-subtitle fw-bold">
+                            {`₹${post.price}`}
+                          </h3>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <FaStar />
+                          <span className="service-card-rating">4.8 (2k)</span>
+                        </div>
+                      </div>
+                      <h3 className="service-card-title fw-semibold">
+                        {post.title || "Brote - Cleaning Service Elementor"}
+                      </h3>
                     </div>
                   </div>
-                </div>
+                </Link>
               </article>
             );
           })}
