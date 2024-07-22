@@ -34,10 +34,7 @@ const RecentPosts = () => {
               : product1;
             return (
               <article key={index}>
-                <Link
-                  to={`/product-details/${post.id}`}
-                  className="text-decoration-none"
-                >
+                <Link to={`/post/${post.id}`} className="text-decoration-none">
                   <div
                     className="service-card bg-white"
                     data-aos="fade-up"
