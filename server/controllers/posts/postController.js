@@ -7,10 +7,6 @@ import dayjs from "dayjs";
 export const addPost = async (req, res) => {
   const obj = { ...req.body };
   const { category, subCategory, title, description, price } = obj;
-  const { destination, filename } = req.file;
-  const arr = destination.split(`/`);
-  const suffix = arr[1] + "/" + arr[2];
-  const imgPath = `${suffix}/${filename}`;
 
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
@@ -66,10 +62,18 @@ export const addPost = async (req, res) => {
       );
     }
 
-    await pool.query(
-      `insert into image_posts(post_id, image_path) values($1, $2)`,
-      [+postId, imgPath]
-    );
+    for (const file of req.files) {
+      const destination = file.destination;
+      const filename = file.filename;
+      const arr = destination.split(`/`);
+      const suffix = arr[1] + "/" + arr[2];
+      const imgPath = `${suffix}/${filename}`;
+
+      await pool.query(
+        `insert into image_posts(post_id, image_path) values($1, $2)`,
+        [+postId, imgPath]
+      );
+    }
 
     await pool.query(`COMMIT`);
 
@@ -176,7 +180,7 @@ export const getFeaturedPosts = async (req, res) => {
   const data = await pool.query(
     `select post.*,img.image_path,img.is_cover
       from  master_posts post 
-      left join image_posts img on post.id = img.post_id
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_feature=true order by post.title`,
     []
   );
@@ -188,7 +192,7 @@ export const getRecentPosts = async (req, res) => {
   const data = await pool.query(
     `select post.*,img.image_path,img.is_cover
       from  master_posts post 
-      left join image_posts img on post.id = img.post_id
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_feature=true order by post.created_at desc limit 5`,
     []
   );
@@ -232,8 +236,8 @@ export const getAllPosts = async (req, res) => {
   const data = await pool.query(
     `select post.*,img.image_path,img.is_cover
       from  master_posts post
-      left join image_posts img on post.id = img.post_id
-      where is_active=true and img.is_cover=true ${cat} order by id
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
+      where is_active=true ${cat} order by id
       offset ${req.params.offset} limit 5`,
     []
   );
@@ -241,8 +245,8 @@ export const getAllPosts = async (req, res) => {
   const result = await pool.query(
     `select count(post.id) countId
       from  master_posts post
-      left join image_posts img on post.id = img.post_id
-      where is_active=true and img.is_cover=true ${cat}`,
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
+      where is_active=true ${cat}`,
     []
   );
 

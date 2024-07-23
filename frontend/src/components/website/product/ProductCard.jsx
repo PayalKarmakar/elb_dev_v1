@@ -16,13 +16,14 @@ const ProductCard = ({ catCard }) => {
   const dispatch = useDispatch();
   const [totalCount, setTotalCount] = useState();
 
-  const fetchData = async (offset = 1) => {
+  const fetchData = async (offset = 0) => {
     try {
       let parentCategory = "";
       let subcategory = "";
 
       if (catCard.catname === "all") {
         const response = await customFetch.get(`/website/all-post/${offset}`);
+
         dispatch(setAllPosts(response?.data?.data?.rows));
         setTotalCount(response?.data?.result?.rows[0].countid);
       } else {
@@ -40,6 +41,8 @@ const ProductCard = ({ catCard }) => {
         const response = await customFetch.get(
           `/website/all-post/${offset}/${parentCategory}/${subcategory}`
         );
+        // console.log(`${parentCategory} || ${subcategory}`);
+        console.log(response?.data?.data?.rows);
         dispatch(setAllPosts(response?.data?.data?.rows));
         setTotalCount(response?.data?.result?.rows?.countId);
       }
@@ -48,6 +51,8 @@ const ProductCard = ({ catCard }) => {
       return error;
     }
   };
+
+  // console.log(allPosts);
 
   useEffect(() => {
     fetchData();
@@ -61,19 +66,19 @@ const ProductCard = ({ catCard }) => {
     return `${basePath}${filename}`;
   };
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentOffset, setCurrentOffset] = useState(1);
+  const [currentOffset, setCurrentOffset] = useState(0);
   const pageCount = Math.ceil(totalCount / 5);
 
   const handlePageChange = useCallback((page, offset) => {
-    console.log(page);
-    console.log(offset);
+    // console.log(page);
+    // console.log(offset);
     fetchData(offset);
 
     // fetchData(offset);
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-  console.log(allPosts);
+
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
