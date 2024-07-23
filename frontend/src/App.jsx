@@ -21,7 +21,6 @@ import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteU
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 import UserProfile from "./pages/website/user/UserProfile";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,7 +32,7 @@ const router = createBrowserRouter([
         element: <Login />,
         action: loginAction,
       },
-     
+
       {
         path: "sign-up",
         element: <Signup />,
@@ -47,10 +46,10 @@ const router = createBrowserRouter([
           { path: "about", element: <Elb.WebsiteAbout /> },
           {
             path: "cat/:catname/:subcat?",
+            // path: ":catname/:subcat?",
             element: <Elb.ProductList />,
           },
-          { path: "/post/:id",
-            element: <Elb.PostView /> },
+          { path: "/post/:id", element: <Elb.PostView /> },
         ],
       },
       // {

@@ -3,13 +3,16 @@ import { Form } from "react-router-dom";
 import FilterLocation from "./FilterLocation";
 import FilterCategories from "./FilterCategories";
 import { useDispatch, useSelector } from "react-redux";
-import { setLocationModal,setCategoryModal } from "../../../feature/website/search/searchSlice";
+import {
+  setLocationModal,
+  setCategoryModal,
+} from "../../../feature/website/search/searchSlice";
 
 const TopSearch = () => {
   const dispatch = useDispatch();
 
   const openModal = () => {
-    dispatch(setLocationModal());    
+    dispatch(setLocationModal());
   };
 
   const catModal = () => {
@@ -30,7 +33,7 @@ const TopSearch = () => {
     (store) => store.categories
   );
   const selectedCat =
-  searchCategory && getCategories?.find((i) => i.id === searchCategory);  
+    searchCategory && getCategories?.find((i) => i.id === searchCategory);
 
   useEffect(() => {
     setCategoryLabel(selectedCat?.category || `Categories`);
@@ -51,7 +54,7 @@ const TopSearch = () => {
             </button>
           </div>
           <div>
-          <button
+            <button
               type="button"
               className="form-select shadow-none categorysearch"
               name="cat"
@@ -59,7 +62,7 @@ const TopSearch = () => {
             >
               {categoryLabel}
             </button>
-           </div>
+          </div>
           <div>
             <input
               type="text"

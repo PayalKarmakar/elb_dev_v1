@@ -93,8 +93,7 @@ const PostAd = () => {
       }
     }
 
-    const arr = [...postImages, file];
-
+    const arr = [...postImages, ...file];
     setPostImages(arr);
   };
 
@@ -103,6 +102,32 @@ const PostAd = () => {
     setPostImages(newArr);
   };
 
+  const loopImg = () => {
+    return postImages?.map((img, index) => {
+      // for (let i = 0; i < img.length; i++) {
+      // console.log(img[i]["name"]);
+      return (
+        <div
+          key={nanoid()}
+          className="position-relative gig-media-thumb overflow-hidden"
+        >
+          <img
+            src={img ? URL.createObjectURL(img) : ""}
+            className="img-fluid"
+            alt=""
+          />
+          <button
+            type="button"
+            className="gig-img-delete-btn"
+            onClick={() => deleteImage(index)}
+          >
+            <FaRegTrashCan size={13} className="text-white" />
+          </button>
+        </div>
+      );
+      // }
+    });
+  };
   return (
     <>
       <div className="row justify-content-center">
@@ -303,29 +328,8 @@ const PostAd = () => {
                           />
                         </label>
                       </div>
-                      {postImages?.map((img, index) => {
-                        return img ? (
-                          <div
-                            key={index}
-                            className="position-relative gig-media-thumb overflow-hidden"
-                          >
-                            <img
-                              src={img?.name ? URL.createObjectURL(img) : ""}
-                              className="img-fluid"
-                              alt=""
-                            />
-                            <button
-                              type="button"
-                              className="gig-img-delete-btn"
-                              onClick={() => deleteImage(index)}
-                            >
-                              <FaRegTrashCan size={13} className="text-white" />
-                            </button>
-                          </div>
-                        ) : (
-                          <div key={nanoid()}></div>
-                        );
-                      })}
+
+                      {loopImg()}
                     </div>
                   </div>
                 </div>
