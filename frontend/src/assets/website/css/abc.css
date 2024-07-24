@@ -9,9 +9,14 @@
   padding-top: 110px;
 }
 
-body,
+/* body,
 .bg-offWhite {
   background: var(--white);
+} Aditya */
+
+body,
+.bg-offWhite {
+  background: var(--off-white);
 }
 
 .header-primary {
@@ -104,10 +109,10 @@ body,
 }
 
 .w-btn-secondary-lg {
-  /* background: transparent; */
+  /* background: transparent;
+  border: 2px solid #fff; */
   background-color: #821f8b;
-  border: 2px solid #fff;
-  padding: 12px 35px 12px 32px;
+  padding: 16px 32px;
   transition: all 0.3s linear;
 }
 
@@ -310,7 +315,9 @@ body,
 }
 
 .form-container .form-control {
-  border: 1px solid var(--primary-color3);
+  /* border: 1px solid var(--primary-color3); */
+  border: 1px solid var(--off-white);
+  background: var(--white);
   border-radius: 8px;
   padding: 9px 20px;
   height: auto;
@@ -347,9 +354,8 @@ body,
   text-align: center;
   color: #000;
   font-weight: bold;
-  padding: 25px 0 0;
+  padding: 15px 0 0;
 }
-
 .gig-info-header,
 .profile-info-header {
   background-color: #491e81;

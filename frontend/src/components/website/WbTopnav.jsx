@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa6";
 import TopSearch from "./search/TopSearch";
 import Themeswitch from "./Themeswtich";
 import { useSelector } from "react-redux";
-import UserProfile from "./UserProfile";
+import TopnavProfileDropdown from "./TopnavProfileDropdown";
 import { MdOutlineSell } from "react-icons/md";
 
 //return redirect(`${path}`);
@@ -55,7 +55,7 @@ const WbTopnav = () => {
                 </Link>
               )}
             </div>
-            {currentUser.uuid && <UserProfile />}
+            {currentUser.uuid && <TopnavProfileDropdown />}
 
             <Themeswitch />
 

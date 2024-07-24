@@ -39,14 +39,14 @@ export const pageLocations = async (req, res) => {
 };
 
 // ------
-export const getAllStates = async (req, res) => {
-  const data = await pool.query(
-    `select distinct(state) from master_locations order by state`,
-    []
-  );
+// export const getAllStates = async (req, res) => {
+//   const data = await pool.query(
+//     `select distinct(state) from master_locations order by state`,
+//     []
+//   );
 
-  res.status(StatusCodes.OK).json({ data });
-};
+//   res.status(StatusCodes.OK).json({ data });
+// };
 
 // ------
 export const addLocation = async (req, res) => {
@@ -128,5 +128,13 @@ export const getTopLocations = async (req, res) => {
     []
   );
 
+  res.status(StatusCodes.OK).json({ data });
+};
+
+export const getAllStates = async (req, res) => {
+  const data = await pool.query(
+    `SELECT distinct(state_code) ,state FROM master_locations	group by state_code,state ORDER BY state_code ASC `,
+    []
+  );
   res.status(StatusCodes.OK).json({ data });
 };

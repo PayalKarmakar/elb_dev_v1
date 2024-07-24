@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import profilepic from "../../assets/website/img/dashboard/heade-av.png";
+import profilepic from "../../assets/website/img/dashboard/default-user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { unsetCurrentUser } from "../../feature/currentUserSlice";
 import customFetch from "../../utils/customFetch";
