@@ -36,3 +36,4 @@ export { default as TopSellers } from "./website/landing/TopSellers";
 export { default as FeaturedProducts } from "./website/landing/FeaturedProducts";
 export { default as FilterLocation } from "./website/search/FilterLocation";
 export { default as FilterCategories } from "./website/search/FilterCategories";
+export { default as TopnavProfileDropdown } from "./website/TopnavProfileDropdown.jsx";

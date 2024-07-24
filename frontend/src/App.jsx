@@ -19,7 +19,6 @@ import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
 import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
-import UserProfile from "./pages/website/user/UserProfile";
 
 const router = createBrowserRouter([
   {

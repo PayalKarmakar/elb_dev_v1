@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import customFetch from "../../../utils/customFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { setAllStates } from "../../../feature/masters/locationSlice";
 
 const UserProfile = () => {
+  const dispatch = useDispatch();
+  const { allStates } = useSelector((store) => store.locations);
+
+  const fetchState = async () => {
+    const getStates = await customFetch.get(`/website/get-allstates`);
+    dispatch(setAllStates(getStates?.data?.data?.rows));
+  };
+  useEffect(() => {
+    fetchState();
+  }, []);
   return (
     <>
       <div className="row justify-content-center">
