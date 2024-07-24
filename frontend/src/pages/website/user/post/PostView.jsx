@@ -4,9 +4,12 @@ import { useParams } from "react-router-dom";
 import customFetch from "../../../../utils/customFetch";
 import product1 from "../../../../assets/website/img/job/product-1.jpg"; // Default image for fallback
 import { nanoid } from "nanoid";
+import { decParam } from "../../../../utils/functions";
 
 const PostView = () => {
-  const { id } = useParams(); // Get id parameter from URL
+  let { id } = useParams(); // Get id parameter from URL
+  id = decParam(id);
+
   const [product, setProduct] = useState(null); // State to store product data
 
   useEffect(() => {
@@ -25,7 +28,7 @@ const PostView = () => {
   if (!product) {
     return <div>Loading...</div>; // Show loading message until data is fetched
   }
-  console.log(product);
+  // console.log(product.image);
 
   return (
     <div className="container my-5">
@@ -66,7 +69,7 @@ const PostView = () => {
                             images.image_path
                           }`}
                           className="d-block w-20 h-20"
-                          style={{ maxWidth: "30%" }}
+                          style={{ maxWidth: "20%" }}
                           alt="Product Image 1"
                         />
                       );

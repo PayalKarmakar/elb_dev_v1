@@ -45,6 +45,7 @@ const router = createBrowserRouter([
           { path: "about", element: <Elb.WebsiteAbout /> },
           {
             path: "cat/:catname/:subcat?",
+            // path: ":catname/:subcat?",
             element: <Elb.ProductList />,
           },
           { path: "/post/:id", element: <Elb.PostView /> },

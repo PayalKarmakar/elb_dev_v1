@@ -5,6 +5,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import product1 from "../../../assets/website/img/job/product-1.jpg"; // Default image for fallback
+import { encParam } from "../../../utils/functions";
 
 const RecentPosts = () => {
   const { recentPosts } = useSelector((store) => store.posts);
@@ -34,7 +35,10 @@ const RecentPosts = () => {
               : product1;
             return (
               <article key={index}>
-                <Link to={`/post/${post.id}`} className="text-decoration-none">
+                <Link
+                  to={`/post/${encParam(String(post.id))}`}
+                  className="text-decoration-none"
+                >
                   <div
                     className="service-card bg-white"
                     data-aos="fade-up"
