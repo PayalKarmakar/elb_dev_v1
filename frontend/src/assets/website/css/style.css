@@ -23,12 +23,12 @@
   --blue-300: #4b83fc;
 }
 
-html.dark{
+html.dark {
   --main-font-family: "IBM Plex Sans", sans-serif;
   --body-font-family: "Roboto", sans-serif;
 
   /* Dark */
-  --dark-50: #14141F;
+  --dark-50: #14141f;
   --dark-100: red;
   --dark-200: red;
   --dark-300: red;
@@ -43,10 +43,7 @@ html.dark{
   --green-300: red;
 
   /* Blue */
-  --blue-300:red;
-
-
-  
+  --blue-300: red;
 }
 
 /* .is_dark {
@@ -637,8 +634,8 @@ body {
 
 .swiper-prev svg,
 .swiper-next svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
 
 /* Swiper End */
