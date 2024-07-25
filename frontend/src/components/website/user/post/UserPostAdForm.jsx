@@ -355,9 +355,9 @@ const UserPostAdForm = () => {
                     <path
                       d="M9 9L13 5M13 5L9 1M13 5L1 5"
                       stroke="white"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      th="1.5"
+                      ap="round"
+                      oin="round"
                     />
                   </svg>
                 </button>

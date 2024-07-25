@@ -24,7 +24,7 @@ const CategoryHero = ({ catSlug }) => {
 
   return (
     <>
-      <section className="w-breadcrumb-area" style={{ backgroundColor: "red" }}>
+      <section className="w-breadcrumb-area hero-one">
         <div className="container">
           <div className="row">
             <div className="col-auto">
