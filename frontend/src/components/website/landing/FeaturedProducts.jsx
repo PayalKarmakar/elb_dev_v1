@@ -9,6 +9,7 @@ import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { encParam } from "../../../utils/functions";
+import { FaRegHeart } from "react-icons/fa6";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
@@ -23,7 +24,7 @@ const FeaturedProducts = () => {
     if (!sliderRef.current) return;
     sliderRef.current.swiper.slideNext();
   }, []);
-  console.log(featuredPosts);
+
   const renderFeaturedPosts = () => {
     return featuredPosts.map((i) => {
       const imgSrc = i.image_path
@@ -38,9 +39,6 @@ const FeaturedProducts = () => {
           >
             <article className="swiper-slide">
               <div className="job-post bg-offWhite position-relative">
-                <div className="job-type-badge position-absolute d-flex flex-column gap-2">
-                  <p className="job-type-badge-primary">{i.title}</p>
-                </div>
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <div className="job-post-icon">
                     <img src={imgSrc} alt={i.title} />

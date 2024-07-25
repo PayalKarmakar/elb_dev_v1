@@ -35,26 +35,26 @@ const RecentPosts = () => {
               : product1;
             return (
               <article key={index}>
-                <Link
-                  to={`/post/${encParam(String(post.id))}`}
-                  className="text-decoration-none"
+                <div
+                  className="service-card bg-white"
+                  data-aos="fade-up"
+                  data-aos-duration="1000"
+                  data-aos-easing="linear"
                 >
-                  <div
-                    className="service-card bg-white"
-                    data-aos="fade-up"
-                    data-aos-duration="1000"
-                    data-aos-easing="linear"
+                  <div className="position-relative">
+                    <img
+                      src={imgSrc}
+                      className="recently-view-card-img w-100"
+                      alt={post.title || "Post Image"}
+                    />
+                    <button className="service-card-wishlist-btn">
+                      <FaRegHeart />
+                    </button>
+                  </div>
+                  <Link
+                    to={`/post/${encParam(String(post.id))}`}
+                    className="text-decoration-none"
                   >
-                    <div className="position-relative">
-                      <img
-                        src={imgSrc}
-                        className="recently-view-card-img w-100"
-                        alt={post.title || "Post Image"}
-                      />
-                      <button className="service-card-wishlist-btn">
-                        <FaRegHeart />
-                      </button>
-                    </div>
                     <div className="service-card-content">
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
@@ -71,8 +71,8 @@ const RecentPosts = () => {
                         {post.title || "Brote - Cleaning Service Elementor"}
                       </h3>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               </article>
             );
           })}
