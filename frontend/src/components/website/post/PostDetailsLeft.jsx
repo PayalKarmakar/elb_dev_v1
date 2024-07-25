@@ -13,7 +13,10 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 const PostDetailsLeft = ({ postSlug }) => {
   let id = postSlug.postId;
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const sliderRef = useRef(null);
+
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;
     sliderRef.current.swiper.slidePrev();
@@ -43,95 +46,83 @@ const PostDetailsLeft = ({ postSlug }) => {
     return <div>Loading...</div>; // Show loading message until data is fetched
   }
 
-  const postSlideImages = () => {
-    return (
-      <Swiper
-        spaceBetween={50}
-        loop={true}
-        ref={sliderRef}
-        className="mySwiper"
-      >
-        {product.image.map((images) => (
-          <SwiperSlide key={nanoid()}>
-            <div className="swiper-slide">
-              <div className="job-details-slider-img">
-                <img
-                  key={images.id}
-                  src={`${import.meta.env.VITE_BASE_URL}/${images.image_path}`}
-                  className="img-fluid w-90"
-                />
-              </div>
-              <div className="row row-gap-4 justify-content-center row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
-                {product.image.map((img, i) => {
-                  return (
-                    <article key={i}>
-                      <div
-                        className="service-card bg-white"
-                        data-aos="fade-up"
-                        data-aos-duration="1000"
-                        data-aos-easing="linear"
-                      >
-                        <div className="position-relative">
-                          <img
-                            src={`${import.meta.env.VITE_BASE_URL}/${
-                              img.image_path
-                            }`}
-                            className="recently-view-card-img w-20"
-                            alt={"Post Image"}
-                          />
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    );
+  const handleClick = (image) => {
+    setSelectedImage(image);
   };
-
-  // const postSlideUnderImg = () => {
-  //   return (
-  //     <Swiper
-  //       spaceBetween={50}
-  //       loop={true}
-  //       ref={sliderRef}
-  //       className="mySwiper"
-  //     >
-  //       {product.image.map((images) => {
-  //         console.log(images.image_path);
-  //         return (
-  //           <SwiperSlide key={nanoid()}>
-  //             <div className="swiper-slide">
-  //               <div className="job-details-slider-img-thumb">
-  //                 <img
-  //                   key={images.id}
-  //                   src={`${import.meta.env.VITE_BASE_URL}/${
-  //                     images.image_path
-  //                   }`}
-  //                   className="img-fluid w-20"
-  //                 />
-  //               </div>
-  //             </div>
-  //           </SwiperSlide>
-  //         );
-  //       })}
-  //     </Swiper>
-  //   );
-  // };
 
   return (
     <>
       <div className="bg-white service-details-content">
-        <div className="swiper mySwiper2 mb-3">
-          <div className="swiper-wrapper">{postSlideImages()}</div>
+        <div className="row row-gap-4 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
+          {selectedImage !== null ? (
+            <div className="full-image-container">
+              <img
+                src={selectedImage}
+                alt="Full Size Image"
+                className="full-image"
+              />
+            </div>
+          ) : (
+            product.image.map((img, i) => {
+              console.log(img);
+              if (img.is_cover) {
+                return (
+                  <article key={i}>
+                    <div
+                      className="service-card bg-white"
+                      data-aos="fade-up"
+                      data-aos-duration="1000"
+                      data-aos-easing="linear"
+                    >
+                      <div className="position-relative">
+                        <img
+                          src={`${import.meta.env.VITE_BASE_URL}/${
+                            img.image_path
+                          }`}
+                          className="recently-view-card-img w-100"
+                          alt={"Post Image"}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                );
+              }
+            })
+          )}
+        </div>
 
-          <div className="swiper-nav-btn">
+        <div thumbs-slider="" className="row row-gap-4 row-cols-xl-6">
+          <div className="swiper-nav-btn mt-6">
             <button onClick={handlePrev} className="swiper-button-prev">
               <IoChevronBack />
             </button>
+          </div>
+          {product.image.map((img, i) => {
+            return (
+              <article key={i}>
+                <div
+                  className="service-card bg-white"
+                  data-aos="fade-up"
+                  data-aos-duration="1000"
+                  data-aos-easing="linear"
+                >
+                  <div className="position-relative">
+                    <img
+                      src={`${import.meta.env.VITE_BASE_URL}/${img.image_path}`}
+                      onClick={() =>
+                        handleClick(
+                          `${import.meta.env.VITE_BASE_URL}/${img.image_path}`
+                        )
+                      }
+                      className="recently-view-card-img w-20"
+                      alt={"Post Image"}
+                    />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+          <div className="swiper-nav-btn mt-6">
             <button onClick={handleNext} className="swiper-button-next">
               <IoChevronForward />
             </button>
