@@ -97,7 +97,7 @@ const PostDetailsLeft = ({ postSlug }) => {
               <IoChevronBack />
             </button>
           </div>
-          {product.image.map((img, i) => {
+          {/* {product.image.map((img, i) => {
             return (
               <article key={i}>
                 <div
@@ -121,7 +121,49 @@ const PostDetailsLeft = ({ postSlug }) => {
                 </div>
               </article>
             );
-          })}
+          })} */}
+          <Swiper
+            spaceBetween={8}
+            slidesPerView={2}
+            loop={true}
+            //autoplay={{ delay: 3000 }}
+            ref={sliderRef}
+            navigation={true}
+            //modules={[Autoplay, Pagination, Navigation]}
+            className="mySwiper"
+          >
+            {product.image.map((img, i) => {
+              return (
+                <SwiperSlide key={nanoid()}>
+                  <article key={i}>
+                    <div
+                      className="service-card bg-white"
+                      data-aos="fade-up"
+                      data-aos-duration="1000"
+                      data-aos-easing="linear"
+                    >
+                      <div className="position-relative">
+                        <img
+                          src={`${import.meta.env.VITE_BASE_URL}/${
+                            img.image_path
+                          }`}
+                          onClick={() =>
+                            handleClick(
+                              `${import.meta.env.VITE_BASE_URL}/${
+                                img.image_path
+                              }`
+                            )
+                          }
+                          className="recently-view-card-img w-20"
+                          alt={"Post Image"}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
           <div className="swiper-nav-btn mt-6">
             <button onClick={handleNext} className="swiper-button-next">
               <IoChevronForward />
