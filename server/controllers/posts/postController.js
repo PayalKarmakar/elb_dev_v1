@@ -177,27 +177,35 @@ export const updatePost = async (req, res) => {
 };
 
 export const getFeaturedPosts = async (req, res) => {
-  const data = await pool.query(
-    `select post.*,img.image_path,img.is_cover
+  try {
+    const data = await pool.query(
+      `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_feature=true order by post.title`,
-    []
-  );
+      []
+    );
 
-  res.status(StatusCodes.OK).json({ data });
+    res.status(StatusCodes.OK).json({ data });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
 }; // Jyoti
 
 export const getRecentPosts = async (req, res) => {
-  const data = await pool.query(
-    `select post.*,img.image_path,img.is_cover
+  try {
+    const data = await pool.query(
+      `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_feature=true order by post.created_at desc limit 5`,
-    []
-  );
+      []
+    );
 
-  res.status(StatusCodes.OK).json({ data });
+    res.status(StatusCodes.OK).json({ data });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
@@ -233,28 +241,42 @@ export const getAllPosts = async (req, res) => {
   } else {
     cat = "";
   }
-  const data = await pool.query(
-    `select post.*,img.image_path,img.is_cover
+  try {
+    const data = await pool.query(
+      `select post.*,img.image_path,img.is_cover
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_active=true ${cat} order by id
       offset ${req.params.offset} limit 5`,
-    []
-  );
+      []
+    );
 
-  const result = await pool.query(
-    `select count(post.id) countId
+    const result = await pool.query(
+      `select count(post.id) countId
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
       where is_active=true ${cat}`,
-    []
-  );
+      []
+    );
 
-  res.status(StatusCodes.OK).json({ data, result });
+    res.status(StatusCodes.OK).json({ data, result });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
 }; // Jyoti
 
 export const testUpload = (req, res) => {
   const obj = { ...req.body };
   console.log(obj);
   console.log(req.file);
+};
+
+export const getPostUser = async (req, res) => {
+  const query = `select * from master_users where id=${req.params.id}`;
+  try {
+    const userDetails = await pool.query(query, []);
+    res.status(StatusCodes.ACCEPTED).json({ data: userDetails });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ data: "Failed" });
+  }
 };
