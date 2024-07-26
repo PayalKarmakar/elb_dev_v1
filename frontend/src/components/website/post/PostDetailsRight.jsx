@@ -1,558 +1,164 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import customFetch from "../../../utils/customFetch";
+import { FaStar, FaUser } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { MdPermContactCalendar } from "react-icons/md";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { TiTick } from "react-icons/ti";
 
 const PostDetailsRight = ({ postSlug }) => {
+  const postId = postSlug.postId;
+
+  const { postDetails } = useSelector((store) => store.posts);
+  const { currentUser } = useSelector((store) => store.currentUser);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!postDetails.user_id) return; // Exit early if user_id is not available
+      try {
+        const response = await customFetch.get(
+          `/website/post/user/${postDetails.user_id}`
+        );
+        setUser(response.data.data.rows[0]); // Assuming your API response structure
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [postDetails.user_id]); // Update dependency array to only include user_id
+
+  const handleLoginCheck = useCallback(() => {
+    if (!currentUser) {
+      console.log("please login");
+      navigate("/sign-in"); // Use navigate for programmatic navigation
+    } else {
+      console.log("already login");
+    }
+  }, [currentUser, navigate]);
+
   return (
-    <>
-      <div className="col-xl-3 mt-30 mt-xl-0">
-        <aside className="d-flex flex-column gap-4">
-          <div>
-            <nav>
-              <div
-                className="nav package-tabs d-flex gap-4 justify-content-between align-items-center"
-                id="nav-tab"
-                role="tablist"
+    <div className="col-xl-3 mt-30 mt-xl-0">
+      <aside className="d-flex flex-column gap-4">
+        <div>
+          <nav>
+            <div
+              className="nav package-tabs d-flex gap-4 justify-content-between align-items-center"
+              id="nav-tab"
+              role="tablist"
+            >
+              <button
+                className="package-tab-btn active"
+                id="nav-basic-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-basic"
+                type="button"
+                role="tab"
+                aria-controls="nav-basic"
+                aria-selected="true"
               >
-                <button
-                  className="package-tab-btn active"
-                  id="nav-basic-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-basic"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-basic"
-                  aria-selected="true"
-                >
-                  Basic
-                </button>
-                <button
-                  className="package-tab-btn"
-                  id="nav-standard-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-standard"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-standard"
-                  aria-selected="false"
-                >
-                  Standard
-                </button>
-                <button
-                  className="package-tab-btn"
-                  id="nav-premium-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-premium"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-premium"
-                  aria-selected="false"
-                >
-                  Premium
-                </button>
-              </div>
-            </nav>
-            <div className="package-tab-content bg-white">
-              <div className="tab-content" id="nav-tabContent">
-                <div
-                  className="tab-pane fade show active"
-                  id="nav-basic"
-                  role="tabpanel"
-                  aria-labelledby="nav-basic-tab"
-                  tabIndex="0"
-                >
-                  <div>
-                    <div className="d-flex mb-2 justify-content-between align-items-center">
-                      <h4 className="package-name fw-semibold">Basic</h4>
-                      <h3 className="package-price fw-bold">$600</h3>
-                    </div>
-                    <p className="text-dark-200 fs-6">
-                      Design, Redesign and revamp 4 to 5 sections of a basic
-                      responsive website
-                    </p>
-                    <div className="d-flex align-items-center gap-4 pt-2 pb04">
-                      <p className="package-title">2 Day Delivery</p>
-                      <p className="package-title">3 Revisions</p>
-                    </div>
-                    <ul className="py-4">
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Functional website
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Pages 5
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Responsive design
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Source file
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Content upload
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Speed optimization
-                      </li>
-                    </ul>
-                    <div className="mt-3">
-                      <a
-                        href="#"
-                        className="w-btn-secondary-xl"
-                        data-bs-toggle="modal"
-                        data-bs-target="#buyModal"
-                      >
-                        Order Now
-                        <svg
-                          width="14"
-                          height="10"
-                          viewBox="0 0 14 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M9 9L13 5M13 5L9 1M13 5L1 5"
-                            stroke="currentColor"
-                            th="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </a>
-                    </div>
+                Price
+              </button>
+            </div>
+          </nav>
+          <div className="package-tab-content bg-white">
+            <div className="tab-content" id="nav-tabContent">
+              <div
+                className="tab-pane fade show active"
+                id="nav-basic"
+                role="tabpanel"
+                aria-labelledby="nav-basic-tab"
+                tabIndex="0"
+              >
+                <div>
+                  <div className="d-flex mb-2 justify-content-between align-items-center">
+                    <h4 className="package-name fw-semibold">Price</h4>
+                    <h3 className="package-price fw-bold">
+                      {postDetails.price}
+                    </h3>
                   </div>
-                </div>
-
-                <div
-                  className="tab-pane fade"
-                  id="nav-standard"
-                  role="tabpanel"
-                  aria-labelledby="nav-standard-tab"
-                  tabIndex="0"
-                >
-                  <div>
-                    <div className="d-flex mb-2 justify-content-between align-items-center">
-                      <h4 className="package-name fw-semibold">Standard</h4>
-                      <h3 className="package-price fw-bold">$700</h3>
-                    </div>
-                    <p className="text-dark-200 fs-6">
-                      Design, Redesign and revamp 4 to 5 sections of a basic
-                      responsive website
-                    </p>
-                    <div className="d-flex align-items-center gap-4 pt-2 pb04">
-                      <p className="package-title">2 Day Delivery</p>
-                      <p className="package-title">3 Revisions</p>
-                    </div>
-                    <ul className="py-4">
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Functional website
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Pages 5
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Responsive design
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Source file
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Content upload
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Speed optimization
-                      </li>
-                    </ul>
-                    <div className="mt-3">
-                      <a href="#" className="w-btn-secondary-xl">
-                        Order Now
-                        <svg
-                          width="14"
-                          height="10"
-                          viewBox="0 0 14 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M9 9L13 5M13 5L9 1M13 5L1 5"
-                            stroke="currentColor"
-                            th="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </a>
-                    </div>
+                  <p className="text-dark-200 fs-6">
+                    Design, Redesign and revamp 4 to 5 sections of a basic
+                    responsive website
+                  </p>
+                  <div className="d-flex align-items-center gap-4 pt-2 pb04">
+                    <p className="package-title">2 Day Delivery</p>
+                    <p className="package-title">3 Revisions</p>
                   </div>
-                </div>
-
-                <div
-                  className="tab-pane fade"
-                  id="nav-premium"
-                  role="tabpanel"
-                  aria-labelledby="nav-premium-tab"
-                  tabIndex="0"
-                >
-                  <div>
-                    <div className="d-flex mb-2 justify-content-between align-items-center">
-                      <h4 className="package-name fw-semibold">Premium</h4>
-                      <h3 className="package-price fw-bold">$900</h3>
-                    </div>
-                    <p className="text-dark-200 fs-6">
-                      Design, Redesign and revamp 4 to 5 sections of a basic
-                      responsive website
-                    </p>
-                    <div className="d-flex align-items-center gap-4 pt-2 pb04">
-                      <p className="package-title">2 Day Delivery</p>
-                      <p className="package-title">3 Revisions</p>
-                    </div>
-                    <ul className="py-4">
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Functional website
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Pages 5
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Responsive design
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Source file
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Content upload
-                      </li>
-                      <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                        >
-                          <rect width="14" height="14" rx="7" fill="#EDEBE7" />
-                          <path
-                            d="M10.9989 4.56984C11.0104 4.74646 10.9288 4.88498 10.8005 5.00444C9.44356 6.26706 8.08607 7.52917 6.72804 8.79076C6.43121 9.06522 6.10773 9.07037 5.8109 8.80209C5.26037 8.30466 4.71781 7.79934 4.18322 7.28612C4.12574 7.2337 4.07992 7.17091 4.04845 7.10145C4.01699 7.03199 4.00052 6.95727 4.00001 6.88169C3.99951 6.80612 4.01497 6.7312 4.0455 6.66138C4.07603 6.59155 4.12101 6.52821 4.17778 6.4751C4.40938 6.25368 4.7758 6.24441 5.03403 6.4751C5.33956 6.74338 5.63204 7.02659 5.92724 7.30363C6.25941 7.61259 6.25887 7.61259 6.60137 7.2959C7.68178 6.29109 8.76237 5.28749 9.84314 4.28508C9.92373 4.20401 10.0151 4.13322 10.115 4.07447C10.2055 4.02511 10.3083 3.99942 10.4127 4.00001C10.5172 4.0006 10.6196 4.02747 10.7095 4.07785C10.7995 4.12824 10.8736 4.20034 10.9245 4.28678C10.9753 4.37322 11.001 4.47091 10.9989 4.56984Z"
-                            fill="#06131C"
-                          />
-                        </svg>
-                        Speed optimization
-                      </li>
-                    </ul>
-                    <div className="mt-3">
-                      <a href="#" className="w-btn-secondary-xl">
-                        Order Now
-                        <svg
-                          width="14"
-                          height="10"
-                          viewBox="0 0 14 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M9 9L13 5M13 5L9 1M13 5L1 5"
-                            stroke="currentColor"
-                            th="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </a>
-                    </div>
+                  <ul className="py-4">
+                    <li className="fs-6 d-flex align-items-center gap-3 text-dark-200">
+                      <TiTick />
+                      Functional website
+                    </li>
+                  </ul>
+                  <div className="mt-3">
+                    <Link
+                      to="#"
+                      className="w-btn-secondary-lg text-decoration-none"
+                      onClick={handleLoginCheck}
+                    >
+                      <MdPermContactCalendar
+                        size={18}
+                        style={{ borderRadius: "50%" }}
+                      />
+                      Order Now
+                      <FaArrowRightLong />
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="freelancer-sidebar-card p-4 rounded-4 bg-white position-relative">
-            <div className="job-type-badge position-absolute d-flex flex-column gap-2">
-              <p className="job-type-badge-tertiary">Top Seller</p>
-              <p className="job-type-badge-secondary">$90/hr</p>
+        <div className="freelancer-sidebar-card p-4 rounded-4 bg-white position-relative">
+          <div className="job-type-badge position-absolute d-flex flex-column gap-2">
+            <p className="job-type-badge-tertiary">Top Seller</p>
+          </div>
+          <div className="freelancer-sidebar-card-header border-bottom d-flex flex-column justify-content-center align-items-center py-4">
+            <h3 className="fw-bold freelancer-name text-dark-300 mb-2">
+              {`${user?.first_name} ${user?.last_name}`}
+            </h3>
+            <p className="text-dark-200 mb-1">UiUx Designer</p>
+            <p>
+              <FaStar />
+              <span className="text-dark-300"> 4.9 </span>
+              <span className="text-dark-200"> (399 Reviews)</span>
+            </p>
+          </div>
+          <div className="d-flex gap-4 justify-content-between sidebar-rate-card p-4">
+            <div>
+              <p className="text-dark-300">Location</p>
+              <p className="text-dark-200">Dhaka</p>
             </div>
-            <div className="freelancer-sidebar-card-header border-bottom d-flex flex-column justify-content-center align-items-center py-4">
-              <img
-                src="assets/img/freelancer/avatar-1.png"
-                className="freelancer-avatar rounded-circle mb-4"
-                alt=""
+            <div>
+              <p className="text-dark-300">Rate</p>
+              <p className="text-dark-200">$90/hr</p>
+            </div>
+            <div>
+              <p className="text-dark-300">Jobs</p>
+              <p className="text-dark-200">560</p>
+            </div>
+          </div>
+          <div className="d-grid">
+            <Link
+              to="#"
+              onClick={handleLoginCheck}
+              className="w-btn-secondary-lg text-decoration-none"
+            >
+              <MdPermContactCalendar
+                size={18}
+                style={{ borderRadius: "50%" }}
               />
-              <h3 className="fw-bold freelancer-name text-dark-300 mb-2">
-                Sufankho Jhon
-              </h3>
-              <p className="text-dark-200 mb-1">UiUx Designer</p>
-              <p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="11"
-                  viewBox="0 0 12 11"
-                  fill="none"
-                >
-                  <path
-                    d="M11.1141 4.15628C11.0407 3.92385 10.8406 3.75929 10.6048 3.73731L7.38803 3.43649L6.11676 0.370622C6.0229 0.145376 5.80934 0 5.57163 0C5.33392 0 5.12027 0.145376 5.02701 0.370622L3.75574 3.43649L0.538508 3.73731C0.302669 3.75973 0.102963 3.92429 0.0291678 4.15628C-0.0442024 4.3887 0.0235566 4.64364 0.201923 4.80478L2.63351 7.0011L1.91656 10.2539C1.8641 10.493 1.95422 10.7403 2.14687 10.8838C2.25042 10.9613 2.37208 11 2.49417 11C2.59908 11 2.70407 10.9713 2.79785 10.9135L5.57163 9.20504L8.3449 10.9135C8.54835 11.0387 8.80417 11.0272 8.99639 10.8838C9.18904 10.7403 9.27916 10.493 9.22671 10.2539L8.50975 7.0011L10.9413 4.80478C11.1196 4.64364 11.1875 4.38923 11.1141 4.15628Z"
-                    fill="#06131C"
-                  />
-                </svg>
-                <span className="text-dark-300">4.9 </span>
-                <span className="text-dark-200"> (399 Reviews)</span>
-              </p>
-            </div>
-            <div className="d-flex gap-4 justify-content-between sidebar-rate-card p-4">
-              <div>
-                <p className="text-dark-300">Location</p>
-                <p className="text-dark-200">Dhaka</p>
-              </div>
-              <div>
-                <p className="text-dark-300">Rate</p>
-                <p className="text-dark-200">$90/hr</p>
-              </div>
-              <div>
-                <p className="text-dark-300">Jobs</p>
-                <p className="text-dark-200">560</p>
-              </div>
-            </div>
-            <div className="d-grid">
-              <a href="contact.html" className="w-btn-black-lg w-100">
-                Contact Me
-                <svg
-                  width="14"
-                  height="10"
-                  viewBox="0 0 14 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 9L13 5M13 5L9 1M13 5L1 5"
-                    stroke="currentColor"
-                    th="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            </div>
+              Contact Me
+            </Link>
           </div>
-        </aside>
-      </div>
-    </>
+        </div>
+      </aside>
+    </div>
   );
 };
 

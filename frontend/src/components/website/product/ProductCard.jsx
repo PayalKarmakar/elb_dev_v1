@@ -42,7 +42,7 @@ const ProductCard = ({ catCard }) => {
           `/website/all-post/${offset}/${parentCategory}/${subcategory}`
         );
         // console.log(`${parentCategory} || ${subcategory}`);
-        console.log(response?.data?.data?.rows);
+        // console.log(response?.data?.data?.rows);
         dispatch(setAllPosts(response?.data?.data?.rows));
         setTotalCount(response?.data?.result?.rows?.countId);
       }
