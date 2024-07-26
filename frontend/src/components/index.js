@@ -36,4 +36,9 @@ export { default as TopSellers } from "./website/landing/TopSellers";
 export { default as FeaturedProducts } from "./website/landing/FeaturedProducts";
 export { default as FilterLocation } from "./website/search/FilterLocation";
 export { default as FilterCategories } from "./website/search/FilterCategories";
-export { default as TopnavProfileDropdown } from "./website/TopnavProfileDropdown.jsx";
+export { default as TopnavProfileDropdown } from "./website/TopnavProfileDropdown";
+
+// Website components > User dashboard ------
+export { default as DashboardPostList } from "./website/user/dashboard/DashboardPostList";
+export { default as DashboardOrderList } from "./website/user/dashboard/DashboardOrderList";
+export { default as DashboardGraphBox } from "./website/user/dashboard/DashboardGraphBox";
