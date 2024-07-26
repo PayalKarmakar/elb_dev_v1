@@ -7,6 +7,7 @@ import { setListCategories } from "../../../feature/masters/categorySlice";
 // Loader starts ------
 export const loader = (store) => async () => {
   const { listCategories } = store.getState().categories;
+
   try {
     if (listCategories.length === 0) {
       const sCat = await customFetch.get(`/website/all-categories`);
