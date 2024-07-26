@@ -43,7 +43,7 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/masters", protectRoute, masterRoute);
 app.use("/api/v1/users", protectRoute, userRoute);
 app.use("/api/v1/website", websiteRoute);
-app.use("/api/v1/posts", postRoute);
+app.use("/api/v1/posts", protectRoute, postRoute);
 // API ends ---
 
 app.get("*", (req, res) => {
@@ -57,7 +57,7 @@ app.use("*", (req, res) => {
   res.status(StatusCodes.NOT_FOUND).json({ msg: `not found` });
 });
 
-app.use(errorHandlerMiddleware);
+// app.use(errorHandlerMiddleware);
 
 app.listen(port, () => {
   console.log(`Server running on ${port}`);

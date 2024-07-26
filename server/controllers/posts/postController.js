@@ -252,9 +252,3 @@ export const getAllPosts = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data, result });
 }; // Jyoti
-
-export const testUpload = (req, res) => {
-  const obj = { ...req.body };
-  console.log(obj);
-  console.log(req.file);
-};
