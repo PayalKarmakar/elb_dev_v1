@@ -78,7 +78,7 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-
+  let path ='';
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
@@ -91,9 +91,11 @@ const ProductCard = ({ catCard }) => {
         >
           <div className="row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
             {allPosts.map((post) => {
-              //const imagePath = clearSlug(post.image_path) || product1;
+              if (typeof window !== 'undefined') {
+                path = location.protocol + '//' + location.host; // (or whatever)
+              }
               const imagePath = post.image_path
-                ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
+                ? `${path}/${post.image_path}`
                 : product1;
 
               return (
