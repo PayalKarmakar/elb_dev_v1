@@ -3,39 +3,39 @@ import React from "react";
 const UserPostAdForm = () => {
   return (
     <div>
-      <div class="row justify-content-center">
-        <div class="col-xl-12">
+      <div className="row justify-content-center">
+        <div className="col-xl-12">
           <form>
-            <div class="d-flex flex-column gap-4">
-              <div class="gig-info-card">
-                <div class="gig-info-header">
-                  <h4 class="text-18 fw-semibold text-dark-300">
+            <div className="d-flex flex-column gap-4">
+              <div className="gig-info-card">
+                <div className="gig-info-header">
+                  <h4 className="text-18 fw-semibold text-dark-300">
                     Project Info
                   </h4>
                 </div>
-                <div class="gig-info-body bg-white">
-                  <div class="row g-4">
-                    <div class="col-12">
-                      <div class="form-container">
-                        <label for="title" class="form-label">
+                <div className="gig-info-body bg-white">
+                  <div className="row g-4">
+                    <div className="col-12">
+                      <div className="form-container">
+                        <label for="title" className="form-label">
                           Title Name*
                         </label>
                         <input
                           type="text"
-                          class="form-control shadow-none"
+                          className="form-control shadow-none"
                           placeholder="Brote - Cleanin Service Elementor Template Kit"
                         />
                       </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-container">
-                        <label for="category" class="form-label">
+                    <div className="col-md-6">
+                      <div className="form-container">
+                        <label for="category" className="form-label">
                           Select Category*
                         </label>
                         <select
                           id="s"
                           autocomplete="off"
-                          class="form-select shadow-none"
+                          className="form-select shadow-none"
                         >
                           <option value="0">Site Template</option>
                           <option value="1">UX/UI Design</option>
@@ -45,15 +45,15 @@ const UserPostAdForm = () => {
                         </select>
                       </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-container">
-                        <label for="subcategory" class="form-label">
+                    <div className="col-md-6">
+                      <div className="form-container">
+                        <label for="subcategory" className="form-label">
                           Select SubCategory*
                         </label>
                         <select
                           id=""
                           autocomplete="off"
-                          class="form-select shadow-none"
+                          className="form-select shadow-none"
                         >
                           <option value="0">Corporate</option>
                           <option value="1">Creative</option>
@@ -64,11 +64,11 @@ const UserPostAdForm = () => {
                         </select>
                       </div>
                     </div>
-                    <div class="col-12">
-                      <label for="description" class="form-label">
+                    <div className="col-12">
+                      <label for="description" className="form-label">
                         Description*
                       </label>
-                      <div class="w-editor-wrapper">
+                      <div className="w-editor-wrapper">
                         <div id="toolbar"></div>
                         <div id="editor"></div>
                       </div>
@@ -77,30 +77,30 @@ const UserPostAdForm = () => {
                 </div>
               </div>
 
-              <div class="gig-info-card">
-                <div class="gig-info-header">
-                  <h4 class="text-18 fw-semibold text-dark-300">
+              <div className="gig-info-card">
+                <div className="gig-info-header">
+                  <h4 className="text-18 fw-semibold text-dark-300">
                     Pricing Package
                   </h4>
                 </div>
-                <div class="gig-info-body bg-white">
-                  <div class="row g-0 price-pack-wrapper">
-                    <div class="col-md-4">
-                      <div class="gig-pricing-pack border-end">
-                        <div class="p-2 ps-3 border-bottom">
-                          <span class="pricing-pack-name">Basic</span>
+                <div className="gig-info-body bg-white">
+                  <div className="row g-0 price-pack-wrapper">
+                    <div className="col-md-4">
+                      <div className="gig-pricing-pack border-end">
+                        <div className="p-2 ps-3 border-bottom">
+                          <span className="pricing-pack-name">Basic</span>
                         </div>
-                        <div class="pack-description border-bottom">
+                        <div className="pack-description border-bottom">
                           <textarea
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Description Here"
                             rows="3"
                           ></textarea>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Select Delivery Time</option>
                             <option value="1">1</option>
@@ -108,10 +108,10 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Revision</option>
                             <option value="1">1</option>
@@ -119,31 +119,31 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="pack-description">
+                        <div className="pack-description">
                           <input
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Price Here"
                             rows="1"
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">
-                      <div class="gig-pricing-pack border-end">
-                        <div class="p-2 ps-3 border-bottom">
-                          <span class="pricing-pack-name">Standard</span>
+                    <div className="col-md-4">
+                      <div className="gig-pricing-pack border-end">
+                        <div className="p-2 ps-3 border-bottom">
+                          <span className="pricing-pack-name">Standard</span>
                         </div>
-                        <div class="pack-description border-bottom">
+                        <div className="pack-description border-bottom">
                           <textarea
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Description Here"
                             rows="3"
                           ></textarea>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Select Delivery Time</option>
                             <option value="1">1</option>
@@ -151,10 +151,10 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Revision</option>
                             <option value="1">1</option>
@@ -162,32 +162,32 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="pack-description">
+                        <div className="pack-description">
                           <input
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Price Here"
                             rows="1"
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">
-                      <div class="gig-pricing-pack">
-                        <div class="p-2 ps-3 border-bottom">
-                          <span class="pricing-pack-name">Premium</span>
+                    <div className="col-md-4">
+                      <div className="gig-pricing-pack">
+                        <div className="p-2 ps-3 border-bottom">
+                          <span className="pricing-pack-name">Premium</span>
                         </div>
 
-                        <div class="pack-description border-bottom">
+                        <div className="pack-description border-bottom">
                           <textarea
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Description Here"
                             rows="3"
                           ></textarea>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Select Delivery Time</option>
                             <option value="1">1</option>
@@ -195,10 +195,10 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="p-2 ps-3 border-bottom">
+                        <div className="p-2 ps-3 border-bottom">
                           <select
                             id=""
-                            class="form-select p-0 border-0 shadow-none"
+                            className="form-select p-0 border-0 shadow-none"
                           >
                             <option value="">Revision</option>
                             <option value="1">1</option>
@@ -206,9 +206,9 @@ const UserPostAdForm = () => {
                             <option value="3">3</option>
                           </select>
                         </div>
-                        <div class="pack-description">
+                        <div className="pack-description">
                           <input
-                            class="border-0 px-3 w-100 shadow-none form-control"
+                            className="border-0 px-3 w-100 shadow-none form-control"
                             placeholder="Price Here"
                           />
                         </div>
@@ -218,40 +218,40 @@ const UserPostAdForm = () => {
                 </div>
               </div>
 
-              <div class="gig-info-card">
-                <div class="gig-info-header">
-                  <h4 class="text-18 fw-semibold text-dark-300">
+              <div className="gig-info-card">
+                <div className="gig-info-header">
+                  <h4 className="text-18 fw-semibold text-dark-300">
                     Upload Gig Images
                   </h4>
                 </div>
-                <div class="gig-info-body bg-white">
-                  <p class="text-dark-200 mb-2">Gig Images</p>
-                  <div class="d-flex flex-wrap gap-3">
+                <div className="gig-info-body bg-white">
+                  <p className="text-dark-200 mb-2">Gig Images</p>
+                  <div className="d-flex flex-wrap gap-3">
                     <div>
                       <label
                         for="gig-img"
-                        class="border text-center gig-file-upload"
+                        className="border text-center gig-file-upload"
                       >
                         <img
                           src="assets/img/dashboard/gigs/gallery-icon.png"
                           alt=""
                         />
-                        <p class="text-dark-200">Max.Size 10MB</p>
+                        <p className="text-dark-200">Max.Size 10MB</p>
                         <input
-                          class="d-none"
+                          className="d-none"
                           type="file"
                           name=""
                           id="gig-img"
                         />
                       </label>
                     </div>
-                    <div class="position-relative gig-media-thumb">
+                    <div className="position-relative gig-media-thumb">
                       <img
                         src="assets/img/dashboard/gigs/g-1.png"
-                        class="img-fluid"
+                        className="img-fluid"
                         alt=""
                       />
-                      <button class="gig-img-delete-btn">
+                      <button className="gig-img-delete-btn">
                         <svg
                           width="12"
                           height="14"
@@ -282,37 +282,39 @@ const UserPostAdForm = () => {
                 </div>
               </div>
 
-              <div class="gig-info-card">
-                <div class="gig-info-header">
-                  <h4 class="text-18 fw-semibold text-dark-300">Add a Video</h4>
+              <div className="gig-info-card">
+                <div className="gig-info-header">
+                  <h4 className="text-18 fw-semibold text-dark-300">
+                    Add a Video
+                  </h4>
                 </div>
-                <div class="gig-info-body bg-white">
-                  <div class="d-flex gap-3 flex-wrap">
+                <div className="gig-info-body bg-white">
+                  <div className="d-flex gap-3 flex-wrap">
                     <div>
                       <label
                         for="gig-img"
-                        class="border text-center gig-file-upload"
+                        className="border text-center gig-file-upload"
                       >
                         <img
                           src="assets/img/dashboard/gigs/gallery-icon.png"
                           alt=""
                         />
-                        <p class="text-dark-200">Max.Size 300MB</p>
+                        <p className="text-dark-200">Max.Size 300MB</p>
                         <input
-                          class="d-none"
+                          className="d-none"
                           type="file"
                           name=""
                           id="gig-img"
                         />
                       </label>
                     </div>
-                    <div class="position-relative gig-media-thumb">
+                    <div className="position-relative gig-media-thumb">
                       <img
                         src="assets/img/dashboard/gigs/g-2.png"
-                        class="img-fluid"
+                        className="img-fluid"
                         alt=""
                       />
-                      <button class="gig-img-delete-btn">
+                      <button className="gig-img-delete-btn">
                         <svg
                           width="12"
                           height="14"
@@ -343,7 +345,7 @@ const UserPostAdForm = () => {
                 </div>
               </div>
               <div>
-                <button class="w-btn-secondary-lg">
+                <button className="w-btn-secondary-lg">
                   Publish Gig Now
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

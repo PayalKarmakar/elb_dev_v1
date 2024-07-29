@@ -2,10 +2,13 @@ import React from "react";
 import WbLogoSvg from "../WbLogoSvg";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IoIosHome } from "react-icons/io";
+import { HiFolderPlus } from "react-icons/hi2";
+import { RiFileUserFill, RiFileListFill } from "react-icons/ri";
 
 const UserSidebar = () => {
   const { currentUser } = useSelector((state) => state.currentUser);
-  const path = `/${currentUser.slug}`;
+
   return (
     <>
       <aside className="dashboard-sidebar d-none d-xl-block">
@@ -14,85 +17,46 @@ const UserSidebar = () => {
         </div>
         <ul className="sidebar-nav p-3 overflow-y-auto">
           <li className="sidebar-nav-item">
-            <Link to={path + "/dashboard"} className="sidebar-nav-link">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M14.1804 20H5.81965C3.5109 20 1.6393 18.214 1.6393 16.0108V11.133C1.6393 10.4248 1.34447 9.74559 0.819688 9.2448C-0.396195 8.0845 -0.23813 6.16205 1.15251 5.19692L7.54124 0.762995C9.00708 -0.254332 10.9929 -0.254332 12.4588 0.762995L18.8475 5.19691C20.2381 6.16205 20.3962 8.0845 19.1803 9.2448C18.6555 9.74559 18.3607 10.4248 18.3607 11.133V16.0108C18.3607 18.214 16.4891 20 14.1804 20ZM8 15.25C7.58579 15.25 7.25 15.5858 7.25 16C7.25 16.4142 7.58579 16.75 8 16.75H12C12.4142 16.75 12.75 16.4142 12.75 16C12.75 15.5858 12.4142 15.25 12 15.25H8Z"
-                  fill="currentColor"
-                />
-              </svg>
+            <Link
+              to={`/${currentUser.slug}/dashboard`}
+              className="sidebar-nav-link text-decoration-none"
+            >
+              <IoIosHome size={26} />
               Dashboard
             </Link>
           </li>
           <li className="sidebar-nav-item">
-            <Link to={path + "/post-ad"} className="sidebar-nav-link">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="21"
-                viewBox="0 0 21 21"
-                fill="none"
-              >
-                <path
-                  d="M12.8333 0H3.49999C2.57259 0.00276977 1.68396 0.372408 1.02818 1.02819C0.372407 1.68396 0.00276977 2.57259 0 3.5V12.8333C0.00276977 13.7607 0.372407 14.6494 1.02818 15.3052C1.68396 15.9609 2.57259 16.3306 3.49999 16.3333H12.8333C13.7607 16.3306 14.6493 15.9609 15.3051 15.3052C15.9609 14.6494 16.3305 13.7607 16.3333 12.8333V3.5C16.3305 2.57259 15.9609 1.68396 15.3051 1.02819C14.6493 0.372408 13.7607 0.00276977 12.8333 0ZM10.5 9.33333H9.33331V10.5C9.33331 10.8094 9.2104 11.1062 8.99161 11.325C8.77281 11.5438 8.47607 11.6667 8.16665 11.6667C7.85723 11.6667 7.56049 11.5438 7.34169 11.325C7.1229 11.1062 6.99999 10.8094 6.99999 10.5V9.33333H5.83332C5.5239 9.33333 5.22716 9.21042 5.00837 8.99163C4.78957 8.77283 4.66666 8.47609 4.66666 8.16667C4.66666 7.85725 4.78957 7.5605 5.00837 7.34171C5.22716 7.12292 5.5239 7 5.83332 7H6.99999V5.83333C6.99999 5.52391 7.1229 5.22717 7.34169 5.00838C7.56049 4.78958 7.85723 4.66667 8.16665 4.66667C8.47607 4.66667 8.77281 4.78958 8.99161 5.00838C9.2104 5.22717 9.33331 5.52391 9.33331 5.83333V7H10.5C10.8094 7 11.1061 7.12292 11.3249 7.34171C11.5437 7.5605 11.6666 7.85725 11.6666 8.16667C11.6666 8.47609 11.5437 8.77283 11.3249 8.99163C11.1061 9.21042 10.8094 9.33333 10.5 9.33333Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M15.1666 21H4.66666C4.35725 21 4.0605 20.8771 3.84171 20.6583C3.62292 20.4395 3.5 20.1428 3.5 19.8333C3.5 19.5239 3.62292 19.2272 3.84171 19.0084C4.0605 18.7896 4.35725 18.6667 4.66666 18.6667H15.1666C16.0949 18.6667 16.9851 18.2979 17.6415 17.6415C18.2979 16.9852 18.6666 16.0949 18.6666 15.1667V4.66667C18.6666 4.35725 18.7896 4.0605 19.0083 3.84171C19.2271 3.62292 19.5239 3.5 19.8333 3.5C20.1427 3.5 20.4395 3.62292 20.6583 3.84171C20.877 4.0605 21 4.35725 21 4.66667V15.1667C20.9981 16.7132 20.3829 18.1958 19.2894 19.2894C18.1958 20.383 16.7132 20.9981 15.1666 21Z"
-                  fill="currentColor"
-                />
-              </svg>
+            <Link
+              to={`/${currentUser.slug}/post-ad`}
+              className="sidebar-nav-link text-decoration-none"
+            >
+              <HiFolderPlus size={26} />
               Post Ad
             </Link>
           </li>
           <li className="sidebar-nav-item">
-            <Link to={path + "/profile"} className="sidebar-nav-link">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="20"
-                viewBox="0 0 19 20"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M15.2001 0H3.80012C1.70144 0 0.00012207 1.79086 0.00012207 4V16C0.00012207 17.8642 1.21167 19.4306 2.85117 19.8743C3.1545 19.9563 3.47247 20 3.80012 20H15.2001C15.5278 20 15.8458 19.9563 16.1491 19.8743C17.7886 19.4306 19.0001 17.8642 19.0001 16V4C19.0001 1.79086 17.2988 0 15.2001 0ZM12.3501 7C12.3501 5.34315 11.0741 4 9.50012 4C7.92611 4 6.65012 5.34315 6.65012 7C6.65012 8.65685 7.92611 10 9.50012 10C11.0741 10 12.3501 8.65685 12.3501 7ZM4.89507 15.0155C5.41593 13.2824 7.28019 12 9.50012 12C11.7201 12 13.5843 13.2824 14.1052 15.0155C14.2634 15.5421 13.8248 16 13.3001 16H5.70012C5.17545 16 4.73681 15.5421 4.89507 15.0155Z"
-                  fill="currentColor"
-                />
-              </svg>
+            <Link
+              to={`/${currentUser.slug}/profile`}
+              className="sidebar-nav-link text-decoration-none"
+            >
+              <RiFileUserFill size={26} />
               Profile Settings
             </Link>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-my-orders.html" className="sidebar-nav-link">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="17"
-                height="20"
-                viewBox="0 0 17 20"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M16.2817 1.62818V19.3056C16.2817 19.5642 16.1384 19.8015 15.9095 19.9224C15.6807 20.0434 15.4043 20.0276 15.1904 19.8815L12.869 18.2971L10.6742 19.8722C10.4109 20.062 10.0518 20.0443 9.80805 19.8303L8.14079 18.3724L6.47353 19.8303C6.22977 20.0443 5.87064 20.062 5.60734 19.8722L3.41255 18.2971L1.09123 19.8815C0.877236 20.0276 0.60091 20.0434 0.372034 19.9224C0.143158 19.8015 -0.00012207 19.5642 -0.00012207 19.3056V1.62818C-0.00012207 0.729426 0.728373 0 1.62806 0H14.6535C15.5532 0 16.2817 0.729426 16.2817 1.62818ZM4.41923 8.83871H11.8624C12.2475 8.83871 12.5601 8.52609 12.5601 8.14091C12.5601 7.75573 12.2475 7.44312 11.8624 7.44312H4.41923C4.03405 7.44312 3.72144 7.75573 3.72144 8.14091C3.72144 8.52609 4.03405 8.83871 4.41923 8.83871ZM4.41923 5.11715H11.8624C12.2475 5.11715 12.5601 4.80453 12.5601 4.41935C12.5601 4.03417 12.2475 3.72156 11.8624 3.72156H4.41923C4.03405 3.72156 3.72144 4.03417 3.72144 4.41935C3.72144 4.80453 4.03405 5.11715 4.41923 5.11715ZM4.41923 12.5603H8.14079C8.52597 12.5603 8.83858 12.2477 8.83858 11.8625C8.83858 11.4773 8.52597 11.1647 8.14079 11.1647H4.41923C4.03405 11.1647 3.72144 11.4773 3.72144 11.8625C3.72144 12.2477 4.03405 12.5603 4.41923 12.5603Z"
-                  fill="currentColor"
-                />
-              </svg>
+            <a
+              href="seller-my-orders.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
+              <RiFileListFill size={26} />
               My Orders
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-projects.html" className="sidebar-nav-link">
+            <a
+              href="seller-projects.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -117,7 +81,10 @@ const UserSidebar = () => {
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-withdraw.html" className="sidebar-nav-link">
+            <a
+              href="seller-withdraw.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -138,7 +105,10 @@ const UserSidebar = () => {
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-subscriptions.html" className="sidebar-nav-link">
+            <a
+              href="seller-subscriptions.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -201,7 +171,10 @@ const UserSidebar = () => {
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-message.html" className="sidebar-nav-link">
+            <a
+              href="seller-message.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -219,7 +192,10 @@ const UserSidebar = () => {
           </li>
 
           <li className="sidebar-nav-item">
-            <a href="seller-manage-gigs.html" className="sidebar-nav-link">
+            <a
+              href="seller-manage-gigs.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -244,7 +220,10 @@ const UserSidebar = () => {
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-change-password.html" className="sidebar-nav-link">
+            <a
+              href="seller-change-password.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -263,7 +242,10 @@ const UserSidebar = () => {
             </a>
           </li>
           <li className="sidebar-nav-item">
-            <a href="seller-account-delete.html" className="sidebar-nav-link">
+            <a
+              href="seller-account-delete.html"
+              className="sidebar-nav-link text-decoration-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -289,7 +271,7 @@ const UserSidebar = () => {
           </li>
           <li className="sidebar-nav-item">
             <button
-              className="sidebar-nav-link"
+              className="sidebar-nav-link text-decoration-none"
               data-bs-toggle="modal"
               data-bs-target="#logoutModal"
             >
@@ -339,7 +321,7 @@ const UserSidebar = () => {
               <li className="sidebar-nav-item">
                 <a
                   href="seller-dashboard.html"
-                  className="sidebar-nav-link active"
+                  className="sidebar-nav-link text-decoration-none active"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -359,7 +341,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-create-gig.html" className="sidebar-nav-link">
+                <a
+                  href="seller-create-gig.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="21"
@@ -380,7 +365,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-my-orders.html" className="sidebar-nav-link">
+                <a
+                  href="seller-my-orders.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="17"
@@ -399,7 +387,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-projects.html" className="sidebar-nav-link">
+                <a
+                  href="seller-projects.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -424,7 +415,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-withdraw.html" className="sidebar-nav-link">
+                <a
+                  href="seller-withdraw.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -447,7 +441,7 @@ const UserSidebar = () => {
               <li className="sidebar-nav-item">
                 <a
                   href="seller-subscriptions.html"
-                  className="sidebar-nav-link"
+                  className="sidebar-nav-link text-decoration-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -511,7 +505,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-message.html" className="sidebar-nav-link">
+                <a
+                  href="seller-message.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -530,7 +527,7 @@ const UserSidebar = () => {
               <li className="sidebar-nav-item">
                 <a
                   href="seller-profile-settings.html"
-                  className="sidebar-nav-link"
+                  className="sidebar-nav-link text-decoration-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -550,7 +547,10 @@ const UserSidebar = () => {
                 </a>
               </li>
               <li className="sidebar-nav-item">
-                <a href="seller-manage-gigs.html" className="sidebar-nav-link">
+                <a
+                  href="seller-manage-gigs.html"
+                  className="sidebar-nav-link text-decoration-none"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="21"
@@ -577,7 +577,7 @@ const UserSidebar = () => {
               <li className="sidebar-nav-item">
                 <a
                   href="seller-change-password.html"
-                  className="sidebar-nav-link"
+                  className="sidebar-nav-link text-decoration-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -599,7 +599,7 @@ const UserSidebar = () => {
               <li className="sidebar-nav-item">
                 <a
                   href="seller-account-delete.html"
-                  className="sidebar-nav-link"
+                  className="sidebar-nav-link text-decoration-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -626,7 +626,7 @@ const UserSidebar = () => {
               </li>
               <li className="sidebar-nav-item">
                 <button
-                  className="sidebar-nav-link"
+                  className="sidebar-nav-link text-decoration-none"
                   data-bs-toggle="modal"
                   data-bs-target="#logoutModal"
                 >

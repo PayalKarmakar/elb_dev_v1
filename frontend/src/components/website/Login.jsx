@@ -79,7 +79,9 @@ export default function Login() {
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb w-breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Home</a>
+                      <Link to={`/`} className="text-decoration-none">
+                        Home
+                      </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                       Login
@@ -270,9 +272,9 @@ export default function Login() {
                         </label>
                       </div>
                       <div>
-                        <a href="#" className="form-forget-pass">
+                        <Link to={`#`} className="form-forget-pass">
                           Forget Password
-                        </a>
+                        </Link>
                       </div>
                     </div>
                     <div className="d-grid">
@@ -299,7 +301,7 @@ export default function Login() {
                 </div>
                 <div className="mt-4">
                   <p className="text-center form-text signup-text">
-                    Don’t have an account? <Link to="/sign-up">Sign up</Link>
+                    Don't have an account? <Link to="/sign-up">Sign up</Link>
                   </p>
                 </div>
               </div>

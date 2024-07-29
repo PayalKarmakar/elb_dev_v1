@@ -1,11 +1,19 @@
 import slug from "slug";
 import pool from "../db.js";
+import { verifyJWT } from "./tokenUtils.js";
 
 export const getUserId = async (uuid) => {
   const user = await pool.query(`select id from master_users where uuid=$1`, [
     uuid,
   ]);
   return user.rows[0].id;
+};
+
+export const getUserIdFromToken = async (req) => {
+  const { token } = req.cookies;
+  const useUuid = verifyJWT(token);
+  const userId = await getUserId(useUuid.uuid);
+  return userId;
 };
 
 export const paginationLogic = (page, limit) => {
