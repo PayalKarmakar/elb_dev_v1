@@ -138,3 +138,13 @@ export const getAllStates = async (req, res) => {
   );
   res.status(StatusCodes.OK).json({ data });
 };
+
+export const getCities = async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(
+    `select id,city from master_locations where state_code=$1 order by city`,
+    [id]
+  );
+  // console.log(data.rows + "5765765");
+  // res.status(StatusCodes.OK).json({ data });
+};

@@ -9,7 +9,7 @@ import { encParam } from "../../../utils/functions";
 
 const RecentPosts = () => {
   const { recentPosts } = useSelector((store) => store.posts);
-let path ='';
+  let path = "";
   return (
     <section className="recently-view pb-110 bg-offWhite py-110">
       <div className="container">
@@ -30,16 +30,11 @@ let path ='';
         </div>
         <div className="row row-gap-4 justify-content-center row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
           {recentPosts.map((post, index) => {
-           
-            if (typeof window !== 'undefined') {
-              path = location.protocol + '//' + location.host; // (or whatever)
-            }
             const imgSrc = post.image_path
-              ? `${path}/${post.image_path}`
+              ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
               : product1;
-               
+
             return (
-             
               <article key={index}>
                 <div
                   className="service-card bg-white"

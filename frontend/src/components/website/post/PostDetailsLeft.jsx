@@ -57,10 +57,10 @@ const PostDetailsLeft = ({ postSlug }) => {
   const handleClick = (image) => {
     setSelectedImage(image);
   };
-  let path ='';
-  if (typeof window !== 'undefined') {
-    path = location.protocol + '//' + location.host; // (or whatever)
-  }
+  // let path ='';
+  // if (typeof window !== 'undefined') {
+  //   path = location.protocol + '//' + location.host; // (or whatever)
+  // }
   return (
     <>
       <div className="bg-white service-details-content">
@@ -75,7 +75,6 @@ const PostDetailsLeft = ({ postSlug }) => {
             </div>
           ) : (
             postDetails?.image?.map((img, i) => {
-               
               if (img.is_cover) {
                 return (
                   <article key={i}>
@@ -87,7 +86,7 @@ const PostDetailsLeft = ({ postSlug }) => {
                     >
                       <div className="position-relative">
                         <img
-                          src={`${path}/${
+                          src={`${import.meta.env.VITE_BASE_URL}/${
                             img.image_path
                           }`}
                           className="recently-view-card-img w-100"
@@ -135,12 +134,12 @@ const PostDetailsLeft = ({ postSlug }) => {
                     >
                       <div className="position-relative">
                         <img
-                          src={`${path}/${
+                          src={`${import.meta.env.VITE_BASE_URL}/${
                             img.image_path
                           }`}
                           onClick={() =>
                             handleClick(
-                              `${path}/${
+                              `${import.meta.env.VITE_BASE_URL}/${
                                 img.image_path
                               }`
                             )

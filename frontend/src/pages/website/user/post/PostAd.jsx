@@ -149,7 +149,7 @@ const PostAd = () => {
                           <input
                             type="text"
                             className="w-editor-wrapper"
-                            placeholder="Brote - Cleanin Service Elementor Template Kit"
+                            placeholder="Product Title"
                             name="title"
                             value={form.title}
                             onChange={handleChange}

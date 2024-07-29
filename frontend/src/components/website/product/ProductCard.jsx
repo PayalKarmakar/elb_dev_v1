@@ -9,6 +9,7 @@ import { FaRegHeart, FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import ListPagination from "../PaginationContainer";
 import PaginationContainer from "../PaginationContainer";
+import TextTruncate from "react-text-truncate";
 
 const ProductCard = ({ catCard }) => {
   const { allPosts } = useSelector((store) => store.posts);
@@ -78,7 +79,7 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-  let path ='';
+  let path = "";
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
@@ -91,13 +92,19 @@ const ProductCard = ({ catCard }) => {
         >
           <div className="row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
             {allPosts.map((post) => {
-              if (typeof window !== 'undefined') {
-                path = location.protocol + '//' + location.host; // (or whatever)
-              }
               const imagePath = post.image_path
-                ? `${path}/${post.image_path}`
+                ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
                 : product1;
 
+              const postTitle = (
+                <TextTruncate
+                  line={1}
+                  element="span"
+                  truncateText="…"
+                  text={post.title}
+                  //textTruncateChild={<a href="#">Read on</a>}
+                />
+              );
               return (
                 <article key={nanoid()}>
                   <div
@@ -110,7 +117,7 @@ const ProductCard = ({ catCard }) => {
                       <img
                         src={imagePath}
                         className="recently-view-card-img w-100"
-                        alt={post.title || "Post Image"}
+                        alt={"Post Image"}
                       />
                       <button className="service-card-wishlist-btn">
                         <FaRegHeart />
@@ -130,7 +137,7 @@ const ProductCard = ({ catCard }) => {
                       </div>
                       <h3 className="service-card-title fw-semibold">
                         <Link to="/service-details">
-                          {post.title || "Brote - Cleaning Service Elementor"}
+                          {postTitle || "Brote - Cleaning Service Elementor"}
                         </Link>
                       </h3>
                       <div className="d-flex align-items-center service-card-author">
