@@ -1,6 +1,9 @@
 import { Router } from "express";
 const router = Router();
-import { getTopLocations } from "../controllers/masters/locationController.js";
+import {
+  getTopLocations,
+  getCities,
+} from "../controllers/masters/locationController.js";
 import {
   getAllCategories,
   getCategories,
@@ -21,4 +24,5 @@ router.get(`/recent-posts`, getRecentPosts); // Jyoti
 router.get(`/post/:id`, getPostDetails); // Arko
 router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 router.get(`/get-allstates`, getAllStates); //Payal
+router.post(`/get-cities/:id`, getCities); //Payal
 export default router;
