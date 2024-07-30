@@ -78,7 +78,7 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-  let path = "";
+  // let path = "";
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
