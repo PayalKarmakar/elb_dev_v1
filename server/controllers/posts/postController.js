@@ -182,7 +182,7 @@ export const getFeaturedPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_feature=true order by post.title`,
+      where is_feature=true and post.is_active=true order by post.title`,
       []
     );
 
@@ -198,7 +198,7 @@ export const getRecentPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_feature=true order by post.created_at desc limit 5`,
+      where post.is_active=true order by post.created_at desc limit 5`,
       []
     );
 
@@ -246,7 +246,7 @@ export const getAllPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_active=true ${cat} order by id
+      where post.is_active=true ${cat} order by id
       offset ${req.params.offset} limit 5`,
       []
     );
@@ -255,7 +255,7 @@ export const getAllPosts = async (req, res) => {
       `select count(post.id) countId
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_active=true ${cat}`,
+      where post.is_active=true ${cat}`,
       []
     );
 

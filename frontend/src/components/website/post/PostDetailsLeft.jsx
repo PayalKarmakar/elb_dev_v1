@@ -57,7 +57,10 @@ const PostDetailsLeft = ({ postSlug }) => {
   const handleClick = (image) => {
     setSelectedImage(image);
   };
-
+  // let path ='';
+  // if (typeof window !== 'undefined') {
+  //   path = location.protocol + '//' + location.host; // (or whatever)
+  // }
   return (
     <>
       <div className="bg-white service-details-content">
