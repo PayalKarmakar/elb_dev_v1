@@ -26,7 +26,7 @@ const FeaturedProducts = () => {
   }, []);
 
   const renderFeaturedPosts = () => {
-    let path = "";
+    // let path = "";
     return featuredPosts.map((i) => {
       const imgSrc = i.image_path
         ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`

@@ -78,7 +78,7 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-  //let path = "";
+  let path = "";
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
@@ -94,6 +94,11 @@ const ProductCard = ({ catCard }) => {
               const imagePath = post.image_path
                 ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
                 : product1;
+
+              const postTitle =
+                post.title.length > 20
+                  ? post.title.substring(0, 20) + "..."
+                  : post.title;
 
               return (
                 <article key={nanoid()}>
