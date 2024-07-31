@@ -6,7 +6,15 @@ import dayjs from "dayjs";
 
 export const addPost = async (req, res) => {
   const obj = { ...req.body };
-  const { category, subCategory, title, description, price } = obj;
+  const {
+    category,
+    subCategory,
+    userState,
+    userCity,
+    title,
+    description,
+    price,
+  } = obj;
 
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
@@ -20,7 +28,7 @@ export const addPost = async (req, res) => {
     await pool.query(`BEGIN`);
 
     const master = await pool.query(
-      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at) values($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id`,
+      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id`,
       [
         uid,
         title.trim(),
@@ -31,6 +39,7 @@ export const addPost = async (req, res) => {
         postSlug,
         timeStamp,
         timeStamp,
+        userCity,
       ]
     );
 
@@ -118,6 +127,53 @@ export const allPosts = async (req, res) => {
   res.status(StatusCodes.OK).json({ data });
 };
 
+// ------
+export const getAllPostsMin = async (req, res) => {
+  const { page, search } = req.query;
+  const { cat, subcat } = req.params;
+
+  const catid = await pool.query(
+    `select id from master_categories where slug=$1 and parent_id is null`,
+    [cat]
+  );
+  let subcatId;
+  if (subcat) {
+    subcatId = await pool.query(
+      `select id from master_categories where slug=$1 and parent_id=$2`,
+      [subcat, catid.rows[0].id]
+    );
+  }
+
+  const subCatFilter = subcat
+    ? ` where pm.cat_id=$1 and pm.subcat_id=$2`
+    : ` where pm.cat_id=$1`;
+  const vals = subcat
+    ? [catid.rows[0].id, subcatId.rows[0].id]
+    : [catid.rows[0].id];
+
+  const data = await pool.query(
+    `select 
+      pm.id, pm.title, pm.cat_id, pm.subcat_id, pm.description, pm.price, pm.slug,
+      um.first_name AS seller_first_name,
+      um.last_name AS seller_last_name,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'image_url', pi.image_path
+          )
+        ) filter (where pi.id is not null), '[]'
+      ) as images
+      from master_posts pm
+      inner join master_users um on pm.user_id = um.id
+      left join image_posts pi on pi.post_id = pm.id ${subCatFilter}
+      group by pm.id, um.first_name, um.last_name`,
+    vals
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+};
+
+// ------
 export const updatePost = async (req, res) => {
   const { category, subCategory, title, description, price } = req.body;
   const { id } = req.params;
@@ -264,12 +320,6 @@ export const getAllPosts = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
   }
 }; // Jyoti
-
-export const testUpload = (req, res) => {
-  const obj = { ...req.body };
-  console.log(obj);
-  console.log(req.file);
-};
 
 export const getPostUser = async (req, res) => {
   const query = `select * from master_users where id=${req.params.id}`;

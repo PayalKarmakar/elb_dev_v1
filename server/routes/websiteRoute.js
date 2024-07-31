@@ -10,6 +10,7 @@ import {
 } from "../controllers/masters/categoryController.js";
 import {
   getAllPosts,
+  getAllPostsMin,
   getFeaturedPosts,
   getPostDetails,
   getPostUser,
@@ -27,4 +28,5 @@ router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 router.get(`/get-allstates`, getAllStates); //Payal
 router.get(`/get-cities/:id`, getCities); //Payal
 router.get(`/post/user/:id`, getPostUser);
+
 export default router;

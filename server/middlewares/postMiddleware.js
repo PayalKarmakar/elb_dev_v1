@@ -13,6 +13,8 @@ export const validatePostForm = withValidationErrors([
     .withMessage(`Title must be between 3 to 255 characters`),
   body("category").notEmpty().withMessage(`Select a category`),
   body("subCategory").notEmpty().withMessage(`Select a sub-category`),
+  body("userState").notEmpty().withMessage(`Select a state`),
+  body("userCity").notEmpty().withMessage(`Select a city`),
   body("price").notEmpty().withMessage(`Price is required`),
 ]);
 
@@ -44,7 +46,3 @@ export const validateDynamic = async (req, res, next) => {
 
   next();
 };
-
-export const testUploadMiddleware = withValidationErrors([
-  body("name").notEmpty().withMessage(`Name is required`),
-]);
