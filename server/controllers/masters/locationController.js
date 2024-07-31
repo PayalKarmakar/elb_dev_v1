@@ -145,6 +145,9 @@ export const getCities = async (req, res) => {
     `select id,city from master_locations where state_code=$1 order by city`,
     [id]
   );
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1968a786e6f91c642f3431d4dbd3ebb0bc851bd5
   res.status(StatusCodes.OK).json({ data });
 };
