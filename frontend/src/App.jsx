@@ -48,7 +48,7 @@ const router = createBrowserRouter([
             // path: ":catname/:subcat?",
             element: <Elb.ProductList />,
           },
-          { path: "/post/:id", element: <Elb.PostView /> },
+          { path: "/posts/:slug", element: <Elb.PostView /> },
         ],
       },
       // {
