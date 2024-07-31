@@ -32,8 +32,8 @@ const FeaturedProducts = () => {
       //   path = location.protocol + '//' + location.host; // (or whatever)
       // }
 
-      const imgSrc = post.image_path
-        ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
+      const imgSrc = i.image_path
+        ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
         : product1;
 
       return (
