@@ -10,29 +10,35 @@ const UserProfile = () => {
   const dispatch = useDispatch();
   const { allStates } = useSelector((store) => store.locations);
 
+  const [selectedState, setselectedState] = useState([]);
+  const [selectedCity, setselectedCity] = useState([]);
+
   const fetchState = async () => {
-    const getStates = await customFetch.get(`/website/get-allstates`);
-    dispatch(setAllStates(getStates?.data?.data?.rows));
+    try {
+      const getStates = await customFetch.get(`/website/get-allstates`);
+      dispatch(setAllStates(getStates?.data?.data?.rows));
+    } catch (error) {
+      console.log(error);
+      setselectedState([]);
+      setselectedCity([]);
+    }
   };
   useEffect(() => {
     fetchState();
   }, []);
 
-  const [selectedState, setselectedState] = useState("");
-  const [selectedCity, setselectedCity] = useState("");
-
-  const onStateChange = (e) => {
-    setselectedState(e.target.value);
-  };
-
-  const getCities = async () => {
-    if (selectedState) {
-      const getStates = await customFetch.get(
-        `/website/get-cities/${selectedState}`
+  const getCities = async (stateCode) => {
+    try {
+      const getallCities = await customFetch.get(
+        `/website/get-cities/${stateCode}`
       );
+      setselectedState(stateCode);
+      setselectedCity(getallCities.data.data.rows);
+    } catch (error) {
+      console.log(error);
+      setselectedState([]);
     }
   };
-
   return (
     <>
       <div className="row justify-content-center">
@@ -51,33 +57,51 @@ const UserProfile = () => {
                   <div className="row g-4">
                     <div className="col-md-6">
                       <div className="form-container">
-                        <label for="fname" className="form-label">
+                        <label htmlFor="fname" className="form-label">
                           First Name
                           <span className="text-lime-300">*</span>
                         </label>
                         <input
                           type="text"
                           className="form-control shadow-none"
-                          placeholder="Mansa"
+                          placeholder="Name"
+                          name="fname"
                         />
                       </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-container">
-                        <label for="lname" className="form-label">
+                        <label htmlFor="lname" className="form-label">
                           Last Name
                           <span className="text-lime-300">*</span>
                         </label>
                         <input
                           type="text"
                           className="form-control shadow-none"
-                          placeholder="Musa"
+                          placeholder="Last Name"
+                          name="lname"
                         />
                       </div>
                     </div>
-                    <div className="col-12">
+                    <div className="col-md-6">
                       <div className="form-container">
-                        <label for="email" className="form-label">
+                        <label htmlFor="gender" className="form-label">
+                          Gender
+                          <span className="text-lime-300">*</span>
+                        </label>
+                        <select
+                          id="gender"
+                          autoComplete="off"
+                          className="form-select shadow-none"
+                        >
+                          <option value="0">Male</option>
+                          <option value="1">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-container">
+                        <label htmlFor="email" className="form-label">
                           Email Address
                           <span className="text-lime-300">*</span>
                         </label>
@@ -85,22 +109,43 @@ const UserProfile = () => {
                           type="text"
                           className="form-control shadow-none"
                           placeholder="example@email.com"
+                          name="email"
                         />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <label for="description" className="form-label">
-                        Description
-                        <span className="text-lime-300">*</span>
-                      </label>
-                      <div className="w-editor-wrapper">
-                        <div id="toolbar"></div>
-                        <div id="editor"></div>
                       </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-container">
-                        <label for="state" className="form-label">
+                        <label htmlFor="email" className="form-label">
+                          Mobile
+                          <span className="text-lime-300">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control shadow-none"
+                          name="mobile"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-container">
+                        <label htmlFor="country" className="form-label">
+                          Country
+                          <span className="text-lime-300">*</span>
+                        </label>
+                        <select
+                          id="country"
+                          autoComplete="off"
+                          className="form-select shadow-none"
+                        >
+                          <option value="1" selected>
+                            INDIA
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-container">
+                        <label htmlFor="state" className="form-label">
                           State
                           <span className="text-lime-300">*</span>
                         </label>
@@ -109,8 +154,9 @@ const UserProfile = () => {
                           id="state"
                           name="state"
                           value={selectedState}
+                          autoComplete="off"
                           className="form-select shadow-none"
-                          onChange={onStateChange}
+                          onChange={(e) => getCities(e.target.value)}
                         >
                           <option value="">- Select -</option>
                           {allStates.map((i) => (
@@ -123,94 +169,70 @@ const UserProfile = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-container">
-                        <label for="category" className="form-label">
+                        <label htmlFor="category" className="form-label">
                           Town/City
                           <span className="text-lime-300">*</span>
                         </label>
                         <select
                           id="city"
-                          value=""
+                          name="city"
                           autoComplete="off"
                           className="form-select shadow-none"
-                        ></select>
+                        >
+                          <option value="">- Select -</option>
+                          {selectedCity?.map((city) => {
+                            return (
+                              <option key={nanoid()} value={city.id}>
+                                {city.city}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
+                    </div>
+                    <div className="col-12">
+                      <label htmlFor="description" className="form-label">
+                        Tell Us Something About Yourself
+                      </label>
+                      <div className="w-editor-wrapper">
+                        <div id="toolbar"></div>
+                        <div id="editor"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="gig-info-card">
+                <div className="gig-info-header">
+                  <h4 className="text-18 fw-semibold text-white">
+                    Drop your pic—make your profile pop!
+                  </h4>
+                </div>
+                <div className="gig-info-body bg-white">
+                  <p className="text-dark-200 mb-2">Profile Picture</p>
+                  <div className="d-flex flex-wrap gap-3">
+                    <div>
+                      <label
+                        htmlFor="gig-img"
+                        className="border text-center gig-file-upload"
+                      >
+                        <img
+                          src="assets/img/dashboard/gigs/gallery-icon.png"
+                          alt=""
+                        />
+                        <p className="text-dark-200">Max.Size 500KB</p>
+                        <input
+                          className="d-none"
+                          type="file"
+                          multiple
+                          name="image"
+                          id="gig-img"
+                          // onChange={(e) => handleImageChange(e ? e : null)}
+                        />
+                      </label>
                     </div>
 
-                    <div className="col-md-12">
-                      <div className="form-container">
-                        <label for="country" className="form-label">
-                          Country
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <select
-                          id="country"
-                          autoComplete="off"
-                          className="form-select shadow-none"
-                        >
-                          {/* <option value="0">USA</option> */}
-                          <option value="1" selected>
-                            INDIA
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-container">
-                        <label for="designation" className="form-label">
-                          Your Designation
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <input
-                          id="designation"
-                          type="text"
-                          className="form-control shadow-none"
-                          placeholder="example@email.com"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-container">
-                        <label for="rate" className="form-label">
-                          Hourly Rate
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <input
-                          id="rate"
-                          type="text"
-                          className="form-control shadow-none"
-                          placeholder="example@email.com"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-container">
-                        <label for="gender" className="form-label">
-                          Gender
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <select
-                          id="gender"
-                          autoComplete="off"
-                          className="form-select shadow-none"
-                        >
-                          {/* <option value="0">Male</option>
-                          <option value="1">Female</option> */}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-container">
-                        <label for="language" className="form-label">
-                          Language
-                        </label>
-                        <input
-                          id="language"
-                          type="text"
-                          className="form-control shadow-none"
-                          placeholder="example@email.com"
-                        />
-                      </div>
-                    </div>
+                    {/* {loopImg()} */}
                   </div>
                 </div>
               </div>

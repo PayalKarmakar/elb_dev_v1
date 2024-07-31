@@ -25,6 +25,6 @@ router.get(`/recent-posts`, getRecentPosts); // Jyoti
 router.get(`/post/:id`, getPostDetails); // Arko
 router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 router.get(`/get-allstates`, getAllStates); //Payal
-router.post(`/get-cities/:id`, getCities); //Payal
+router.get(`/get-cities/:id`, getCities); //Payal
 router.get(`/post/user/:id`, getPostUser);
 export default router;
