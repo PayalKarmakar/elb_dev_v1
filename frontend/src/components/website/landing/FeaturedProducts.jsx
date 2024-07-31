@@ -26,12 +26,8 @@ const FeaturedProducts = () => {
   }, []);
 
   const renderFeaturedPosts = () => {
-    let path = "";
+    // let path = "";
     return featuredPosts.map((i) => {
-      // if (typeof window !== 'undefined') {
-      //   path = location.protocol + '//' + location.host; // (or whatever)
-      // }
-
       const imgSrc = i.image_path
         ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
         : product1;

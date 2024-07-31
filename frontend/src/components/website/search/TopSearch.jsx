@@ -3,6 +3,7 @@ import { Form } from "react-router-dom";
 import FilterLocation from "./FilterLocation";
 import FilterCategories from "./FilterCategories";
 import { useDispatch, useSelector } from "react-redux";
+import { IoSearch } from "react-icons/io5";
 import {
   setLocationModal,
   setCategoryModal,
@@ -71,28 +72,7 @@ const TopSearch = () => {
               placeholder="Search for any service..."
             />
             <button type="submit" className="hero-form-btn position-absolute">
-              <svg
-                width="19"
-                height="18"
-                viewBox="0 0 19 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                  stroke="#F2F2F2"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M18 17L14 13"
-                  stroke="#F2F2F2"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <IoSearch />
               Search
             </button>
           </div>
