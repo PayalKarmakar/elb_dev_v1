@@ -345,6 +345,7 @@ export const getSearchPosts = async (req, res) => {
   let noSrcQ = "";
   if (catId && locationId && search) {
     cat = `WHERE cat.id = ${catId}`;
+    srchC = `OR cat.category ILIKE '%${search}%'`;
     catC = `WHERE post.cat_id =${catId}`;
     loc = `and post.location_id = ${locationId}`;
     srchP = `and post.title ILIKE '%${search}%'`;
@@ -353,13 +354,15 @@ export const getSearchPosts = async (req, res) => {
               FROM master_posts post
               WHERE location_id = ${locationId}
           )`;
-    noLocQ = `, OR
+    noLocQ = ` OR
           (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
     noSrc =`,  matched_posts_by_partial_title AS (
               SELECT *
               FROM master_posts
               WHERE title ILIKE '%${search}%'
-          )` ;     
+          )` ;  
+    noSrcQ =`OR
+      (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;   
   } else if (catId && locationId) {
     cat = `WHERE cat.id = ${catId}`;
     catC = `WHERE post.cat_id =${catId}`;
@@ -369,12 +372,12 @@ export const getSearchPosts = async (req, res) => {
               FROM master_posts post
               WHERE location_id = ${locationId}
           )`;
-    noLocQ = `, OR
+    noLocQ = ` OR
           (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
   } else if (catId && search) {
     cat = `WHERE cat.id = ${catId}`;
     catC = `WHERE post.cat_id =${catId}`;
-    srchC = `and cat.category ILIKE '%${search}%'`;
+    srchC = `OR cat.category ILIKE '%${search}%'`;
     srchP = `WHERE post.title ILIKE '%${search}%'`;
     noSrc =`,  matched_posts_by_partial_title AS (
               SELECT *
@@ -417,7 +420,7 @@ export const getSearchPosts = async (req, res) => {
      cat = `WHERE cat.id = ${catId}`;
      catC = `WHERE post.cat_id =${catId}`;
   }
-console.log(`${cat}`);
+
   queryStr = `WITH 
           -- Step 1: Check if there are categories matching
           matched_categories AS (
@@ -443,7 +446,7 @@ console.log(`${cat}`);
           (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
           ${noSrcQ}
           ${noLocQ} `;
- console.log(`${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`);
+ console.log(`${queryStr} ORDER BY post.id`);
   try {
     const data = await pool.query(
       `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
