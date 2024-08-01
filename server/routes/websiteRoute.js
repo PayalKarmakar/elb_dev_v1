@@ -15,6 +15,7 @@ import {
   getPostDetails,
   getPostUser,
   getRecentPosts,
+  getSearchPosts,
 } from "../controllers/posts/postController.js";
 import { getAllStates } from "../controllers/masters/locationController.js";
 
@@ -28,5 +29,6 @@ router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 router.get(`/get-allstates`, getAllStates); //Payal
 router.get(`/get-cities/:id`, getCities); //Payal
 router.get(`/post/user/:id`, getPostUser);
+router.post(`/search-post/:offset`, getSearchPosts); // Arko
 
 export default router;

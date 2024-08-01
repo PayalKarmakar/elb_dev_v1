@@ -26,7 +26,23 @@ const ProductCard = ({ catCard }) => {
 
         dispatch(setAllPosts(response?.data?.data?.rows));
         setTotalCount(response?.data?.result?.rows[0].countid);
-      } else {
+      }else if (catCard.catname === "search-value") {
+        const searchItem = localStorage.getItem("searchItem");
+        let data = JSON.parse(searchItem);
+        try {
+          const response = await customFetch.post(
+            `/website/search-post/${offset}`,
+            data
+          );
+
+          dispatch(setAllPosts(response?.data?.data?.rows));
+          setTotalCount(response?.data?.result?.rows[0].countid);
+        } catch (error) {
+          // toast.error("No Product Found");
+          splitErrors(error?.response?.data?.msg);
+          return error;
+        }
+      }  else {
         listCategories.forEach((item) => {
           if (item.slug === catCard.catname) {
             parentCategory = item.id;

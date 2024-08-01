@@ -330,3 +330,132 @@ export const getPostUser = async (req, res) => {
     res.status(StatusCodes.NOT_FOUND).json({ data: "Failed" });
   }
 };
+export const getSearchPosts = async (req, res) => {
+  const { search, catId, locationId } = req.body;
+
+  let cat = "";
+  let catC = "";
+  let loc = "";
+  let srchP = "";
+  let srchC = "";
+  let queryStr = "";
+  let noLoc = "";
+  let noLocQ = "";
+  let noSrc = "";
+  let noSrcQ = "";
+  if (catId && locationId && search) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    loc = `and post.location_id = ${locationId}`;
+    srchP = `and post.title ILIKE '%${search}%'`;
+    noLoc = `,matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = `, OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ;     
+  } else if (catId && locationId) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    loc = `and post.location_id = ${locationId}`;
+    noLoc = `,matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = `, OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+  } else if (catId && search) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    srchC = `and cat.category ILIKE '%${search}%'`;
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;      
+  } else if (locationId && search) {
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    loc = `and post.location_id = ${locationId}`;
+
+    noLoc = `, matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = ` OR
+    (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
+  } else if (catId == "" && locationId == "" && search != "") {
+    srchC = `WHERE cat.category ILIKE '%${search}%'`;
+
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
+  }else if(catId != "" && locationId == "" && search == ""){
+     cat = `WHERE cat.id = ${catId}`;
+     catC = `WHERE post.cat_id =${catId}`;
+  }
+console.log(`${cat}`);
+  queryStr = `WITH 
+          -- Step 1: Check if there are categories matching
+          matched_categories AS (
+              SELECT cat.id AS cateId, cat.parent_id AS parId
+              FROM master_categories cat
+            ${cat} ${srchC}
+          ),
+          -- Step 2: Check if there are posts whose title matches
+          matched_posts_by_title AS (
+              SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
+              FROM master_posts post
+              ${catC} ${srchP} ${loc}
+          )
+          ${noSrc}
+          ${noLoc}
+          
+
+      SELECT DISTINCT post.*
+      FROM master_posts post
+      WHERE 
+          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
+          OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
+          ${noSrcQ}
+          ${noLocQ} `;
+ console.log(`${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`);
+  try {
+    const data = await pool.query(
+      `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
+      []
+    );
+    const result = await pool.query(
+      `SELECT COUNT(*) countId FROM ( ${queryStr} ) AS matched_posts`,
+      []
+    );
+
+    res.status(StatusCodes.OK).json({ data, result });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
+}; // Arko
