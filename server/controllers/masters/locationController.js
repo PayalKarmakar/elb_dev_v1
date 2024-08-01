@@ -133,8 +133,17 @@ export const getTopLocations = async (req, res) => {
 
 export const getAllStates = async (req, res) => {
   const data = await pool.query(
-    `SELECT distinct(state_code) ,state FROM master_locations	group by state_code,state ORDER BY state_code ASC `,
+    `SELECT distinct(state_code) ,state FROM master_locations	group by state_code,state ORDER BY state, state_code ASC `,
     []
+  );
+  res.status(StatusCodes.OK).json({ data });
+};
+
+export const getCities = async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(
+    `select id,city from master_locations where state_code=$1 order by city`,
+    [id]
   );
   res.status(StatusCodes.OK).json({ data });
 };

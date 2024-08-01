@@ -1,0 +1,110 @@
+WITH category_match AS (
+    SELECT cat1.id AS cateId, cat1.parent_id AS parId
+    FROM master_categories cat1
+    WHERE cat1.category ILIKE '%car%'
+),
+post_match AS (
+    SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
+    FROM master_posts post
+    WHERE post.title ILIKE '%car%'
+)
+SELECT *
+FROM master_posts post
+WHERE (
+    EXISTS (SELECT 1 FROM category_match) AND (
+        post.cat_id IN (SELECT cateId FROM category_match) OR
+        post.subcat_id IN (SELECT parId FROM category_match) OR
+        post.title ILIKE '%car%'
+    )
+) OR (
+    NOT EXISTS (SELECT 1 FROM category_match) AND EXISTS (SELECT 1 FROM post_match) AND (
+        post.cat_id = (SELECT postCat FROM post_match) OR
+        post.subcat_id = (SELECT postSubCat FROM post_match)
+    )
+) OR (
+    NOT EXISTS (SELECT 1 FROM category_match) AND NOT EXISTS (SELECT 1 FROM post_match)
+);
+
+
+--------------------------------------- right -------------------------------------------------
+
+WITH category_match AS (
+    SELECT cat1.id AS cateId, cat1.parent_id AS parId
+    FROM master_categories cat1
+    WHERE cat1.category ILIKE '%test%'
+),
+post_match AS (
+    SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
+    FROM master_posts post
+    WHERE post.title ILIKE '%test%'
+)
+SELECT post.*
+FROM master_posts post
+WHERE 
+    EXISTS (SELECT 1 FROM category_match) AND (
+        post.cat_id IN (SELECT cateId FROM category_match) OR
+        post.subcat_id IN (SELECT parId FROM category_match) OR
+        post.title ILIKE '%test%'
+    )
+    OR
+    NOT EXISTS (SELECT 1 FROM category_match) AND EXISTS (SELECT 1 FROM post_match) AND (
+        post.cat_id IN (SELECT postCat FROM post_match) OR
+        post.subcat_id IN (SELECT postSubCat FROM post_match)
+    )
+    OR
+    NOT EXISTS (SELECT 1 FROM category_match) AND NOT EXISTS (SELECT 1 FROM post_match);
+
+
+
+
+
+---------------------OR----------------------------------------------------------------------
+WITH category_match AS (
+    SELECT cat1.id AS cateId, cat1.parent_id AS parId
+    FROM master_categories cat1
+    WHERE cat1.category ILIKE '%test%'
+),
+post_match AS (
+    SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
+    FROM master_posts post
+    WHERE post.title ILIKE '%test%'
+)
+SELECT distinct(post.*)
+FROM master_posts post
+LEFT JOIN category_match cm ON post.cat_id = cm.cateId OR post.subcat_id = cm.parId
+LEFT JOIN post_match pm ON post.cat_id = pm.postCat OR post.subcat_id = pm.postSubCat
+WHERE 
+    (post.cat_id = cm.cateId OR post.cat_id = pm.postCat OR post.title ILIKE '%test%')
+    OR (
+        post.title ILIKE '%tes%'
+    )
+    OR (
+        post.title ILIKE '%te%'
+    );
+
+
+
+--------------------------- achive -------------------------------------------------------------
+
+if (select cat1.id as cateId, cat1.parent_id as parId
+	from master_categories cat1
+where cat1.category ilike '%car%') !=0
+then 
+(
+	select post.* from master_posts post where post .cat_id in(cateId)
+	OR post.subcat_id in(parId) OR post.title ilike '%car%'
+)
+	else(
+	if(
+		select post.cat_id as postCat, post.subcat_id postSubCat from master_posts post 
+		where post.title ilike '%car%'
+	)!=0
+	then (
+		select * from master_posts post2 where post2.cat_id = postCat   
+		OR post2.sub_cat = postSubCat
+	)
+	else(
+		select * from master_posts
+	)
+		
+	)

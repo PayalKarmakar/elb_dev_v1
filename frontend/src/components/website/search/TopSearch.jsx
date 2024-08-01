@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "react-router-dom";
+import { useEffect, useState } from "react";
 import FilterLocation from "./FilterLocation";
 import FilterCategories from "./FilterCategories";
 import { useDispatch, useSelector } from "react-redux";
+import { IoSearch } from "react-icons/io5";
 import {
   setLocationModal,
   setCategoryModal,
 } from "../../../feature/website/search/searchSlice";
+import { useNavigate } from "react-router-dom";
 
 const TopSearch = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Use the useNavigate hook here
 
   const openModal = () => {
     dispatch(setLocationModal());
@@ -19,6 +21,7 @@ const TopSearch = () => {
     dispatch(setCategoryModal());
   };
   const [locationLabel, setLocationLabel] = useState(`Location`);
+
   const { topLocations, searchLocation } = useSelector(
     (store) => store.locations
   );
@@ -35,13 +38,43 @@ const TopSearch = () => {
   const selectedCat =
     searchCategory && getCategories?.find((i) => i.id === searchCategory);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    let data = Object.fromEntries(formData);
+    data = {
+      ...data,
+      catId: selectedCat ? selectedCat.id : "",
+      locationId: selectedLoc ? selectedLoc.id : "",
+    };
+    let searchItem = JSON.stringify(data);
+    localStorage.setItem("searchItem", searchItem);
+    navigate(`/cat/search-value`);
+    // if (data.search && data.catId && data.locationId) {
+    //   navigate(
+    //     `/cat/search-value/${data.search}/${data.catId}/${data.locationId}`
+    //   );
+    // } else if (data.search && data.catId) {
+    //   navigate(`/cat/search-value/${data.search}/${data.catId}`);
+    // } else if (data.search && data.locationId) {
+    //   navigate(`/cat/search-value/${data.search}/${data.locationId}`);
+    // } else if (data.search) {
+    //   navigate(`/cat/search-value/${data.search}`);
+    // } else if (data.locationId) {
+    //   navigate(`/cat/search-value/${data.locationId}`);
+    // } else if (data.catId) {
+    //   navigate(`/cat/search-value/${data.catId}`);
+    // }
+  };
+
   useEffect(() => {
     setCategoryLabel(selectedCat?.category || `Categories`);
   }, [selectedCat]);
 
   return (
     <>
-      <Form method="get">
+      <form method="get" onSubmit={handleSubmit}>
         <div className="hero-form-wrapper bg-white d-flex position-relative">
           <div>
             <button
@@ -71,33 +104,12 @@ const TopSearch = () => {
               placeholder="Search for any service..."
             />
             <button type="submit" className="hero-form-btn position-absolute">
-              <svg
-                width="19"
-                height="18"
-                viewBox="0 0 19 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                  stroke="#F2F2F2"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M18 17L14 13"
-                  stroke="#F2F2F2"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <IoSearch />
               Search
             </button>
           </div>
         </div>
-      </Form>
+      </form>
       <FilterLocation />
       <FilterCategories />
     </>

@@ -6,7 +6,15 @@ import dayjs from "dayjs";
 
 export const addPost = async (req, res) => {
   const obj = { ...req.body };
-  const { category, subCategory, title, description, price } = obj;
+  const {
+    category,
+    subCategory,
+    userState,
+    userCity,
+    title,
+    description,
+    price,
+  } = obj;
 
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
@@ -20,7 +28,7 @@ export const addPost = async (req, res) => {
     await pool.query(`BEGIN`);
 
     const master = await pool.query(
-      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at) values($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id`,
+      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id`,
       [
         uid,
         title.trim(),
@@ -31,6 +39,7 @@ export const addPost = async (req, res) => {
         postSlug,
         timeStamp,
         timeStamp,
+        userCity,
       ]
     );
 
@@ -118,6 +127,53 @@ export const allPosts = async (req, res) => {
   res.status(StatusCodes.OK).json({ data });
 };
 
+// ------
+export const getAllPostsMin = async (req, res) => {
+  const { page, search } = req.query;
+  const { cat, subcat } = req.params;
+
+  const catid = await pool.query(
+    `select id from master_categories where slug=$1 and parent_id is null`,
+    [cat]
+  );
+  let subcatId;
+  if (subcat) {
+    subcatId = await pool.query(
+      `select id from master_categories where slug=$1 and parent_id=$2`,
+      [subcat, catid.rows[0].id]
+    );
+  }
+
+  const subCatFilter = subcat
+    ? ` where pm.cat_id=$1 and pm.subcat_id=$2`
+    : ` where pm.cat_id=$1`;
+  const vals = subcat
+    ? [catid.rows[0].id, subcatId.rows[0].id]
+    : [catid.rows[0].id];
+
+  const data = await pool.query(
+    `select 
+      pm.id, pm.title, pm.cat_id, pm.subcat_id, pm.description, pm.price, pm.slug,
+      um.first_name AS seller_first_name,
+      um.last_name AS seller_last_name,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'image_url', pi.image_path
+          )
+        ) filter (where pi.id is not null), '[]'
+      ) as images
+      from master_posts pm
+      inner join master_users um on pm.user_id = um.id
+      left join image_posts pi on pi.post_id = pm.id ${subCatFilter}
+      group by pm.id, um.first_name, um.last_name`,
+    vals
+  );
+
+  res.status(StatusCodes.OK).json({ data });
+};
+
+// ------
 export const updatePost = async (req, res) => {
   const { category, subCategory, title, description, price } = req.body;
   const { id } = req.params;
@@ -182,7 +238,7 @@ export const getFeaturedPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_feature=true order by post.title`,
+      where is_feature=true and post.is_active=true order by post.title`,
       []
     );
 
@@ -198,7 +254,7 @@ export const getRecentPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post 
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_feature=true order by post.created_at desc limit 5`,
+      where post.is_active=true order by post.created_at desc limit 5`,
       []
     );
 
@@ -246,7 +302,7 @@ export const getAllPosts = async (req, res) => {
       `select post.*,img.image_path,img.is_cover
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_active=true ${cat} order by id
+      where post.is_active=true ${cat} order by id
       offset ${req.params.offset} limit 5`,
       []
     );
@@ -255,7 +311,7 @@ export const getAllPosts = async (req, res) => {
       `select count(post.id) countId
       from  master_posts post
       left join image_posts img on post.id = img.post_id and img.is_cover=true
-      where is_active=true ${cat}`,
+      where post.is_active=true ${cat}`,
       []
     );
 
@@ -264,12 +320,6 @@ export const getAllPosts = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
   }
 }; // Jyoti
-
-export const testUpload = (req, res) => {
-  const obj = { ...req.body };
-  console.log(obj);
-  console.log(req.file);
-};
 
 export const getPostUser = async (req, res) => {
   const query = `select * from master_users where id=${req.params.id}`;
@@ -280,3 +330,132 @@ export const getPostUser = async (req, res) => {
     res.status(StatusCodes.NOT_FOUND).json({ data: "Failed" });
   }
 };
+export const getSearchPosts = async (req, res) => {
+  const { search, catId, locationId } = req.body;
+
+  let cat = "";
+  let catC = "";
+  let loc = "";
+  let srchP = "";
+  let srchC = "";
+  let queryStr = "";
+  let noLoc = "";
+  let noLocQ = "";
+  let noSrc = "";
+  let noSrcQ = "";
+  if (catId && locationId && search) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    loc = `and post.location_id = ${locationId}`;
+    srchP = `and post.title ILIKE '%${search}%'`;
+    noLoc = `,matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = `, OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ;     
+  } else if (catId && locationId) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    loc = `and post.location_id = ${locationId}`;
+    noLoc = `,matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = `, OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+  } else if (catId && search) {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
+    srchC = `and cat.category ILIKE '%${search}%'`;
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;      
+  } else if (locationId && search) {
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    loc = `and post.location_id = ${locationId}`;
+
+    noLoc = `, matched_posts_by_loc AS (
+              SELECT *
+              FROM master_posts post
+              WHERE location_id = ${locationId}
+          )`;
+    noLocQ = ` OR
+    (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
+
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
+  } else if (catId == "" && locationId == "" && search != "") {
+    srchC = `WHERE cat.category ILIKE '%${search}%'`;
+
+    srchP = `WHERE post.title ILIKE '%${search}%'`;
+    noSrc =`,  matched_posts_by_partial_title AS (
+              SELECT *
+              FROM master_posts
+              WHERE title ILIKE '%${search}%'
+          )` ; 
+    noSrcQ =`OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
+  }else if(catId != "" && locationId == "" && search == ""){
+     cat = `WHERE cat.id = ${catId}`;
+     catC = `WHERE post.cat_id =${catId}`;
+  }
+console.log(`${cat}`);
+  queryStr = `WITH 
+          -- Step 1: Check if there are categories matching
+          matched_categories AS (
+              SELECT cat.id AS cateId, cat.parent_id AS parId
+              FROM master_categories cat
+            ${cat} ${srchC}
+          ),
+          -- Step 2: Check if there are posts whose title matches
+          matched_posts_by_title AS (
+              SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
+              FROM master_posts post
+              ${catC} ${srchP} ${loc}
+          )
+          ${noSrc}
+          ${noLoc}
+          
+
+      SELECT DISTINCT post.*
+      FROM master_posts post
+      WHERE 
+          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
+          OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
+          ${noSrcQ}
+          ${noLocQ} `;
+ console.log(`${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`);
+  try {
+    const data = await pool.query(
+      `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
+      []
+    );
+    const result = await pool.query(
+      `SELECT COUNT(*) countId FROM ( ${queryStr} ) AS matched_posts`,
+      []
+    );
+
+    res.status(StatusCodes.OK).json({ data, result });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
+}; // Arko

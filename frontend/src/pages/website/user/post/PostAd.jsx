@@ -11,6 +11,7 @@ import PostSubmitBtn from "../../../../components/admin/users/post/PostSubmitBtn
 import { splitErrors } from "../../../../utils/showErrors";
 import customFetch from "../../../../utils/customFetch";
 import { toast } from "react-toastify";
+import { UserLocation, WebsiteLoader } from "../../../../components";
 
 // // Action starts ------
 export const action = async ({ request }) => {
@@ -104,8 +105,6 @@ const PostAd = () => {
 
   const loopImg = () => {
     return postImages?.map((img, index) => {
-      // for (let i = 0; i < img.length; i++) {
-      // console.log(img[i]["name"]);
       return (
         <div
           key={nanoid()}
@@ -125,7 +124,6 @@ const PostAd = () => {
           </button>
         </div>
       );
-      // }
     });
   };
   return (
@@ -149,7 +147,7 @@ const PostAd = () => {
                           <input
                             type="text"
                             className="w-editor-wrapper"
-                            placeholder="Brote - Cleanin Service Elementor Template Kit"
+                            placeholder="Product Title"
                             name="title"
                             value={form.title}
                             onChange={handleChange}
@@ -202,6 +200,9 @@ const PostAd = () => {
                           </select>
                         </div>
                       </div>
+
+                      <UserLocation />
+
                       <div className="col-12">
                         <label className="form-label required">
                           Description
@@ -375,7 +376,8 @@ const PostAd = () => {
                 </div>
 
                 <div>
-                  <PostSubmitBtn isLoading={isLoading} text={`Add post`} />
+                  {/* <PostSubmitBtn isLoading={isLoading} text={`Add post`} /> */}
+                  <PostSubmitBtn isLoading={false} text={`Add post`} />
                 </div>
               </div>
             </div>
