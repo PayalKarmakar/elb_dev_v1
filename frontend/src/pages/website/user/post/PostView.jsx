@@ -9,7 +9,7 @@ import PostDetailsLeft from "../../../../components/website/post/PostDetailsLeft
 const PostView = () => {
   let { id } = useParams(); // Get id parameter from URL
   let postId = decParam(id);
-
+  console.log(postId);
   return (
     <>
       <PostHero />

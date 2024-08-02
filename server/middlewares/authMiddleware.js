@@ -218,7 +218,7 @@ export const validateChangePass = withValidationErrors([
   body("confirmPassword")
     .notEmpty()
     .withMessage(`Re-enter password`)
-    // .bail()
+    .bail()
     .custom((value, { req }) => {
       const { newPassword } = req.body;
       if (value !== newPassword) {
