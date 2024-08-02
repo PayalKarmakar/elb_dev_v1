@@ -8,8 +8,8 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { encParam } from "../../../utils/functions";
 import { FaRegHeart } from "react-icons/fa6";
+import { encParam } from "../../../utils/functions";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
@@ -28,9 +28,17 @@ const FeaturedProducts = () => {
   const renderFeaturedPosts = () => {
     // let path = "";
     return featuredPosts.map((i) => {
-      const imgSrc = i.image_path
-        ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
-        : product1;
+      let imgSrc;
+      if (i.image_path) {
+        if (i.image_path.includes("https")) {
+          imgSrc = i.image_path;
+        } else {
+          imgSrc = `${import.meta.env.VITE_BASE_URL}/${i.image_path}`;
+        }
+      } else {
+        imgSrc = product1;
+      }
+
       const postTitle =
         i.title.length > 20 ? i.title.substring(0, 20) + "..." : i.title;
       return (
@@ -43,7 +51,7 @@ const FeaturedProducts = () => {
               <div className="job-post bg-offWhite position-relative">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <div className="job-post-icon">
-                    <img src={imgSrc} width={200} height={250} />
+                    <img src={imgSrc} alt={i.title} width={300} height={250} />
                   </div>
                   <p className="job-post-subtitle fw-bold">{postTitle}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>

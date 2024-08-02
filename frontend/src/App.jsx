@@ -10,7 +10,7 @@ import TestUpload from "./pages/website/user/post/TestUpload";
 import { action as loginAction } from "./components/website/Login";
 import { action as registerAction } from "./components/website/Signup";
 import { action as testUploadAction } from "./pages/website/user/post/TestUpload";
-import { action as createPostAction } from "./pages/website/user/post/PostAd";
+// import { action as createPostAction } from "./pages/website/user/post/PostAd";
 
 // Loaders ------
 import { loader as layoutLoader } from "./pages/Layout";
@@ -19,6 +19,7 @@ import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
 import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
+import Getaddress from "./beta/Getaddress";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
         path: "sign-up",
         element: <Signup />,
         action: registerAction,
+      },
+      {
+        path:'/beta/get-address',
+        element:<Getaddress/>
+
       },
       {
         element: <Elb.LayoutWebsiteUser />,
@@ -71,7 +77,7 @@ const router = createBrowserRouter([
       {
         path: "post-ad",
         element: <Elb.UserPostAd />,
-        action: createPostAction,
+        // action: createPostAction,
       },
       { path: "my-posts", element: <Elb.MyPosts /> },
       {
