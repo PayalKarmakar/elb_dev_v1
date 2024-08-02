@@ -446,11 +446,8 @@ export const getSearchPosts = async (req, res) => {
           OR
           (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
           ${noSrcQ}
-          ${noLocQ} 
-          and post.is_sold = false`;
-  // console.log(
-  //   `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`
-  // );
+          ${noLocQ} `;
+  console.log(`${queryStr} ORDER BY post.id`);
   try {
     const data = await pool.query(
       `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
