@@ -59,3 +59,18 @@ export const capitalizeFirstLetter = (string) => {
   if (!string) return "";
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+export const postStatusBadge = ({ is_sold, is_blocked }) => {
+  let badge, label;
+  if (is_sold) {
+    badge = `in-progress`;
+    label = `Sold`;
+  } else if (is_blocked) {
+    badge = `cancelled`;
+    label = `Rejected`;
+  } else {
+    badge = `pending`;
+    label = `Posted`;
+  }
+  return { badge, label };
+};
