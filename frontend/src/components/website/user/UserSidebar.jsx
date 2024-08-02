@@ -44,13 +44,13 @@ const UserSidebar = () => {
             </Link>
           </li>
           <li className="sidebar-nav-item">
-            <a
-              href="seller-my-orders.html"
+            <Link
+              to={`/${currentUser.slug}/my-posts`}
               className="sidebar-nav-link text-decoration-none"
             >
               <RiFileListFill size={26} />
-              My Orders
-            </a>
+              My Posts
+            </Link>
           </li>
           <li className="sidebar-nav-item">
             <a

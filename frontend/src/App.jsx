@@ -62,7 +62,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: ":slug/",
+    path: ":slug",
     element: <Elb.LayoutUser />,
     loader: layoutUserLoader(store),
     children: [
@@ -73,6 +73,7 @@ const router = createBrowserRouter([
         element: <Elb.UserPostAd />,
         action: createPostAction,
       },
+      { path: "my-posts", element: <Elb.MyPosts /> },
       {
         path: "test-upload",
         element: <TestUpload />,
