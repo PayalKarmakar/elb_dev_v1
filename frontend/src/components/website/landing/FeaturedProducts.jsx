@@ -24,7 +24,7 @@ const FeaturedProducts = () => {
     if (!sliderRef.current) return;
     sliderRef.current.swiper.slideNext();
   }, []);
-
+  console.log(featuredPosts);
   const renderFeaturedPosts = () => {
     // let path = "";
     return featuredPosts.map((i) => {
