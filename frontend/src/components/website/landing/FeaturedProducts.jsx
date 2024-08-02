@@ -39,6 +39,8 @@ const FeaturedProducts = () => {
         imgSrc = product1;
       }
 
+      const postTitle =
+        i.title.length > 20 ? i.title.substring(0, 20) + "..." : i.title;
       return (
         <SwiperSlide key={nanoid()}>
           <Link
@@ -51,7 +53,7 @@ const FeaturedProducts = () => {
                   <div className="job-post-icon">
                     <img src={imgSrc} alt={i.title} width={300} height={250} />
                   </div>
-                  <p className="job-post-subtitle fw-bold">{i.title}</p>
+                  <p className="job-post-subtitle fw-bold">{postTitle}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
                   {/* <h3 className="job-post-title fw-semibold">
                     <span className="text-decoration-none">

@@ -23,8 +23,8 @@ const PostDetailsLeft = ({ postSlug }) => {
   const fetchProduct = async () => {
     try {
       const response = await customFetch.get(`/website/post/${id}`);
-
-      //setProduct(response.data.data.rows[0]); // Assuming your API response structure
+      console.log(response);
+      // setProduct(response.data.data.rows[0]); // Assuming your API response structure
       dispatch(setPostsDetails(response?.data?.data?.rows[0]));
     } catch (error) {
       console.error("Error fetching product:", error);
@@ -48,7 +48,6 @@ const PostDetailsLeft = ({ postSlug }) => {
   // postDetails?.image?.map((img, i) => {
   //   console.log(img);
   // });
-  // console.log(postDetails.image);
 
   if (!postDetails) {
     return <div>Loading...</div>; // Show loading message until data is fetched
@@ -106,60 +105,67 @@ const PostDetailsLeft = ({ postSlug }) => {
           )}
         </div>
 
-        <div className="row row-gap-4 row-cols-xl-6">
-          <div className="swiper-nav-btn mt-6">
-            <button onClick={handlePrev} className="swiper-button-prev">
-              <IoChevronBack />
-            </button>
-          </div>
-          <Swiper
-            spaceBetween={8}
-            slidesPerView={2}
-            loop={true}
-            //autoplay={{ delay: 3000 }}
-            ref={sliderRef}
-            navigation={true}
-            //modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper"
-          >
-            {postDetails?.image?.map((img, i) => {
-              return (
-                <SwiperSlide key={nanoid()}>
-                  <article key={i}>
-                    <div
-                      className="service-card bg-white"
-                      data-aos="fade-up"
-                      data-aos-duration="1000"
-                      data-aos-easing="linear"
-                    >
-                      <div className="position-relative">
-                        <img
-                          src={`${import.meta.env.VITE_BASE_URL}/${
-                            img.image_path
-                          }`}
-                          onClick={() =>
-                            handleClick(
-                              `${import.meta.env.VITE_BASE_URL}/${
+        <section className="py-110">
+          <div className="container">
+            <div className="row row-cols-xl-3">
+              <div className="swiper-nav-btn mt-6">
+                <button onClick={handlePrev} className="swiper-button-prev">
+                  <IoChevronBack />
+                </button>
+              </div>
+
+              <Swiper
+                spaceBetween={8}
+                slidesPerView={3}
+                loop={true}
+                autoplay={{ delay: 1000 }}
+                ref={sliderRef}
+                navigation={true}
+                modules={[Autoplay, Pagination, Navigation]}
+                className="mySwiper"
+              >
+                {postDetails?.image?.map((img, i) => {
+                  return (
+                    <SwiperSlide key={nanoid()}>
+                      <article key={i}>
+                        <div
+                          className="service-card bg-white"
+                          data-aos="fade-up"
+                          data-aos-duration="1000"
+                          data-aos-easing="linear"
+                        >
+                          <div className="position-relative">
+                            <img
+                              src={`${import.meta.env.VITE_BASE_URL}/${
                                 img.image_path
-                              }`
-                            )
-                          }
-                          className="recently-view-card-img w-20"
-                          alt={"Post Image"}
-                        />
-                      </div>
-                    </div>
-                  </article>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-          <div className="swiper-nav-btn mt-6">
-            <button onClick={handleNext} className="swiper-button-next">
-              <IoChevronForward />
-            </button>
+                              }`}
+                              onClick={() =>
+                                handleClick(
+                                  `${import.meta.env.VITE_BASE_URL}/${
+                                    img.image_path
+                                  }`
+                                )
+                              }
+                              width={200}
+                              height={150}
+                              className="recently-view-card-img w-10"
+                              alt={"Post Image"}
+                            />
+                          </div>
+                        </div>
+                      </article>
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+              <div className="swiper-nav-btn mt-6">
+                <button onClick={handleNext} className="swiper-button-next">
+                  <IoChevronForward />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
         <div className="mt-40">
           <h2 className="service-details-title fw-bold mb-4">

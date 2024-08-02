@@ -438,8 +438,9 @@ export const getSearchPosts = async (req, res) => {
           ${noLoc}
           
 
-      SELECT DISTINCT post.*
+      SELECT DISTINCT post.id, post.user_id, post.cat_id, post.subcat_id, post.title, post.price, post.location_id,post.address, post.is_sold, img.image_path
       FROM master_posts post
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
       WHERE 
           (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
           OR
@@ -452,6 +453,7 @@ export const getSearchPosts = async (req, res) => {
       `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
       []
     );
+    // console.log(data);
     const result = await pool.query(
       `SELECT COUNT(*) countId FROM ( ${queryStr} ) AS matched_posts`,
       []
