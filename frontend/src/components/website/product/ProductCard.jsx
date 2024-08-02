@@ -26,7 +26,7 @@ const ProductCard = ({ catCard }) => {
 
         dispatch(setAllPosts(response?.data?.data?.rows));
         setTotalCount(response?.data?.result?.rows[0].countid);
-      }else if (catCard.catname === "search-value") {
+      } else if (catCard.catname === "search-value") {
         const searchItem = localStorage.getItem("searchItem");
         let data = JSON.parse(searchItem);
         try {
@@ -42,7 +42,7 @@ const ProductCard = ({ catCard }) => {
           splitErrors(error?.response?.data?.msg);
           return error;
         }
-      }  else {
+      } else {
         listCategories.forEach((item) => {
           if (item.slug === catCard.catname) {
             parentCategory = item.id;
@@ -67,9 +67,7 @@ const ProductCard = ({ catCard }) => {
       return error;
     }
   };
-
-  // console.log(allPosts);
-
+  console.log(allPosts);
   useEffect(() => {
     fetchData();
   }, [catCard]); // Dependency array to re-fetch data when catCard changes
@@ -132,6 +130,8 @@ const ProductCard = ({ catCard }) => {
                         <img
                           src={imagePath}
                           className="recently-view-card-img w-100"
+                          width={200}
+                          height={250}
                           alt={"Post Image"}
                         />
                         <button className="service-card-wishlist-btn">

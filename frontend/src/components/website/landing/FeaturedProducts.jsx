@@ -31,7 +31,8 @@ const FeaturedProducts = () => {
       const imgSrc = i.image_path
         ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
         : product1;
-
+      const postTitle =
+        i.title.length > 20 ? i.title.substring(0, 20) + "..." : i.title;
       return (
         <SwiperSlide key={nanoid()}>
           <Link
@@ -42,9 +43,9 @@ const FeaturedProducts = () => {
               <div className="job-post bg-offWhite position-relative">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <div className="job-post-icon">
-                    <img src={imgSrc} alt={i.title} />
+                    <img src={imgSrc} width={200} height={250} />
                   </div>
-                  <p className="job-post-subtitle fw-bold">{i.title}</p>
+                  <p className="job-post-subtitle fw-bold">{postTitle}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
                   {/* <h3 className="job-post-title fw-semibold">
                     <span className="text-decoration-none">
