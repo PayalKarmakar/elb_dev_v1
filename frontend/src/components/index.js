@@ -44,3 +44,5 @@ export { default as WebsiteLoader } from "./website/WebsiteLoader";
 export { default as DashboardPostList } from "./website/user/dashboard/DashboardPostList";
 export { default as DashboardOrderList } from "./website/user/dashboard/DashboardOrderList";
 export { default as DashboardGraphBox } from "./website/user/dashboard/DashboardGraphBox";
+export { default as UserPaginationContainer } from "./website/user/UserPaginationContainer";
+export { default as UserPostCount } from "./website/user/UserPostCount";
