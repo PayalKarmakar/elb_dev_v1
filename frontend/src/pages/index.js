@@ -35,3 +35,4 @@ export { default as WebsiteUserDashboard } from "./website/user/UserDashboard";
 export { default as UserPostAd } from "./website/user/post/PostAd";
 export { default as PostView } from "./website/user/post/PostView";
 export { default as WebsiteUserProfile } from "./website/user/UserProfile";
+export { default as MyPosts } from "./website/user/post/MyPosts";
