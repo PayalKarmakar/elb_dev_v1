@@ -356,13 +356,13 @@ export const getSearchPosts = async (req, res) => {
           )`;
     noLocQ = ` OR
           (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
-    noSrc =`,  matched_posts_by_partial_title AS (
+    noSrc = `,  matched_posts_by_partial_title AS (
               SELECT *
               FROM master_posts
               WHERE title ILIKE '%${search}%'
-          )` ;  
-    noSrcQ =`OR
-      (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;   
+          )`;
+    noSrcQ = `OR
+      (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
   } else if (catId && locationId) {
     cat = `WHERE cat.id = ${catId}`;
     catC = `WHERE post.cat_id =${catId}`;
@@ -379,13 +379,13 @@ export const getSearchPosts = async (req, res) => {
     catC = `WHERE post.cat_id =${catId}`;
     srchC = `OR cat.category ILIKE '%${search}%'`;
     srchP = `WHERE post.title ILIKE '%${search}%'`;
-    noSrc =`,  matched_posts_by_partial_title AS (
+    noSrc = `,  matched_posts_by_partial_title AS (
               SELECT *
               FROM master_posts
               WHERE title ILIKE '%${search}%'
-          )` ; 
-    noSrcQ =`OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;      
+          )`;
+    noSrcQ = `OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
   } else if (locationId && search) {
     srchP = `WHERE post.title ILIKE '%${search}%'`;
     loc = `and post.location_id = ${locationId}`;
@@ -398,27 +398,27 @@ export const getSearchPosts = async (req, res) => {
     noLocQ = ` OR
     (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
 
-    noSrc =`,  matched_posts_by_partial_title AS (
+    noSrc = `,  matched_posts_by_partial_title AS (
               SELECT *
               FROM master_posts
               WHERE title ILIKE '%${search}%'
-          )` ; 
-    noSrcQ =`OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
+          )`;
+    noSrcQ = `OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
   } else if (catId == "" && locationId == "" && search != "") {
     srchC = `WHERE cat.category ILIKE '%${search}%'`;
 
     srchP = `WHERE post.title ILIKE '%${search}%'`;
-    noSrc =`,  matched_posts_by_partial_title AS (
+    noSrc = `,  matched_posts_by_partial_title AS (
               SELECT *
               FROM master_posts
               WHERE title ILIKE '%${search}%'
-          )` ; 
-    noSrcQ =`OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;       
-  }else if(catId != "" && locationId == "" && search == ""){
-     cat = `WHERE cat.id = ${catId}`;
-     catC = `WHERE post.cat_id =${catId}`;
+          )`;
+    noSrcQ = `OR
+          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
+  } else if (catId != "" && locationId == "" && search == "") {
+    cat = `WHERE cat.id = ${catId}`;
+    catC = `WHERE post.cat_id =${catId}`;
   }
 
   queryStr = `WITH 
@@ -438,20 +438,25 @@ export const getSearchPosts = async (req, res) => {
           ${noLoc}
           
 
-      SELECT DISTINCT post.*
+      SELECT DISTINCT post.id, post.user_id, post.cat_id, post.subcat_id, post.title, post.price, post.location_id,post.address, post.is_sold, img.image_path
       FROM master_posts post
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
       WHERE 
           (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
           OR
           (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
           ${noSrcQ}
-          ${noLocQ} `;
- console.log(`${queryStr} ORDER BY post.id`);
+          ${noLocQ} 
+          and post.is_sold = false`;
+  // console.log(
+  //   `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`
+  // );
   try {
     const data = await pool.query(
       `${queryStr} ORDER BY post.id offset ${req.params.offset} limit 5`,
       []
     );
+    // console.log(data);
     const result = await pool.query(
       `SELECT COUNT(*) countId FROM ( ${queryStr} ) AS matched_posts`,
       []

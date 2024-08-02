@@ -9,7 +9,7 @@ import { encParam } from "../../../utils/functions";
 
 const RecentPosts = () => {
   const { recentPosts } = useSelector((store) => store.posts);
-  let path = "";
+
   return (
     <section className="recently-view pb-110 bg-offWhite py-110">
       <div className="container">
@@ -33,7 +33,10 @@ const RecentPosts = () => {
             const imgSrc = post.image_path
               ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
               : product1;
-
+            const postTitle =
+              post.title.length > 20
+                ? post.title.substring(0, 20) + "..."
+                : post.title;
             return (
               <article key={index}>
                 <div
@@ -45,6 +48,8 @@ const RecentPosts = () => {
                   <div className="position-relative">
                     <img
                       src={imgSrc}
+                      width={200}
+                      height={250}
                       className="recently-view-card-img w-100"
                       alt={post.title || "Post Image"}
                     />
@@ -69,7 +74,7 @@ const RecentPosts = () => {
                         </div>
                       </div>
                       <h3 className="service-card-title fw-semibold">
-                        {post.title || "Brote - Cleaning Service Elementor"}
+                        {postTitle}
                       </h3>
                     </div>
                   </Link>
