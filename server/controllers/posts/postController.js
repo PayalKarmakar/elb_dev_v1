@@ -14,6 +14,7 @@ export const addPost = async (req, res) => {
     title,
     description,
     price,
+    cover,
   } = obj;
 
   const { token } = req.cookies;
@@ -72,15 +73,22 @@ export const addPost = async (req, res) => {
     }
 
     for (const file of req.files) {
+      console.log(file);
       const destination = file.destination;
       const filename = file.filename;
       const arr = destination.split(`/`);
       const suffix = arr[1] + "/" + arr[2];
       const imgPath = `${suffix}/${filename}`;
-
+      let is_cover = false;
+      if (file.originalname == cover) is_cover = true;
+      // console.log(is_cover);
+      // console.log(`${file.originalname}  || ${cover}`);
+      // console.log(
+      //   `insert into image_posts(post_id, image_path,is_cover) values(${postId}, ${imgPath}, ${is_cover})`
+      // );
       await pool.query(
-        `insert into image_posts(post_id, image_path) values($1, $2)`,
-        [+postId, imgPath]
+        `insert into image_posts(post_id, image_path, is_cover) values($1, $2, $3)`,
+        [+postId, imgPath, is_cover]
       );
     }
 
