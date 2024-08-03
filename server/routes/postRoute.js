@@ -23,6 +23,7 @@ router.post(
   [validatePostForm, validateDynamic],
   addPost
 );
+
 router.get(`/posts`, allPosts);
 router
   .route(`/posts/:id`)
