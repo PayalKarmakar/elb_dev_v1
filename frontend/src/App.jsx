@@ -19,6 +19,7 @@ import { loader as websiteLoader } from "./pages/website/LayoutWebsite";
 import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
 import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
+import Getaddress from "./beta/Getaddress";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
         path: "sign-up",
         element: <Signup />,
         action: registerAction,
+      },
+      {
+        path:'/beta/get-address',
+        element:<Getaddress/>
+
       },
       {
         element: <Elb.LayoutWebsiteUser />,
