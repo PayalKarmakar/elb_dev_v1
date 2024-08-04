@@ -60,25 +60,43 @@ const PostAd = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    const validMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+    ]; // Example MIME types
 
     files.forEach((file) => {
-      if (!file.type.startsWith("image/")) {
+      console.log(file.type);
+      if (validMimeTypes.includes(file.type)) {
+        // if (!file.type.startsWith("image/")) {
+        //   toast.error(`Not an image`);
+        //   return;
+        // }
+        if (
+          !(file.type == "image/jpeg") &&
+          !(file.type == "image/jpg") &&
+          !(file.type == "image/png") &&
+          !(file.type == "image/gif")
+        ) {
+          console.log("not");
+          toast.error(`Image should be JPG or JPEG or PNG or GIF type`);
+          return;
+        }
+        if (file.size > 500 * 1024) {
+          toast.error(`Image size cannot be more than 500 KB`);
+          return;
+        }
+
+        setPostImages((prevImages) => [...prevImages, file]);
+        setSelectedImages((prevSelected) =>
+          new Map(prevSelected).set(file.name, false)
+        );
+      } else {
         toast.error(`Not an image`);
         return;
       }
-      if (file.size > 500 * 1024) {
-        toast.error(`Image size cannot be more than 500 KB`);
-        return;
-      }
-      if (postImages.length >= 2) {
-        toast.error(`Maximum 2 images can be uploaded`);
-        return;
-      }
-
-      setPostImages((prevImages) => [...prevImages, file]);
-      setSelectedImages((prevSelected) =>
-        new Map(prevSelected).set(file.name, false)
-      );
     });
   };
 
@@ -138,7 +156,7 @@ const PostAd = () => {
     }
 
     // Append images
-    postImages.forEach((img, index) => {
+    postImages.forEach((img) => {
       data.append(`image`, img); // Use a unique key for each image
     });
 
@@ -151,10 +169,11 @@ const PostAd = () => {
     // console.log(...data);
     try {
       const response = await customFetch.post(`/posts/posts`, data);
+      console.log(response);
       toast.success(`Post created`);
       navigate(`/`);
     } catch (error) {
-      // toast.error(`Failed to create post`);
+      toast.error(`Failed to create post`);
       splitErrors(error?.response?.data?.msg);
       console.log(error);
       return null;
@@ -393,7 +412,6 @@ const PostAd = () => {
                       <button className="gig-img-delete-btn">
                         <FaRegTrashCan size={13} className="text-white" />
                       </button>
-                      <input type="checkbox" className="form-check-input" />
                     </div>
                   </div>
                 </div>
