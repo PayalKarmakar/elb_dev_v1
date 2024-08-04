@@ -92,6 +92,14 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
+  
+  if (allPosts.length == 0) {
+    return (
+      <div>
+        <h1>No Product found with your input search queries</h1>
+      </div>
+    ); // Show loading message until data is fetched
+  }
   // let path = "";
   return (
     <section>
