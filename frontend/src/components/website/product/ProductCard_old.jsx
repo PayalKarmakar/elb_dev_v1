@@ -92,14 +92,6 @@ const ProductCard = ({ catCard }) => {
     setCurrentOffset(offset);
     setCurrentPage(page);
   });
-  
-  if (allPosts.length == 0) {
-    return (
-      <div>
-        <h1>No Product found with your input search queries</h1>
-      </div>
-    ); // Show loading message until data is fetched
-  }
   // let path = "";
   return (
     <section>
@@ -118,8 +110,8 @@ const ProductCard = ({ catCard }) => {
                 : product1;
 
               const postTitle =
-                post.title.length > 15
-                  ? post.title.substring(0, 15) + "..."
+                post.title.length > 20
+                  ? post.title.substring(0, 20) + "..."
                   : post.title;
 
               return (

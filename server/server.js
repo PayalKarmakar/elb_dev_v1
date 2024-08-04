@@ -51,7 +51,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./frontend/dist", "index.html"));
 });
 
-const port = process.env.APP_PORT || 3001;
+const port = process.env.APP_PORT || 3000;
 
 app.use("*", (req, res) => {
   res.status(StatusCodes.NOT_FOUND).json({ msg: `not found` });
