@@ -1,21 +1,17 @@
+import fs from "fs/promises";
+import path from "path";
 import { StatusCodes } from "http-status-codes";
 import pool from "../../db.js";
 import { verifyJWT } from "../../utils/tokenUtils.js";
 import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
+import { log } from "console";
 
 export const addPost = async (req, res) => {
+  console.log(123);
   const obj = { ...req.body };
-  const {
-    category,
-    subCategory,
-    userState,
-    userCity,
-    title,
-    description,
-    price,
-    cover,
-  } = obj;
+  const { category, subCategory, userCity, title, description, price, cover } =
+    obj;
 
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
@@ -29,7 +25,8 @@ export const addPost = async (req, res) => {
     await pool.query(`BEGIN`);
 
     const master = await pool.query(
-      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id`,
+      `INSERT INTO master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
       [
         uid,
         title.trim(),
@@ -47,12 +44,11 @@ export const addPost = async (req, res) => {
     const postId = master.rows[0].id;
 
     const formFields = await pool.query(
-      `select id, field_name, field_type from master_form_fields where cat_id=$1`,
+      `SELECT id, field_name, field_type FROM master_form_fields WHERE cat_id=$1`,
       [subCategory]
     );
 
     for (const field of formFields.rows) {
-      // const value = req.body[field.field_name];
       const value = obj[field.field_name];
 
       const dbData =
@@ -67,29 +63,41 @@ export const addPost = async (req, res) => {
           : null;
 
       await pool.query(
-        `insert into details_posts(post_id, attr_id, attr_db_value, attr_entry) values($1, $2, $3, $4)`,
+        `INSERT INTO details_posts(post_id, attr_id, attr_db_value, attr_entry)
+        VALUES($1, $2, $3, $4)`,
         [postId, +field.id, dbData, entryData]
       );
     }
+    const postDirectory = path.join("public", "uploads", "posts", `${postId}`);
+    await fs.mkdir(postDirectory, { recursive: true });
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        // Ensure file.buffer is valid
+        if (!file.buffer) {
+          console.log("File buffer is missing");
+          continue;
+        }
 
-    for (const file of req.files) {
-      console.log(file);
-      const destination = file.destination;
-      const filename = file.filename;
-      const arr = destination.split(`/`);
-      const suffix = arr[1] + "/" + arr[2];
-      const imgPath = `${suffix}/${filename}`;
-      let is_cover = false;
-      if (file.originalname == cover) is_cover = true;
-      // console.log(is_cover);
-      // console.log(`${file.originalname}  || ${cover}`);
-      // console.log(
-      //   `insert into image_posts(post_id, image_path,is_cover) values(${postId}, ${imgPath}, ${is_cover})`
-      // );
-      await pool.query(
-        `insert into image_posts(post_id, image_path, is_cover) values($1, $2, $3)`,
-        [+postId, imgPath, is_cover]
-      );
+        // Define the file path
+        const filename = Date.now() + path.extname(file.originalname);
+        const destinationPath = path.join(postDirectory, filename);
+        console.log("Saving file to:", destinationPath);
+
+        // Save file to disk
+        await fs.writeFile(destinationPath, file.buffer);
+
+        const imgPath = path.join("uploads", "posts", `${postId}`, filename);
+        let is_cover = false;
+        if (file.originalname === cover) is_cover = true;
+
+        await pool.query(
+          `INSERT INTO image_posts(post_id, image_path, is_cover)
+          VALUES($1, $2, $3)`,
+          [+postId, imgPath, is_cover]
+        );
+      }
+    } else {
+      console.error("No files uploaded");
     }
 
     await pool.query(`COMMIT`);
