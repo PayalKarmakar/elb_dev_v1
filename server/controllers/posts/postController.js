@@ -5,7 +5,7 @@ import pool from "../../db.js";
 import { verifyJWT } from "../../utils/tokenUtils.js";
 import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
-import { log } from "console";
+import { fileTypeFromBuffer } from "file-type";
 
 export const addPost = async (req, res) => {
   console.log(123);
@@ -70,6 +70,12 @@ export const addPost = async (req, res) => {
     }
     const postDirectory = path.join("public", "uploads", "posts", `${postId}`);
     await fs.mkdir(postDirectory, { recursive: true });
+    const validMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+    ];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         // Ensure file.buffer is valid
@@ -78,23 +84,29 @@ export const addPost = async (req, res) => {
           continue;
         }
 
-        // Define the file path
-        const filename = Date.now() + path.extname(file.originalname);
-        const destinationPath = path.join(postDirectory, filename);
-        console.log("Saving file to:", destinationPath);
+        const type = await fileTypeFromBuffer(file.buffer);
 
-        // Save file to disk
-        await fs.writeFile(destinationPath, file.buffer);
+        if (type && validMimeTypes.includes(type.mime)) {
+          // Define the file path
+          const filename = Date.now() + path.extname(file.originalname);
+          const destinationPath = path.join(postDirectory, filename);
+          console.log("Saving file to:", destinationPath);
 
-        const imgPath = path.join("uploads", "posts", `${postId}`, filename);
-        let is_cover = false;
-        if (file.originalname === cover) is_cover = true;
+          // Save file to disk
+          await fs.writeFile(destinationPath, file.buffer);
 
-        await pool.query(
-          `INSERT INTO image_posts(post_id, image_path, is_cover)
+          const imgPath = path.join("uploads", "posts", `${postId}`, filename);
+          let is_cover = false;
+          if (file.originalname === cover) is_cover = true;
+
+          await pool.query(
+            `INSERT INTO image_posts(post_id, image_path, is_cover)
           VALUES($1, $2, $3)`,
-          [+postId, imgPath, is_cover]
-        );
+            [+postId, imgPath, is_cover]
+          );
+        } else {
+          console.error("No files uploaded");
+        }
       }
     } else {
       console.error("No files uploaded");
