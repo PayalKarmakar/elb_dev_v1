@@ -110,8 +110,8 @@ const ProductCard = ({ catCard }) => {
                 : product1;
 
               const postTitle =
-                post.title.length > 15
-                  ? post.title.substring(0, 15) + "..."
+                post.title.length > 20
+                  ? post.title.substring(0, 20) + "..."
                   : post.title;
 
               return (

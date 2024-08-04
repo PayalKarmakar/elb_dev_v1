@@ -34,8 +34,8 @@ const RecentPosts = () => {
               ? `${import.meta.env.VITE_BASE_URL}/${post.image_path}`
               : product1;
             const postTitle =
-              post.title.length > 15
-                ? post.title.substring(0, 15) + "..."
+              post.title.length > 20
+                ? post.title.substring(0, 20) + "..."
                 : post.title;
             return (
               <article key={index}>
