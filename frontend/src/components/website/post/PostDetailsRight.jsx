@@ -14,7 +14,7 @@ const PostDetailsRight = ({ postSlug }) => {
   const { currentUser } = useSelector((store) => store.currentUser);
   const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Use useNavigate for programmatic navigation
-  console.log(postDetails);
+
   useEffect(() => {
     const fetchUser = async () => {
       if (!postDetails.user_id) return; // Exit early if user_id is not available

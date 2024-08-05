@@ -1,6 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPostReviews } from "../../../feature/postSlice";
+import customFetch from "../../../utils/customFetch";
 
 const PostReviews = ({ postSlug }) => {
+  let id = postSlug.postId;
+  const { postReviews } = useSelector((store) => store.posts);
+  const dispatch = useDispatch();
+  const fetchProduct = async () => {
+    try {
+      const response = await customFetch.get(`/website/post/reviews/${id}`);
+      console.log(response);
+      // setProduct(response.data.data.rows[0]); // Assuming your API response structure
+      dispatch(setPostReviews(response?.data?.data?.rows[0]));
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
+  console.log(postReviews);
   return (
     <div>
       <div className="pt-80">

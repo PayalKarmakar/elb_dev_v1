@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import { fileTypeFromBuffer } from "file-type";
 
 export const addPost = async (req, res) => {
-  console.log(123);
   const obj = { ...req.body };
   const { category, subCategory, userCity, title, description, price, cover } =
     obj;
@@ -105,16 +104,18 @@ export const addPost = async (req, res) => {
             [+postId, imgPath, is_cover]
           );
         } else {
-          console.error("No files uploaded");
         }
       }
+      await pool.query(`COMMIT`);
+
+      res.status(StatusCodes.CREATED).json({ data: `success` });
     } else {
-      console.error("No files uploaded");
+      console.log(`file not uploaded!!`);
     }
 
-    await pool.query(`COMMIT`);
+    // await pool.query(`COMMIT`);
 
-    res.status(StatusCodes.CREATED).json({ data: `success` });
+    // res.status(StatusCodes.CREATED).json({ data: `success` });
   } catch (error) {
     console.log(error);
     await pool.query(`ROLLBACK`);
@@ -512,5 +513,18 @@ export const getSearchPosts = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+  }
+};
+
+export const getPostReviews = async (req, res) => {
+  const query = `select review.*
+    from reviews_posts review
+    where post_id=${req.params.id} order by id`;
+
+  try {
+    const details = await pool.query(query, []);
+    res.status(StatusCodes.ACCEPTED).json({ data: details });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
   }
 };
