@@ -363,3 +363,5 @@ body,
 .header-text {
   color: var(--white);
 }
+.service-card-min-height {min-height: 392px;}
+.service-card-img {min-height: 250px;}

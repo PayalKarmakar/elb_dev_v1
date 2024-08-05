@@ -64,7 +64,7 @@ const FeaturedProducts = () => {
   };
 
   return (
-    <section className="py-110">
+    <section className="py-60">
       <div className="container">
         <div className="row mb-40 justify-content-between align-items-end">
           <div className="col-md-auto">

@@ -38,7 +38,7 @@ const WbTopnav = () => {
               {!currentUser.uuid ? (
                 <Link
                   to="/sign-in"
-                  className="w-btn-secondary-lg text-decoration-none"
+                  className="w-btn-secondary-lg text-decoration-none border"
                 >
                   <FaUser size={14} style={{ borderRadius: "50%" }} />
                   Login
