@@ -8,14 +8,13 @@ const PostReviews = ({ postSlug }) => {
   const { postReviews } = useSelector((store) => store.posts);
   const dispatch = useDispatch();
   const fetchProduct = async () => {
-    try {
-      const response = await customFetch.get(`/website/post/reviews/${id}`);
-      console.log(response);
-      // setProduct(response.data.data.rows[0]); // Assuming your API response structure
-      dispatch(setPostReviews(response?.data?.data?.rows[0]));
-    } catch (error) {
-      console.error("Error fetching product:", error);
-    }
+    // try {
+    //   const response = await customFetch.get(`/website/post/reviews/${id}`);
+    //   // setProduct(response.data.data.rows[0]); // Assuming your API response structure
+    //   dispatch(setPostReviews(response?.data?.data?.rows[0]));
+    // } catch (error) {
+    //   console.error("Error fetching product:", error);
+    // }
   };
   useEffect(() => {
     fetchProduct();
