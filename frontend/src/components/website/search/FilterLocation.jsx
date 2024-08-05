@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 // import * as iconcities from "../../../assets/website/img/features";
 import iconkolkata from "../../../assets/website/img/features/kolkata.png";
 import icondelhi from "../../../assets/website/img/features/icon-delhi2.png";
+// import icondelhi from "../../../assets/website/img/features/icon-delhi.png";
 import iconchennai from "../../../assets/website/img/features/icon-chennai.png";
 import iconmumbai from "../../../assets/website/img/features/icon-mumbai2.png";
 import iconbangalore from "../../../assets/website/img/features/icon-bangaluru.png";
