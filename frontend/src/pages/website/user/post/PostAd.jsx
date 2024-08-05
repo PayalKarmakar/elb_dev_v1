@@ -68,7 +68,6 @@ const PostAd = () => {
     ]; // Example MIME types
 
     files.forEach((file) => {
-      console.log(file.type);
       if (validMimeTypes.includes(file.type)) {
         // if (!file.type.startsWith("image/")) {
         //   toast.error(`Not an image`);
@@ -80,7 +79,6 @@ const PostAd = () => {
           !(file.type == "image/png") &&
           !(file.type == "image/gif")
         ) {
-          console.log("not");
           toast.error(`Image should be JPG or JPEG or PNG or GIF type`);
           return;
         }
@@ -125,8 +123,10 @@ const PostAd = () => {
         className="position-relative gig-media-thumb overflow-hidden"
       >
         <input
-          type="checkbox"
+          type="radio"
+          name="is_cover_image"
           className="form-check-input"
+          value={img.name}
           checked={selectedImages.get(img.name) || false}
           onChange={() => handleCheckboxChange(img.name)}
         />
@@ -165,8 +165,8 @@ const PostAd = () => {
         data.append("cover", name);
       }
     });
-
-    // console.log(...data);
+    // console.log(selectedImages);
+    console.log(...data);
     try {
       const response = await customFetch.post(`/posts/posts`, data);
       console.log(response);

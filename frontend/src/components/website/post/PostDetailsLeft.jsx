@@ -23,7 +23,7 @@ const PostDetailsLeft = ({ postSlug }) => {
   const fetchProduct = async () => {
     try {
       const response = await customFetch.get(`/website/post/${id}`);
-      console.log(response);
+
       // setProduct(response.data.data.rows[0]); // Assuming your API response structure
       dispatch(setPostsDetails(response?.data?.data?.rows[0]));
     } catch (error) {
