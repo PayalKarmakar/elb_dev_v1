@@ -158,10 +158,10 @@ const WbFooter = () => {
                   </h3>
                   <nav>
                     <form>
-                      <div className="relative footer-newsletter-form d-flex align-items-center justify-content-between">
+                      <div className="relative# footer-newsletter-form d-flex# align-items-center# justify-content-between# border-0 p-0">
                         <input
                           type="text"
-                          className="form-control shadow-none"
+                          className="form-control shadow-none mb-4"
                           placeholder="Enter your email address"
                         />
                         <button className="footer-newsletter-btn">

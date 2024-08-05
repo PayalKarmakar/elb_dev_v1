@@ -5,9 +5,9 @@ import { unsetLocationModal } from "../../../feature/website/search/searchSlice"
 import { nanoid } from "nanoid";
 // import * as iconcities from "../../../assets/website/img/features";
 import iconkolkata from "../../../assets/website/img/features/kolkata.png";
-import icondelhi from "../../../assets/website/img/features/icon-delhi.png";
+import icondelhi from "../../../assets/website/img/features/icon-delhi2.png";
 import iconchennai from "../../../assets/website/img/features/icon-chennai.png";
-import iconmumbai from "../../../assets/website/img/features/icon-mumbai.png";
+import iconmumbai from "../../../assets/website/img/features/icon-mumbai2.png";
 import iconbangalore from "../../../assets/website/img/features/icon-bangaluru.png";
 import { setSearchLocation } from "../../../feature/masters/locationSlice";
 import { FaCity } from "react-icons/fa";
@@ -27,7 +27,7 @@ const FilterLocation = () => {
   };
 
   return (
-    <Modal show={locationModal} size="xl" centered onHide={handleClose}>
+    <Modal show={locationModal} size="lg" centered onHide={handleClose}>
       <Modal.Body>
         <div className="row justify-content-center cursor-pointer">
           {topLocations.map((i) => {
