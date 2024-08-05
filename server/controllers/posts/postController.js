@@ -294,16 +294,59 @@ export const getRecentPosts = async (req, res) => {
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-  const query = `select post.*,
-    json_agg(
-      json_build_object(
-        'image_path', img.image_path,
-        'is_cover', img.is_cover
-      )
-    ) AS image
-    from master_posts post
-    left join image_posts img on post.id = img.post_id 
-    where post.id=${req.params.id} group by post.id`;
+  const query = `WITH unique_locations AS (
+          SELECT DISTINCT ON (loc.id) loc.id, loc.city, loc.state, loc.dist_code
+          FROM master_posts post
+          LEFT JOIN master_locations loc ON post.location_id = loc.id AND loc.is_active = true
+          WHERE post.id = ${req.params.id}
+        ),
+        post_data AS (
+          SELECT post.*,
+            json_agg(
+              json_build_object(
+                'city', ul.city,
+                'state', ul.state,
+                'dist_code', ul.dist_code
+              )
+            ) AS location
+          FROM master_posts post
+          LEFT JOIN unique_locations ul ON post.location_id = ul.id
+          WHERE post.id = ${req.params.id}
+          GROUP BY post.id
+        ),
+        image_data AS (
+          SELECT post.id,
+            json_agg(
+              json_build_object(
+                'image_path', img.image_path,
+                'is_cover', img.is_cover
+              )
+            ) AS image
+          FROM master_posts post
+          LEFT JOIN image_posts img ON post.id = img.post_id
+          WHERE post.id = ${req.params.id}
+          GROUP BY post.id
+        ),
+        cat_data AS (
+          SELECT cat1.id, cat1.category,
+            json_agg(
+              json_build_object(
+                'id', cat2.id,
+                'category', cat2.category
+              )
+            ) AS sub_cat
+          FROM master_posts post
+          JOIN master_categories cat1 ON post.cat_id = cat1.id
+          LEFT JOIN master_categories cat2 ON cat1.id = cat2.parent_id AND cat2.is_active = true and cat2.id =post.subcat_id
+          WHERE cat1.parent_id IS NULL AND cat1.is_active = true AND post.id = ${req.params.id}
+          GROUP BY cat1.id
+        )
+        SELECT pd.*, id.image, cd.category, cd.sub_cat
+        FROM post_data pd
+        JOIN image_data id ON pd.id = id.id
+        JOIN cat_data cd ON pd.cat_id = cd.id
+
+      `;
 
   try {
     await pool.query(`BEGIN`);
