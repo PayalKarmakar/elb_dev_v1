@@ -8,18 +8,30 @@ const PostReviews = ({ postSlug }) => {
   const { postReviews } = useSelector((store) => store.posts);
   const dispatch = useDispatch();
   const fetchProduct = async () => {
-    // try {
-    //   const response = await customFetch.get(`/website/post/reviews/${id}`);
-    //   // setProduct(response.data.data.rows[0]); // Assuming your API response structure
-    //   dispatch(setPostReviews(response?.data?.data?.rows[0]));
-    // } catch (error) {
-    //   console.error("Error fetching product:", error);
-    // }
+    try {
+      const response = await customFetch.get(`/website/post/reviews/${id}`);
+      console.log(response?.data?.data?.rows);
+      // setProduct(response.data.data.rows[0]); // Assuming your API response structure
+      dispatch(setPostReviews(response?.data?.data?.rows));
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
   };
   useEffect(() => {
     fetchProduct();
   }, [id]);
-  console.log(postReviews);
+
+  const renderReview = () => {
+    let itemReviewArr = [];
+    postReviews.map((item) => {
+      itemReviewArr.push(item.reviews);
+    });
+    const sumWithInitial = itemReviewArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    });
+    const averageReview = (sumWithInitial / itemReviewArr.length).toFixed(2); // Adjust precision as needed
+    console.log(averageReview);
+  };
   return (
     <div>
       <div className="pt-80">
@@ -364,7 +376,9 @@ const PostReviews = ({ postSlug }) => {
           </div>
         </div>
       </div>
-      <div className="pt-60">
+      {renderReview()}
+
+      {/* <div className="pt-60">
         <a href="#" className="w-btn-secondary-lg d-inline">
           See More Review
           <svg
@@ -383,7 +397,7 @@ const PostReviews = ({ postSlug }) => {
             />
           </svg>
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };

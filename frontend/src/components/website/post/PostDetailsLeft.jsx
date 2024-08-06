@@ -172,9 +172,9 @@ const PostDetailsLeft = ({ postSlug }) => {
                 Product Details :
               </h4>
               {postDetails?.sub_cat?.map((item) => (
-                <>
+                <div key={nanoid()}>
                   <p className="text-dark-200">{`${item.category}, `}</p>
-                </>
+                </div>
               ))}
               <p className="text-dark-200">{postDetails.category}</p>
             </div>

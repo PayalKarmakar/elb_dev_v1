@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { MdPermContactCalendar } from "react-icons/md";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
+import { nanoid } from "nanoid";
 
 const PostDetailsRight = ({ postSlug }) => {
   const postId = postSlug.postId;
@@ -39,7 +40,7 @@ const PostDetailsRight = ({ postSlug }) => {
       console.log("already login");
     }
   }, [currentUser, navigate]);
-  console.log(postDetails);
+
   return (
     <div className="col-xl-3 mt-30 mt-xl-0">
       <aside className="d-flex flex-column gap-4">
@@ -69,10 +70,10 @@ const PostDetailsRight = ({ postSlug }) => {
                 <b>Location</b>
               </p>
               {postDetails?.location?.map((item) => (
-                <>
+                <div key={nanoid()}>
                   <p className="text-dark-200">{`${item.city}, `}</p>
                   <p className="text-dark-200">{item.state}</p>
-                </>
+                </div>
               ))}
             </div>
           </div>
