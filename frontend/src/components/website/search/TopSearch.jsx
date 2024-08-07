@@ -7,12 +7,32 @@ import {
   setLocationModal,
   setCategoryModal,
 } from "../../../feature/website/search/searchSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { setSearchLocation } from "../../../feature/masters/locationSlice";
+import { setSearchCategory } from "../../../feature/masters/categorySlice";
 
 const TopSearch = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Use the useNavigate hook here
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
 
+  // Local states start ------
+  const [locationLabel, setLocationLabel] = useState(
+    searchParams.get("loc") || "Location"
+  );
+  const [categoryLabel, setCategoryLabel] = useState(
+    searchParams.get("cat") || "Category"
+  );
+  const [enteredSearch, setEnteredSearch] = useState(
+    searchParams.get("search") || ""
+  );
+  // Local state ends ------
+
+  const { searchLocation } = useSelector((store) => store.locations);
+  const { searchCategory } = useSelector((store) => store.categories);
+
+  // Handle modal opening starts ------
   const openModal = () => {
     dispatch(setLocationModal());
   };
@@ -20,66 +40,36 @@ const TopSearch = () => {
   const catModal = () => {
     dispatch(setCategoryModal());
   };
+  // Handle modal opening ends ------
 
-  const [enteredSearch, setEnteredSearch] = useState("");
-  const [locationLabel, setLocationLabel] = useState("Location");
-
-  const { topLocations, searchLocation } = useSelector(
-    (store) => store.locations
-  );
-
-  const selectedLoc =
-    searchLocation && topLocations?.find((i) => i.id === searchLocation);
-
-  useEffect(() => {
-    setLocationLabel(selectedLoc?.city || "Location");
-  }, [selectedLoc]);
-
-  const [categoryLabel, setCategoryLabel] = useState("Categories");
-  const { getCategories, searchCategory } = useSelector(
-    (store) => store.categories
-  );
-
-  const selectedCat =
-    searchCategory && getCategories?.find((i) => i.id === searchCategory);
-
+  // Handle submit starts ------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    let data = Object.fromEntries(formData);
-    data = {
-      ...data,
-      catId: selectedCat ? selectedCat.id : "",
-      locationId: selectedLoc ? selectedLoc.id : "",
-    };
-    let searchItem = JSON.stringify(data);
-    localStorage.setItem("searchItem", searchItem);
-
-    // Construct redirect URL starts ------
-    const searchLoc =
-      locationLabel && locationLabel !== "Location"
-        ? `${locationLabel.trim()}`
-        : "";
-
-    const searchCat =
-      categoryLabel && categoryLabel !== "Categories"
-        ? `${categoryLabel.trim()}`
-        : "";
-    // Construct redirect URL ends ------
-
     navigate(
-      `/cat/search-value?loc=${searchLoc}&cat=${searchCat}&search=${enteredSearch}`
+      `/cat/search-value?loc=${locationLabel}&cat=${
+        categoryLabel ? encodeURIComponent(categoryLabel) : ""
+      }&search=${enteredSearch ? encodeURIComponent(enteredSearch) : ""}`
     );
   };
+  // Handle submit ends ------
 
   useEffect(() => {
-    setCategoryLabel(selectedCat?.category || "Categories");
-  }, [selectedCat]);
+    setLocationLabel(searchParams.get("loc") || "Location");
+    setCategoryLabel(searchParams.get("cat") || "Category");
+    setEnteredSearch(searchParams.get("search") || "");
+
+    searchLocation && dispatch(setSearchLocation(searchLocation));
+    searchCategory && dispatch(setSearchCategory(searchCategory));
+  }, [
+    searchParams.get("loc"),
+    searchParams.get("cat"),
+    searchParams.get("search"),
+  ]);
 
   return (
     <>
-      <form method="get" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="hero-form-wrapper bg-white d-flex position-relative">
           <div>
             <button
@@ -117,8 +107,14 @@ const TopSearch = () => {
           </div>
         </div>
       </form>
-      <FilterLocation />
-      <FilterCategories />
+      <FilterLocation
+        setLocationLabel={setLocationLabel}
+        locationLabel={locationLabel}
+      />
+      <FilterCategories
+        setCategoryLabel={setCategoryLabel}
+        categoryLabel={categoryLabel}
+      />
     </>
   );
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { unsetCategoryModal } from "../../../feature/website/search/searchSlice";
@@ -7,14 +6,13 @@ import { nanoid } from "nanoid";
 import { setSearchCategory } from "../../../feature/masters/categorySlice";
 import {
   MdBikeScooter,
-  MdCategory,
   MdLaptopChromebook,
   MdOutlineChair,
 } from "react-icons/md";
 import { GiAmpleDress } from "react-icons/gi";
 import { FaBook, FaCar, FaMobile, FaHome } from "react-icons/fa";
 
-const FilterCategories = () => {
+const FilterCategories = ({ sategoryLabel, setCategoryLabel }) => {
   const dispatch = useDispatch();
   const { getCategories } = useSelector((store) => store.categories);
   const { categoryModal } = useSelector((store) => store.search);
@@ -34,15 +32,13 @@ const FilterCategories = () => {
         <div className="row justify-content-center cursor-pointer">
           {getCategories.map((i) => {
             return (
-              // <Link
-              //     key={nanoid()}
-              //     to={i.slug}
-              //     className="text-decoration-none"
-              //   >
               <div
                 className="col-lg-3 col-sm-4 col-md-6 py-4"
                 key={nanoid()}
-                onClick={() => setCat(i.id)}
+                onClick={() => {
+                  setCat(i.id);
+                  setCategoryLabel(i.category);
+                }}
               >
                 <div className="grid-cat">
                   {i.slug == "bikes" ? (
@@ -67,7 +63,6 @@ const FilterCategories = () => {
                   </p>
                 </div>
               </div>
-              // </Link>
             );
           })}
         </div>
