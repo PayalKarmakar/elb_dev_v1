@@ -21,6 +21,7 @@ const TopSearch = () => {
     dispatch(setCategoryModal());
   };
 
+  const [enteredSearch, setEnteredSearch] = useState("");
   const [locationLabel, setLocationLabel] = useState("Location");
 
   const { topLocations, searchLocation } = useSelector(
@@ -58,19 +59,18 @@ const TopSearch = () => {
     // Construct redirect URL starts ------
     const searchLoc =
       locationLabel && locationLabel !== "Location"
-        ? `loc=${locationLabel.trim()}`
+        ? `${locationLabel.trim()}`
         : "";
 
     const searchCat =
       categoryLabel && categoryLabel !== "Categories"
-        ? `cat=${categoryLabel.trim()}`
+        ? `${categoryLabel.trim()}`
         : "";
-
-    const searchString =
-      searchLoc || searchCat ? `?${searchLoc}${searchCat}` : "";
     // Construct redirect URL ends ------
 
-    navigate(`/cat/search-value${searchString}`);
+    navigate(
+      `/cat/search-value?loc=${searchLoc}&cat=${searchCat}&search=${enteredSearch}`
+    );
   };
 
   useEffect(() => {
@@ -107,6 +107,8 @@ const TopSearch = () => {
               name="search"
               className="form-control shadow-none"
               placeholder="Search for any service..."
+              value={enteredSearch}
+              onChange={(e) => setEnteredSearch(e.target.value)}
             />
             <button type="submit" className="hero-form-btn position-absolute">
               <IoSearch />
