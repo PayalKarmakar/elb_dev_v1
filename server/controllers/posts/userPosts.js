@@ -50,6 +50,7 @@ export const myPosts = async (req, res) => {
 // ------
 export const myPostCount = async (req, res) => {
   const userId = await getUserIdFromToken(req);
+  console.log(userId);
 
   const data = await pool.query(
     `select 
