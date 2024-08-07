@@ -191,12 +191,18 @@ body,
   background: var(--primary-color3);
   z-index: 6;
 }
-
+.job-post {
+  padding: 8px;
+}
 .job-post-icon {
   width: auto;
   height: auto;
   position: relative;
+  -webkit-border-radius: 20px;
   border-radius: 20px;
+}
+.job-post-icon img {
+  border-radius: 12px;
 }
 
 /* .job-post-icon:after{
@@ -363,5 +369,10 @@ body,
 .header-text {
   color: var(--white);
 }
-.service-card-min-height {min-height: 392px;}
-.service-card-img {min-height: 250px;}
+.service-card-min-height {
+  min-height: 392px;
+}
+.service-card-img {
+  min-height: 250px;
+  max-height: 250px;
+}

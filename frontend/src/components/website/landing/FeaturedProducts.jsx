@@ -92,8 +92,8 @@ const FeaturedProducts = () => {
         </div>
         <div className="swiper recentJob #swiper-container">
           <Swiper
-            spaceBetween={50}
-            slidesPerView={4}
+            spaceBetween={25}
+            slidesPerView={5}
             loop={true}
             autoplay={{ delay: 3000 }}
             ref={sliderRef}
