@@ -20,21 +20,25 @@ const TopSearch = () => {
   const catModal = () => {
     dispatch(setCategoryModal());
   };
-  const [locationLabel, setLocationLabel] = useState(`Location`);
+
+  const [locationLabel, setLocationLabel] = useState("Location");
 
   const { topLocations, searchLocation } = useSelector(
     (store) => store.locations
   );
+
   const selectedLoc =
     searchLocation && topLocations?.find((i) => i.id === searchLocation);
+
   useEffect(() => {
-    setLocationLabel(selectedLoc?.city || `Location`);
+    setLocationLabel(selectedLoc?.city || "Location");
   }, [selectedLoc]);
 
-  const [categoryLabel, setCategoryLabel] = useState(`Categories`);
+  const [categoryLabel, setCategoryLabel] = useState("Categories");
   const { getCategories, searchCategory } = useSelector(
     (store) => store.categories
   );
+
   const selectedCat =
     searchCategory && getCategories?.find((i) => i.id === searchCategory);
 
@@ -50,26 +54,27 @@ const TopSearch = () => {
     };
     let searchItem = JSON.stringify(data);
     localStorage.setItem("searchItem", searchItem);
-    navigate(`/cat/search-value`);
-    // if (data.search && data.catId && data.locationId) {
-    //   navigate(
-    //     `/cat/search-value/${data.search}/${data.catId}/${data.locationId}`
-    //   );
-    // } else if (data.search && data.catId) {
-    //   navigate(`/cat/search-value/${data.search}/${data.catId}`);
-    // } else if (data.search && data.locationId) {
-    //   navigate(`/cat/search-value/${data.search}/${data.locationId}`);
-    // } else if (data.search) {
-    //   navigate(`/cat/search-value/${data.search}`);
-    // } else if (data.locationId) {
-    //   navigate(`/cat/search-value/${data.locationId}`);
-    // } else if (data.catId) {
-    //   navigate(`/cat/search-value/${data.catId}`);
-    // }
+
+    // Construct redirect URL starts ------
+    const searchLoc =
+      locationLabel && locationLabel !== "Location"
+        ? `loc=${locationLabel.trim()}`
+        : "";
+
+    const searchCat =
+      categoryLabel && categoryLabel !== "Categories"
+        ? `cat=${categoryLabel.trim()}`
+        : "";
+
+    const searchString =
+      searchLoc || searchCat ? `?${searchLoc}${searchCat}` : "";
+    // Construct redirect URL ends ------
+
+    navigate(`/cat/search-value${searchString}`);
   };
 
   useEffect(() => {
-    setCategoryLabel(selectedCat?.category || `Categories`);
+    setCategoryLabel(selectedCat?.category || "Categories");
   }, [selectedCat]);
 
   return (
