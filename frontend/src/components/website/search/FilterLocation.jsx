@@ -26,14 +26,8 @@ const locations = [
   { id: 73, city: "Bengaluru", img: iconbangalore, activeImg: iconbangalore2 },
 ];
 
-const FilterLocation = () => {
+const FilterLocation = ({ locationLabel, setLocationLabel }) => {
   const dispatch = useDispatch();
-
-  const [filterCity, setFilterCity] = useState();
-
-  const { search } = useLocation();
-  const queryParams = new URLSearchParams(search);
-
   const { locationModal } = useSelector((store) => store.search);
 
   const handleClose = () => {
@@ -45,10 +39,6 @@ const FilterLocation = () => {
     dispatch(unsetLocationModal());
   };
 
-  useEffect(() => {
-    setFilterCity(queryParams.get("loc"));
-  }, [queryParams.get("loc")]);
-
   return (
     <Modal show={locationModal} size="lg" centered onHide={handleClose}>
       <Modal.Body>
@@ -58,12 +48,15 @@ const FilterLocation = () => {
               <div
                 className="col py-4"
                 key={nanoid()}
-                onClick={() => setSearch(location.id)}
+                onClick={() => {
+                  setSearch(location.id);
+                  setLocationLabel(location.city);
+                }}
               >
                 <div className="grid-cat">
                   <img
                     src={
-                      filterCity === location.city
+                      locationLabel === location.city
                         ? location.activeImg
                         : location.img
                     }
