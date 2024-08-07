@@ -144,10 +144,12 @@ const MyPosts = () => {
                 </table>
               </div>
               {/* <!-- Pagination --> */}
-              <UserPaginationContainer
-                totalPages={totalPages}
-                currentPage={currentPage}
-              />
+              {totalRecords > 10 && (
+                <UserPaginationContainer
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                />
+              )}
             </div>
           </div>
         </div>
