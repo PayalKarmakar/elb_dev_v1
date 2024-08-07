@@ -16,7 +16,7 @@ const WbHeroSection = () => {
           <div className="col-md-12 col-xl-6 mt-n5">
             <div>
               <h1
-                className="hero-one-title fw-bold"
+                className="hero-one-title fw-bold section-title animate__animated animate__fadeInLeft"
                 data-aos="fade-up"
                 data-aos-duration="1000"
                 data-aos-easing="linear"
