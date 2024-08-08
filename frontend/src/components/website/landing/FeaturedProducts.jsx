@@ -43,7 +43,10 @@ const FeaturedProducts = () => {
               <div className="job-post bg-offWhite position-relative">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <div className="job-post-icon">
-                    <img src={imgSrc} width={200} height={250} />
+                    <img
+                      src={imgSrc}
+                      className="w-100 feature-product-img-min-height"
+                    />
                   </div>
                   <p className="job-post-subtitle fw-bold">{postTitle}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
