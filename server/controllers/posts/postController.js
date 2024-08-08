@@ -403,159 +403,16 @@ export const getPostUser = async (req, res) => {
   }
 };
 export const getSearchPosts = async (req, res) => {
-  const { search, catId, locationId } = req.body;
+  const query = `select post.*,img.image_path,img.is_cover
+      from  master_posts post
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
+      where post.is_active=true order by post.id`;
 
-  // Initialize variables for different parts of the query
-  let cat = "";
-  let catC = "";
-  let loc = "";
-  let srchP = "";
-  let srchC = "";
-  let noLoc = "";
-  let noSrc = "";
-  let noLocCatSrcQ = "";
-  let outQuery = "";
-  let outQueryCount = "";
-
-  // Build query parts based on input conditions
-  const params = [];
-  let paramIndex = 1;
-
-  if (catId) {
-    cat = `WHERE cat.id = $${paramIndex}`;
-    catC = `WHERE post.cat_id = $${paramIndex}`;
-    params.push(catId);
-    paramIndex++;
-
-    if (locationId) {
-      loc = `AND post.location_id = $${paramIndex}`;
-      noLoc = `,matched_posts_by_loc AS (
-                SELECT * FROM master_posts post WHERE location_id = $${paramIndex}
-              )`;
-
-      params.push(locationId);
-      paramIndex++;
-    }
-    if (search) {
-      srchC = `OR cat.category ILIKE $${paramIndex}`;
-      srchP = `AND post.title ILIKE $${paramIndex}`;
-      noSrc = `,matched_posts_by_partial_title AS (
-                SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-              )`;
-
-      params.push(`%${search}%`);
-      paramIndex++;
-    }
-  } else if (locationId) {
-    loc = `WHERE post.location_id = $${paramIndex}`;
-    noLoc = `,matched_posts_by_loc AS (
-              SELECT * FROM master_posts post WHERE location_id = $${paramIndex}
-            )`;
-
-    params.push(locationId);
-    paramIndex++;
-    if (search) {
-      srchP = `AND post.title ILIKE $${paramIndex}`;
-      noSrc = `,matched_posts_by_partial_title AS (
-                SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-              )`;
-
-      params.push(`%${search}%`);
-      paramIndex++;
-    }
-  } else if (search) {
-    srchC = `WHERE cat.category ILIKE $${paramIndex}`;
-    srchP = `WHERE post.title ILIKE $${paramIndex}`;
-    noSrc = `,matched_posts_by_partial_title AS (
-              SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-            )`;
-
-    params.push(`%${search}%`);
-    paramIndex++;
-  }
-
-  if (catId != "" && locationId != "" && search != "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-          OR
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && catId != "" && search == "") {
-    noLocCatSrcQ = ` WHERE 
-        (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-        OR
-        (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-        AND
-        (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-         `;
-  } else if (catId != "" && search != "" && locationId == "") {
-    noLocCatSrcQ = ` WHERE
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && search != "" && catId == "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && search == "" && catId == "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
-  } else if (locationId == "" && search != "" && catId == "") {
-    noLocCatSrcQ = `WHERE (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId == "" && search == "" && catId != "") {
-    noLocCatSrcQ = ` WHERE
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))`;
-  }
-
-  // Construct the final query string
-  const queryStr = `
-    WITH 
-    matched_categories AS (
-        SELECT cat.id AS cateId, cat.parent_id AS parId
-        FROM master_categories cat ${cat} ${srchC}
-    ),
-    matched_posts_by_title AS (
-        SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
-        FROM master_posts post ${catC} ${srchP} ${loc}
-    )
-    ${noSrc}
-    ${noLoc}
-
-    SELECT DISTINCT post.id, post.user_id, post.cat_id, post.subcat_id, post.title, post.price, post.location_id, post.address, post.is_sold, img.image_path
-    FROM master_posts post
-    LEFT JOIN image_posts img ON post.id = img.post_id AND img.is_cover = true
-        ${noLocCatSrcQ}
-  `;
-
-  if (locationId) {
-    outQuery = `select * from (${queryStr}) fetchData where location_id = ${locationId}`;
-  } else {
-    outQuery = queryStr;
-  }
-  // console.log(`${outQuery} OFFSET $${paramIndex} LIMIT 5`, params);
   try {
-    // Add the offset parameter for pagination
-    params.push(req.params.offset);
-
-    const data = await pool.query(
-      `${outQuery} OFFSET $${paramIndex} LIMIT 5`,
-      params
-    );
-
-    const result = await pool.query(
-      `SELECT COUNT(*) AS countId FROM (${outQuery}) AS matched_posts`,
-      params.slice(0, -1)
-    );
-
-    res.status(StatusCodes.OK).json({ data: data, result: result });
+    const details = await pool.query(query, []);
+    res.status(StatusCodes.ACCEPTED).json({ data: details });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+    res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
   }
 };
 
