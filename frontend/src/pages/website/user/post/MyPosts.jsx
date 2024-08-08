@@ -1,5 +1,9 @@
 import { Suspense, useEffect, useState } from "react";
-import { UserPaginationContainer, UserPostCount } from "../../../../components";
+import {
+  PostViewModal,
+  UserPaginationContainer,
+  UserPostCount,
+} from "../../../../components";
 import customFetch from "../../../../utils/customFetch";
 import { FaRegEdit } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
@@ -8,10 +12,16 @@ import dayjs from "dayjs";
 import { useLocation } from "react-router-dom";
 import { postStatusBadge } from "../../../../utils/functions";
 import ImageLoading from "../../../../components/website/ImageLoading";
+import { useDispatch } from "react-redux";
+import {
+  setPostsDetails,
+  showPostDetailsModal,
+} from "../../../../feature/postSlice";
 
 const MyPosts = () => {
   document.title = `My Posts | ${import.meta.env.VITE_APP_TITLE}`;
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const [meta, setMeta] = useState();
   const [posts, setPosts] = useState([]);
   const { search } = useLocation();
@@ -88,10 +98,12 @@ const MyPosts = () => {
                           is_blocked,
                         });
 
-                        const image = post?.image_path?.startsWith("https")
-                          ? post.image_path
+                        const image = post.images[0].image_path?.startsWith(
+                          "https"
+                        )
+                          ? post.images[0].image_path
                           : `${import.meta.env.VITE_BASE_URL}/${
-                              post.image_path
+                              post.images[0].image_path
                             }`;
 
                         return (
@@ -128,7 +140,13 @@ const MyPosts = () => {
                                 <button className="dashboard-action-btn">
                                   <FaRegEdit className="text-muted" size={20} />
                                 </button>
-                                <button className="dashboard-action-btn">
+                                <button
+                                  className="dashboard-action-btn"
+                                  onClick={() => {
+                                    dispatch(showPostDetailsModal());
+                                    dispatch(setPostsDetails(post));
+                                  }}
+                                >
                                   <IoEyeOutline
                                     className="text-muted"
                                     size={24}
@@ -150,6 +168,8 @@ const MyPosts = () => {
                   currentPage={currentPage}
                 />
               )}
+
+              <PostViewModal />
             </div>
           </div>
         </div>
