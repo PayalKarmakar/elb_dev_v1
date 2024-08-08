@@ -108,7 +108,7 @@ const Testimonial = () => {
   // }, []);
 
   return (
-    <section className="bg-offWhite py-110">
+    <section className="bg-offWhite py-60">
       <div className="container">
         <div className="row mb-40 justify-content-center">
           <div className="co-auto">

@@ -46,3 +46,4 @@ export { default as DashboardOrderList } from "./website/user/dashboard/Dashboar
 export { default as DashboardGraphBox } from "./website/user/dashboard/DashboardGraphBox";
 export { default as UserPaginationContainer } from "./website/user/UserPaginationContainer";
 export { default as UserPostCount } from "./website/user/UserPostCount";
+export { default as PostViewModal } from "./website/user/post/PostViewModal";

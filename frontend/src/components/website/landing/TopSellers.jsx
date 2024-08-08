@@ -3,7 +3,7 @@ import seller from "../../../assets/website/img/top-seller/1.png";
 
 const TopSellers = () => {
   return (
-    <section className="top-sellers-area bg-offWhite py-110">
+    <section className="top-sellers-area bg-offWhite py-60">
       <div className="container">
         <div className="row justify-content-between align-items-end mb-40">
           <div className="col-auto">
@@ -70,7 +70,7 @@ const TopSellers = () => {
                     4.9 <span className="top-seller-review">(399 Reviews)</span>
                   </p>
                 </div>
-                <a href="freelancer-details.html" className="w-btn-primary-lg">
+                <a href="freelancer-details.html" className="w-btn-primary-lg text-decoration-none">
                   View Profile
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +126,7 @@ const TopSellers = () => {
                     4.9 <span className="top-seller-review">(399 Reviews)</span>
                   </p>
                 </div>
-                <a href="freelancer-details.html" className="w-btn-primary-lg">
+                <a href="freelancer-details.html" className="w-btn-primary-lg text-decoration-none">
                   View Profile
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +182,7 @@ const TopSellers = () => {
                     4.9 <span className="top-seller-review">(399 Reviews)</span>
                   </p>
                 </div>
-                <a href="freelancer-details.html" className="w-btn-primary-lg">
+                <a href="freelancer-details.html" className="w-btn-primary-lg text-decoration-none">
                   View Profile
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -238,7 +238,7 @@ const TopSellers = () => {
                     4.9 <span className="top-seller-review">(399 Reviews)</span>
                   </p>
                 </div>
-                <a href="freelancer-details.html" className="w-btn-primary-lg">
+                <a href="freelancer-details.html" className="w-btn-primary-lg text-decoration-none">
                   View Profile
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -293,7 +293,7 @@ const TopSellers = () => {
                     4.9 <span className="top-seller-review">(399 Reviews)</span>
                   </p>
                 </div>
-                <a href="freelancer-details.html" className="w-btn-primary-lg">
+                <a href="freelancer-details.html" className="w-btn-primary-lg text-decoration-none">
                   View Profile
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

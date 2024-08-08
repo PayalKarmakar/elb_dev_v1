@@ -76,7 +76,7 @@ body,
 }
 
 .hero-one {
-  padding: 200px 0 50px 0;
+  padding: 200px 0 0px 0;
 }
 
 .hero-one-title {
@@ -150,7 +150,10 @@ body,
 .featureCategory {
   overflow: visible;
 }
-
+.feature-product-img-min-height {
+  min-height: 250px;
+  max-height: 250px;
+}
 .w-btn-primary-lg {
   background: transparent;
   color: var(--primary-color3);
@@ -191,12 +194,18 @@ body,
   background: var(--primary-color3);
   z-index: 6;
 }
-
+.job-post {
+  padding: 8px;
+}
 .job-post-icon {
   width: auto;
   height: auto;
   position: relative;
+  -webkit-border-radius: 20px;
   border-radius: 20px;
+}
+.job-post-icon img {
+  border-radius: 12px;
 }
 
 /* .job-post-icon:after{
@@ -362,4 +371,11 @@ body,
 }
 .header-text {
   color: var(--white);
+}
+.service-card-min-height {
+  min-height: 392px;
+}
+.service-card-img {
+  min-height: 250px;
+  max-height: 250px;
 }

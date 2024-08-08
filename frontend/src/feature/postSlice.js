@@ -6,7 +6,9 @@ const initialValue = {
   editId: "",
   featuredPosts: [],
   recentPosts: [],
-  postDetails: [],
+  postDetailsModal: false,
+  postDetails: {},
+  postReviews: [],
 };
 
 const postSlice = createSlice({
@@ -43,12 +45,23 @@ const postSlice = createSlice({
     unsetRecentPosts: (state) => {
       state.recentPosts = [];
     },
-
+    showPostDetailsModal: (state) => {
+      state.postDetailsModal = true;
+    },
+    hidePostDetailsModal: (state) => {
+      state.postDetailsModal = false;
+    },
     setPostsDetails: (state, action) => {
       state.postDetails = action.payload;
     },
     unsetPostsDetails: (state) => {
-      state.postDetails = [];
+      state.postDetails = {};
+    },
+    setPostReviews: (state, action) => {
+      state.postReviews = action.payload;
+    },
+    unsetPostReviews: (state) => {
+      state.postReviews = [];
     },
   },
 });
@@ -64,7 +77,11 @@ export const {
   unsetFeaturedPosts,
   setRecentPosts,
   unsetRecentPosts,
+  showPostDetailsModal,
+  hidePostDetailsModal,
   setPostsDetails,
   unsetPostsDetails,
+  setPostReviews,
+  unsetPostReviews,
 } = postSlice.actions;
 export default postSlice.reducer;

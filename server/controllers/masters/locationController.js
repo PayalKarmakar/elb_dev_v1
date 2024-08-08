@@ -127,13 +127,12 @@ export const getTopLocations = async (req, res) => {
     `select * from master_locations where is_active=true limit 10`,
     []
   );
-
   res.status(StatusCodes.OK).json({ data });
 };
 
 export const getAllStates = async (req, res) => {
   const data = await pool.query(
-    `SELECT distinct(state_code) ,state FROM master_locations	group by state_code,state ORDER BY state, state_code ASC `,
+    `select distinct(state_code), state FROM master_locations where is_active=true group by state_code, state order by state, state_code asc`,
     []
   );
   res.status(StatusCodes.OK).json({ data });
@@ -142,7 +141,7 @@ export const getAllStates = async (req, res) => {
 export const getCities = async (req, res) => {
   const { id } = req.params;
   const data = await pool.query(
-    `select id,city from master_locations where state_code=$1 order by city`,
+    `select id,city from master_locations where state_code=$1 and is_active=true order by city`,
     [id]
   );
   res.status(StatusCodes.OK).json({ data });

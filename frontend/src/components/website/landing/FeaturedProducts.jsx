@@ -8,8 +8,8 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { FaRegHeart } from "react-icons/fa6";
 import { encParam } from "../../../utils/functions";
+import { FaRegHeart } from "react-icons/fa6";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
@@ -28,19 +28,11 @@ const FeaturedProducts = () => {
   const renderFeaturedPosts = () => {
     // let path = "";
     return featuredPosts.map((i) => {
-      let imgSrc;
-      if (i.image_path) {
-        if (i.image_path.includes("https")) {
-          imgSrc = i.image_path;
-        } else {
-          imgSrc = `${import.meta.env.VITE_BASE_URL}/${i.image_path}`;
-        }
-      } else {
-        imgSrc = product1;
-      }
-
+      const imgSrc = i.image_path
+        ? `${import.meta.env.VITE_BASE_URL}/${i.image_path}`
+        : product1;
       const postTitle =
-        i.title.length > 20 ? i.title.substring(0, 20) + "..." : i.title;
+        i.title.length > 15 ? i.title.substring(0, 15) + "..." : i.title;
       return (
         <SwiperSlide key={nanoid()}>
           <Link
@@ -51,7 +43,10 @@ const FeaturedProducts = () => {
               <div className="job-post bg-offWhite position-relative">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <div className="job-post-icon">
-                    <img src={imgSrc} alt={i.title} width={300} height={250} />
+                    <img
+                      src={imgSrc}
+                      className="w-100 feature-product-img-min-height"
+                    />
                   </div>
                   <p className="job-post-subtitle fw-bold">{postTitle}</p>
                   <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
@@ -72,7 +67,7 @@ const FeaturedProducts = () => {
   };
 
   return (
-    <section className="py-110">
+    <section className="py-60">
       <div className="container">
         <div className="row mb-40 justify-content-between align-items-end">
           <div className="col-md-auto">
@@ -100,8 +95,8 @@ const FeaturedProducts = () => {
         </div>
         <div className="swiper recentJob #swiper-container">
           <Swiper
-            spaceBetween={50}
-            slidesPerView={4}
+            spaceBetween={25}
+            slidesPerView={5}
             loop={true}
             autoplay={{ delay: 3000 }}
             ref={sliderRef}

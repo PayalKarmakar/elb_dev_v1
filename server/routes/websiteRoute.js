@@ -13,6 +13,7 @@ import {
   getAllPostsMin,
   getFeaturedPosts,
   getPostDetails,
+  getPostReviews,
   getPostUser,
   getRecentPosts,
   getSearchPosts,
@@ -25,6 +26,7 @@ router.get(`/all-categories`, getAllCategories);
 router.get(`/featured-posts`, getFeaturedPosts); // Jyoti
 router.get(`/recent-posts`, getRecentPosts); // Jyoti
 router.get(`/post/:id`, getPostDetails); // Arko
+router.get(`/post/reviews/:id`, getPostReviews); // Arko
 router.get(`/all-post/:offset/:cat?/:subcat?`, getAllPosts); // Jyoti
 router.get(`/get-allstates`, getAllStates); //Payal
 router.get(`/get-cities/:id`, getCities); //Payal

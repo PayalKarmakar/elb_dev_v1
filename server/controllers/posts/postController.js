@@ -1,21 +1,16 @@
+import fs from "fs/promises";
+import path from "path";
 import { StatusCodes } from "http-status-codes";
 import pool from "../../db.js";
 import { verifyJWT } from "../../utils/tokenUtils.js";
 import { generateOtherSlug, getUserId } from "../../utils/functions.js";
 import dayjs from "dayjs";
+import { fileTypeFromBuffer } from "file-type";
 
 export const addPost = async (req, res) => {
   const obj = { ...req.body };
-  const {
-    category,
-    subCategory,
-    userState,
-    userCity,
-    title,
-    description,
-    price,
-    cover,
-  } = obj;
+  const { category, subCategory, userCity, title, description, price, cover } =
+    obj;
 
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
@@ -29,7 +24,8 @@ export const addPost = async (req, res) => {
     await pool.query(`BEGIN`);
 
     const master = await pool.query(
-      `insert into master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id`,
+      `INSERT INTO master_posts(user_id, title, cat_id, subcat_id, description, price, slug, created_at, updated_at, location_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
       [
         uid,
         title.trim(),
@@ -47,12 +43,11 @@ export const addPost = async (req, res) => {
     const postId = master.rows[0].id;
 
     const formFields = await pool.query(
-      `select id, field_name, field_type from master_form_fields where cat_id=$1`,
+      `SELECT id, field_name, field_type FROM master_form_fields WHERE cat_id=$1`,
       [subCategory]
     );
 
     for (const field of formFields.rows) {
-      // const value = req.body[field.field_name];
       const value = obj[field.field_name];
 
       const dbData =
@@ -67,34 +62,60 @@ export const addPost = async (req, res) => {
           : null;
 
       await pool.query(
-        `insert into details_posts(post_id, attr_id, attr_db_value, attr_entry) values($1, $2, $3, $4)`,
+        `INSERT INTO details_posts(post_id, attr_id, attr_db_value, attr_entry)
+        VALUES($1, $2, $3, $4)`,
         [postId, +field.id, dbData, entryData]
       );
     }
+    const postDirectory = path.join("public", "uploads", "posts", `${postId}`);
+    await fs.mkdir(postDirectory, { recursive: true });
+    const validMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+    ];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        // Ensure file.buffer is valid
+        if (!file.buffer) {
+          console.log("File buffer is missing");
+          continue;
+        }
 
-    for (const file of req.files) {
-      console.log(file);
-      const destination = file.destination;
-      const filename = file.filename;
-      const arr = destination.split(`/`);
-      const suffix = arr[1] + "/" + arr[2];
-      const imgPath = `${suffix}/${filename}`;
-      let is_cover = false;
-      if (file.originalname == cover) is_cover = true;
-      // console.log(is_cover);
-      // console.log(`${file.originalname}  || ${cover}`);
-      // console.log(
-      //   `insert into image_posts(post_id, image_path,is_cover) values(${postId}, ${imgPath}, ${is_cover})`
-      // );
-      await pool.query(
-        `insert into image_posts(post_id, image_path, is_cover) values($1, $2, $3)`,
-        [+postId, imgPath, is_cover]
-      );
+        const type = await fileTypeFromBuffer(file.buffer);
+
+        if (type && validMimeTypes.includes(type.mime)) {
+          // Define the file path
+          const filename = Date.now() + path.extname(file.originalname);
+          const destinationPath = path.join(postDirectory, filename);
+          console.log("Saving file to:", destinationPath);
+
+          // Save file to disk
+          await fs.writeFile(destinationPath, file.buffer);
+
+          const imgPath = path.join("uploads", "posts", `${postId}`, filename);
+          let is_cover = false;
+          if (file.originalname === cover) is_cover = true;
+
+          await pool.query(
+            `INSERT INTO image_posts(post_id, image_path, is_cover)
+          VALUES($1, $2, $3)`,
+            [+postId, imgPath, is_cover]
+          );
+        } else {
+        }
+      }
+      await pool.query(`COMMIT`);
+
+      res.status(StatusCodes.CREATED).json({ data: `success` });
+    } else {
+      console.log(`file not uploaded!!`);
     }
 
-    await pool.query(`COMMIT`);
+    // await pool.query(`COMMIT`);
 
-    res.status(StatusCodes.CREATED).json({ data: `success` });
+    // res.status(StatusCodes.CREATED).json({ data: `success` });
   } catch (error) {
     console.log(error);
     await pool.query(`ROLLBACK`);
@@ -273,16 +294,59 @@ export const getRecentPosts = async (req, res) => {
 }; // Jyoti
 
 export const getPostDetails = async (req, res) => {
-  const query = `select post.*,
-    json_agg(
-      json_build_object(
-        'image_path', img.image_path,
-        'is_cover', img.is_cover
-      )
-    ) AS image
-    from master_posts post
-    left join image_posts img on post.id = img.post_id 
-    where post.id=${req.params.id} group by post.id`;
+  const query = `WITH unique_locations AS (
+          SELECT DISTINCT ON (loc.id) loc.id, loc.city, loc.state, loc.dist_code
+          FROM master_posts post
+          LEFT JOIN master_locations loc ON post.location_id = loc.id AND loc.is_active = true
+          WHERE post.id = ${req.params.id}
+        ),
+        post_data AS (
+          SELECT post.*,
+            json_agg(
+              json_build_object(
+                'city', ul.city,
+                'state', ul.state,
+                'dist_code', ul.dist_code
+              )
+            ) AS location
+          FROM master_posts post
+          LEFT JOIN unique_locations ul ON post.location_id = ul.id
+          WHERE post.id = ${req.params.id}
+          GROUP BY post.id
+        ),
+        image_data AS (
+          SELECT post.id,
+            json_agg(
+              json_build_object(
+                'image_path', img.image_path,
+                'is_cover', img.is_cover
+              )
+            ) AS image
+          FROM master_posts post
+          LEFT JOIN image_posts img ON post.id = img.post_id
+          WHERE post.id = ${req.params.id}
+          GROUP BY post.id
+        ),
+        cat_data AS (
+          SELECT cat1.id, cat1.category,
+            json_agg(
+              json_build_object(
+                'id', cat2.id,
+                'category', cat2.category
+              )
+            ) AS sub_cat
+          FROM master_posts post
+          JOIN master_categories cat1 ON post.cat_id = cat1.id
+          LEFT JOIN master_categories cat2 ON cat1.id = cat2.parent_id AND cat2.is_active = true and cat2.id =post.subcat_id
+          WHERE cat1.parent_id IS NULL AND cat1.is_active = true AND post.id = ${req.params.id}
+          GROUP BY cat1.id
+        )
+        SELECT pd.*, id.image, cd.category, cd.sub_cat
+        FROM post_data pd
+        JOIN image_data id ON pd.id = id.id
+        JOIN cat_data cd ON pd.cat_id = cd.id
+
+      `;
 
   try {
     await pool.query(`BEGIN`);
@@ -339,158 +403,28 @@ export const getPostUser = async (req, res) => {
   }
 };
 export const getSearchPosts = async (req, res) => {
-  const { search, catId, locationId } = req.body;
+  const query = `select post.*,img.image_path,img.is_cover
+      from  master_posts post
+      left join image_posts img on post.id = img.post_id and img.is_cover=true
+      where post.is_active=true order by post.id`;
 
-  // Initialize variables for different parts of the query
-  let cat = "";
-  let catC = "";
-  let loc = "";
-  let srchP = "";
-  let srchC = "";
-  let noLoc = "";
-  let noSrc = "";
-  let noLocCatSrcQ = "";
-  let outQuery = "";
-  let outQueryCount = "";
-
-  // Build query parts based on input conditions
-  const params = [];
-  let paramIndex = 1;
-
-  if (catId) {
-    cat = `WHERE cat.id = $${paramIndex}`;
-    catC = `WHERE post.cat_id = $${paramIndex}`;
-    params.push(catId);
-    paramIndex++;
-
-    if (locationId) {
-      loc = `AND post.location_id = $${paramIndex}`;
-      noLoc = `,matched_posts_by_loc AS (
-                SELECT * FROM master_posts post WHERE location_id = $${paramIndex}
-              )`;
-
-      params.push(locationId);
-      paramIndex++;
-    }
-    if (search) {
-      srchC = `OR cat.category ILIKE $${paramIndex}`;
-      srchP = `AND post.title ILIKE $${paramIndex}`;
-      noSrc = `,matched_posts_by_partial_title AS (
-                SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-              )`;
-
-      params.push(`%${search}%`);
-      paramIndex++;
-    }
-  } else if (locationId) {
-    loc = `WHERE post.location_id = $${paramIndex}`;
-    noLoc = `,matched_posts_by_loc AS (
-              SELECT * FROM master_posts post WHERE location_id = $${paramIndex}
-            )`;
-
-    params.push(locationId);
-    paramIndex++;
-    if (search) {
-      srchP = `AND post.title ILIKE $${paramIndex}`;
-      noSrc = `,matched_posts_by_partial_title AS (
-                SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-              )`;
-
-      params.push(`%${search}%`);
-      paramIndex++;
-    }
-  } else if (search) {
-    srchC = `WHERE cat.category ILIKE $${paramIndex}`;
-    srchP = `WHERE post.title ILIKE $${paramIndex}`;
-    noSrc = `,matched_posts_by_partial_title AS (
-              SELECT * FROM master_posts WHERE title ILIKE $${paramIndex}
-            )`;
-
-    params.push(`%${search}%`);
-    paramIndex++;
-  }
-
-  if (catId != "" && locationId != "" && search != "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-          OR
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && catId != "" && search == "") {
-    noLocCatSrcQ = ` WHERE 
-        (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-        OR
-        (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-        AND
-        (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-         `;
-  } else if (catId != "" && search != "" && locationId == "") {
-    noLocCatSrcQ = ` WHERE
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && search != "" && catId == "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))
-          OR 
-          (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId != "" && search == "" && catId == "") {
-    noLocCatSrcQ = ` WHERE (EXISTS (SELECT 1 FROM matched_posts_by_loc WHERE post.id = matched_posts_by_loc.id))`;
-  } else if (locationId == "" && search != "" && catId == "") {
-    noLocCatSrcQ = `WHERE (EXISTS (SELECT 1 FROM matched_posts_by_partial_title WHERE post.id = matched_posts_by_partial_title.id))`;
-  } else if (locationId == "" && search == "" && catId != "") {
-    noLocCatSrcQ = ` WHERE
-          (EXISTS (SELECT 1 FROM matched_categories WHERE post.cat_id = cateId OR post.subcat_id = parId))
-          OR
-          (EXISTS (SELECT 1 FROM matched_posts_by_title WHERE post.cat_id = postCat OR post.subcat_id = postSubCat))`;
-  }
-
-  // Construct the final query string
-  const queryStr = `
-    WITH 
-    matched_categories AS (
-        SELECT cat.id AS cateId, cat.parent_id AS parId
-        FROM master_categories cat ${cat} ${srchC}
-    ),
-    matched_posts_by_title AS (
-        SELECT post.cat_id AS postCat, post.subcat_id AS postSubCat
-        FROM master_posts post ${catC} ${srchP} ${loc}
-    )
-    ${noSrc}
-    ${noLoc}
-
-    SELECT DISTINCT post.id, post.user_id, post.cat_id, post.subcat_id, post.title, post.price, post.location_id, post.address, post.is_sold, img.image_path
-    FROM master_posts post
-    LEFT JOIN image_posts img ON post.id = img.post_id AND img.is_cover = true
-        ${noLocCatSrcQ}
-  `;
-
-  if (locationId) {
-    outQuery = `select * from (${queryStr}) fetchData where location_id = ${locationId}`;
-  } else {
-    outQuery = queryStr;
-  }
-  // console.log(`${outQuery} OFFSET $${paramIndex} LIMIT 5`, params);
   try {
-    // Add the offset parameter for pagination
-    params.push(req.params.offset);
-
-    const data = await pool.query(
-      `${outQuery} OFFSET $${paramIndex} LIMIT 5`,
-      params
-    );
-
-    const result = await pool.query(
-      `SELECT COUNT(*) AS countId FROM (${outQuery}) AS matched_posts`,
-      params.slice(0, -1)
-    );
-
-    res.status(StatusCodes.OK).json({ data: data, result: result });
+    const details = await pool.query(query, []);
+    res.status(StatusCodes.ACCEPTED).json({ data: details });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.BAD_REQUEST).json({ data: "Failed" });
+    res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
+  }
+};
+
+export const getPostReviews = async (req, res) => {
+  const query = `select review.*
+    from reviews_posts review
+    where post_id=${req.params.id} order by id`;
+
+  try {
+    const details = await pool.query(query, []);
+    res.status(StatusCodes.ACCEPTED).json({ data: details });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
   }
 };

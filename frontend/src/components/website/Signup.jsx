@@ -292,6 +292,10 @@ export default function Signup() {
                         />
                       </div>
                       <div className="form-input col-lg-12">
+                        <label htmlFor="email" className="form-label">
+                          Password
+                          <span className="text-lime-300">*</span>
+                        </label>
                         <div className="input-group">
                           <input
                             type={textType}

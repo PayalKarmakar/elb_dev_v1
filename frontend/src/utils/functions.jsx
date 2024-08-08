@@ -55,9 +55,12 @@ export const decParam = (value) => {
   return data.toString(CryptoJS.enc.Utf8);
 };
 
-export const capitalizeFirstLetter = (string) => {
-  if (!string) return "";
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalizeWords = (text) => {
+  return text
+    .replace(/-/g, " ") // Replace hyphens with spaces
+    .split(" ") // Split the text into words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter
+    .join(" "); // Join words back into a single string
 };
 
 export const postStatusBadge = ({ is_sold, is_blocked }) => {
