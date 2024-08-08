@@ -1,7 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { getUserIdFromToken, paginationLogic } from "../../utils/functions.js";
 import pool from "../../db.js";
-import { response } from "express";
 
 // ------
 export const myPosts = async (req, res) => {
@@ -29,7 +28,26 @@ export const myPosts = async (req, res) => {
   }
 
   const data = await pool.query(
-    `select mp.*, ip.image_path from master_posts mp left join image_posts ip on mp.id = ip.post_id where mp.user_id=$1 ${queryFilter} and mp.is_active=true offset $2 limit $3`,
+    `SELECT mp.*, 
+      json_agg(
+        json_build_object(
+          'attr_id', dp.attr_id, 
+          'attr_db_value', dp.attr_db_value,
+          'attr_entry', dp.attr_entry
+        )
+      ) AS attributes,
+      json_agg(
+        json_build_object(
+          'image_path', ip.image_path,
+          'weight', ip.weight,
+          'is_cover', ip.is_cover,
+          'is_active', ip.is_active
+        )
+      ) AS images
+    FROM master_posts mp
+    LEFT JOIN details_posts dp ON mp.id = dp.post_id
+    LEFT JOIN image_posts ip ON mp.id = ip.post_id
+    WHERE mp.user_id = $1 ${queryFilter} GROUP BY mp.id offset $2 limit $3`,
     [userId, pagination.offset, pagination.pageLimit]
   );
 
