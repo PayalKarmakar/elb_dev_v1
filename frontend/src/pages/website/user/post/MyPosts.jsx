@@ -14,7 +14,7 @@ import { postStatusBadge } from "../../../../utils/functions";
 import ImageLoading from "../../../../components/website/ImageLoading";
 import { useDispatch } from "react-redux";
 import {
-  setPostsDetails,
+  setEditPost,
   showPostDetailsModal,
 } from "../../../../feature/postSlice";
 
@@ -144,7 +144,7 @@ const MyPosts = () => {
                                   className="dashboard-action-btn"
                                   onClick={() => {
                                     dispatch(showPostDetailsModal());
-                                    dispatch(setPostsDetails(post));
+                                    dispatch(setEditPost(post.id));
                                   }}
                                 >
                                   <IoEyeOutline
