@@ -35,9 +35,10 @@ export const loader = (store) => async () => {
       const pcategories = await customFetch.get(`/masters/categories/parents`);
       store.dispatch(setParentCategories(pcategories.data.data.rows));
     }
+
     if (!currentUser.first_name) {
       const cuser = await customFetch.get(`/auth/current-user`);
-      store.dispatch(setCurrentUser(cuser.data.data.rows[0]));
+      store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
     }
     return null;
   } catch (error) {

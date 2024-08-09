@@ -25,6 +25,14 @@ const FeaturedProducts = () => {
     sliderRef.current.swiper.slideNext();
   }, []);
 
+  const handleMouseEnter = () => {
+    sliderRef?.current?.swiper?.autoplay?.stop();
+  };
+
+  const handleMouseLeave = () => {
+    sliderRef?.current?.swiper?.autoplay?.start();
+  };
+
   const renderFeaturedPosts = () => {
     // let path = "";
     return featuredPosts.map((i) => {
@@ -106,7 +114,11 @@ const FeaturedProducts = () => {
             </div>
           </div>
         </div>
-        <div className="swiper recentJob #swiper-container">
+        <div
+          className="swiper recentJob #swiper-container"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <Swiper
             spaceBetween={25}
             slidesPerView={5}
