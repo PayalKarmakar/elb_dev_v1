@@ -39,7 +39,7 @@ export const myPosts = async (req, res) => {
     ) AS images
     FROM master_posts mp
     LEFT JOIN image_posts ip ON mp.id = ip.post_id
-    WHERE mp.user_id = $1 ${queryFilter} GROUP BY mp.id offset $2 limit $3`,
+    WHERE mp.user_id = $1 ${queryFilter} GROUP BY mp.id order by mp.id desc offset $2 limit $3`,
     [userId, pagination.offset, pagination.pageLimit]
   );
 
@@ -81,23 +81,23 @@ export const mySinglePost = async (req, res) => {
 
   const data = await pool.query(
     `SELECT mp.*, 
-      json_agg(
-        json_build_object(
-          'attr_id', dp.attr_id,
-          'attr_name', mff.field_label,
-          'attr_type', mff.field_type,
-          'attr_db_value', dp.attr_db_value,
-          'attr_entry', dp.attr_entry
-        )
-      ) AS attributes,
-      json_agg(
-        json_build_object(
-          'image_path', ip.image_path,
-          'weight', ip.weight,
-          'is_cover', ip.is_cover,
-          'is_active', ip.is_active
-        )
-      ) AS images,
+    json_agg(
+      json_build_object(
+        'attr_id', dp.attr_id,
+        'attr_name', mff.field_label,
+        'attr_type', mff.field_type,
+        'attr_db_value', dp.attr_db_value,
+        'attr_entry', dp.attr_entry
+      )
+    ) AS attributes,
+    json_agg(
+      json_build_object(
+        'image_path', ip.image_path,
+        'weight', ip.weight,
+        'is_cover', ip.is_cover,
+        'is_active', ip.is_active
+      )
+    ) AS images,
     mc.category as category,
     mcs.category as sub_category,
     ml.state,
