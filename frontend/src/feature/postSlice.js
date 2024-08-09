@@ -6,7 +6,8 @@ const initialValue = {
   editId: "",
   featuredPosts: [],
   recentPosts: [],
-  postDetails: [],
+  postDetailsModal: false,
+  postDetails: {},
   postReviews: [],
 };
 
@@ -44,12 +45,17 @@ const postSlice = createSlice({
     unsetRecentPosts: (state) => {
       state.recentPosts = [];
     },
-
+    showPostDetailsModal: (state) => {
+      state.postDetailsModal = true;
+    },
+    hidePostDetailsModal: (state) => {
+      state.postDetailsModal = false;
+    },
     setPostsDetails: (state, action) => {
       state.postDetails = action.payload;
     },
     unsetPostsDetails: (state) => {
-      state.postDetails = [];
+      state.postDetails = {};
     },
     setPostReviews: (state, action) => {
       state.postReviews = action.payload;
@@ -71,6 +77,8 @@ export const {
   unsetFeaturedPosts,
   setRecentPosts,
   unsetRecentPosts,
+  showPostDetailsModal,
+  hidePostDetailsModal,
   setPostsDetails,
   unsetPostsDetails,
   setPostReviews,
