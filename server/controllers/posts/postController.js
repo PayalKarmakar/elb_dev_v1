@@ -417,13 +417,28 @@ export const getSearchPosts = async (req, res) => {
 };
 
 export const getPostReviews = async (req, res) => {
-  const query = `select review.*
+  const queryTotal = `select review.*
     from reviews_posts review
     where post_id=${req.params.id} order by id`;
+  const queryStar = ` SELECT 
+    review2.post_id,
+    SUM(CASE WHEN review.reviews = 5 THEN 1 ELSE 0 END) AS fivestar,
+    SUM(CASE WHEN review.reviews = 4 THEN 1 ELSE 0 END) AS fourstar,
+    SUM(CASE WHEN review.reviews = 3 THEN 1 ELSE 0 END) AS threestar,
+    SUM(CASE WHEN review.reviews = 2 THEN 1 ELSE 0 END) AS twostar,
+    SUM(CASE WHEN review.reviews = 1 THEN 1 ELSE 0 END) AS onestar
+
+    FROM reviews_posts review2
+    LEFT JOIN reviews_posts review
+        ON review2.id = review.id
+    WHERE review2.post_id = ${req.params.id}
+    GROUP BY review2.post_id`;
 
   try {
-    const details = await pool.query(query, []);
-    res.status(StatusCodes.ACCEPTED).json({ data: details });
+    const dataTotal = await pool.query(queryTotal, []);
+    const dataStar = await pool.query(queryStar, []);
+
+    res.status(StatusCodes.ACCEPTED).json({ data: dataTotal, stars: dataStar });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
   }
