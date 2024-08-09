@@ -1,5 +1,11 @@
-import React from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  Link,
+  Outlet,
+  redirect,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import Sidebar from "../../../components/website/user/UserSidebar";
 import UserHeader from "../../../components/website/user/UserHeader";
@@ -13,28 +19,26 @@ import {
 import { setCurrentUser } from "../../../feature/currentUserSlice";
 import { splitErrors } from "../../../utils/showErrors";
 import customFetch from "../../../utils/customFetch";
+import { toast } from "react-toastify";
 
 // Loader starts ------
 export const loader = (store) => async () => {
-  const { getCategories } = store.getState().categories;
+  const { getCategories, parentCategories } = store.getState().categories;
   const { currentUser } = store.getState().currentUser;
 
   try {
     if (getCategories.length === 0) {
       const sCat = await customFetch.get(`/website/get-categories`);
       store.dispatch(setGetCategories(sCat?.data?.data?.rows));
-    } else {
+    }
+    if (parentCategories.length === 0) {
       const pcategories = await customFetch.get(`/masters/categories/parents`);
       store.dispatch(setParentCategories(pcategories.data.data.rows));
     }
-
-    if (localStorage.getItem("token")) {
-      if (!currentUser.first_name) {
-        const cuser = await customFetch.get(`/auth/current-user`);
-        store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
-      }
+    if (!currentUser.first_name) {
+      const cuser = await customFetch.get(`/auth/current-user`);
+      store.dispatch(setCurrentUser(cuser.data.data.rows[0]));
     }
-
     return null;
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
@@ -51,7 +55,36 @@ const LayoutUser = () => {
 
   const capitalized = capitalizeWords(lastPart);
   const { currentUser } = useSelector((state) => state.currentUser);
-  const path = `/${currentUser.slug}`;
+  const path = `/${currentUser?.slug}`;
+  const navigate = useNavigate();
+
+  // Check if login token is valid starts ------
+  const checkValidToken = async () => {
+    if (localStorage.getItem("token")) {
+      try {
+        const response = await customFetch.get(`/auth/is-valid-token`, {
+          params: { token: localStorage.getItem("token") },
+        });
+        if (!response) {
+          toast.error(`You've been logged out. Login required`);
+          localStorage.removeItem("token");
+          navigate(`/sign-in`);
+        }
+      } catch (error) {
+        splitErrors(error?.response?.data?.msg);
+        console.log(error);
+        return error;
+      }
+    } else {
+      toast.error(`You've been logged out. Login required`);
+      navigate(`/sign-in`);
+    }
+  };
+  // Check if login token is valid ends ------
+
+  useEffect(() => {
+    checkValidToken();
+  }, [url]);
 
   return (
     <>

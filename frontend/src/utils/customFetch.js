@@ -23,7 +23,7 @@ customFetch.interceptors.response.use(
     } catch (e) {
       console.error(e);
     }
-    throw error;
+    // throw error;
   }
 );
 

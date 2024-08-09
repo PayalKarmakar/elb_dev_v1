@@ -23,6 +23,7 @@ const PostAd = () => {
   const { parentCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
   );
+  const { currentUser } = useSelector((store) => store.currentUser);
 
   const [form, setForm] = useState({
     title: "",

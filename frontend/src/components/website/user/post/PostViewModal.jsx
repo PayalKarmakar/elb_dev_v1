@@ -1,6 +1,9 @@
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { hidePostDetailsModal } from "../../../../feature/postSlice";
+import {
+  hidePostDetailsModal,
+  setEditPost,
+} from "../../../../feature/postSlice";
 import { IoMdCloseCircle } from "react-icons/io";
 import { IoChevronForwardSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
@@ -18,12 +21,13 @@ const PostViewModal = () => {
 
   const handleClose = () => {
     dispatch(hidePostDetailsModal());
+    dispatch(setEditPost());
   };
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await customFetch.get(`/users/my-posts/${editId}`);
+      const response = await customFetch.get(`/users/my-single-post/${editId}`);
       setPostDetails(response.data.data.rows[0]);
       setIsLoading(false);
     } catch (error) {
@@ -37,7 +41,7 @@ const PostViewModal = () => {
   address += postDetails?.city + ", " + postDetails?.state;
 
   useEffect(() => {
-    fetchData();
+    editId && fetchData();
   }, [editId]);
 
   return (
