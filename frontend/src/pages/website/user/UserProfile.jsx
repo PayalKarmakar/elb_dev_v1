@@ -65,127 +65,13 @@ const UserProfile = () => {
     }
   };
 
-  // const UserProfileForm = () => {
-  //   const [formData, setFormData] = useState({
-  //     name: '',
-  //     email: '',
-  //     image: null,
-  //     imageUrl: ''
-  //   });
-  //   const [loading, setLoading] = useState(true);
-  //   const [error, setError] = useState(null);
-
-  //   useEffect(() => {
-  //     // Fetch initial data when component mounts
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await axios.get('/api/user-profile'); // Replace with your API endpoint
-  //         setFormData({
-  //           name: response.data.name,
-  //           email: response.data.email,
-  //           imageUrl: response.data.imageUrl
-  //         });
-  //         setLoading(false);
-  //       } catch (err) {
-  //         setError(err);
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, []);
-
-  //   // Handle text field changes
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setFormData(prevData => ({
-  //       ...prevData,
-  //       [name]: value
-  //     }));
-  //   };
-
-  //   // Handle file input change
-  //   const handleFileChange = (e) => {
-  //     setFormData(prevData => ({
-  //       ...prevData,
-  //       image: e.target.files[0]
-  //     }));
-  //   };
-
-  //   // Handle form submission
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-  //     const form = new FormData();
-  //     form.append('name', formData.name);
-  //     form.append('email', formData.email);
-  //     if (formData.image) {
-  //       form.append('image', formData.image);
-  //     }
-
-  //     try {
-  //       await axios.put('/api/user-profile', form, {
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data'
-  //         }
-  //       });
-  //       alert('Profile updated successfully!');
-  //     } catch (err) {
-  //       setError(err);
-  //       alert('Error updating profile.');
-  //     }
-  //   };
-
-  //   if (loading) return <p>Loading...</p>;
-  //   if (error) return <p>Error: {error.message}</p>;
-
-  //   return (
-  //     <form onSubmit={handleSubmit}>
-  //       <div>
-  //         <label htmlFor="name">Name:</label>
-  //         <input
-  //           type="text"
-  //           id="name"
-  //           name="name"
-  //           value={formData.name}
-  //           onChange={handleChange}
-  //         />
-  //       </div>
-  //       <div>
-  //         <label htmlFor="email">Email:</label>
-  //         <input
-  //           type="email"
-  //           id="email"
-  //           name="email"
-  //           value={formData.email}
-  //           onChange={handleChange}
-  //         />
-  //       </div>
-  //       <div>
-  //         <label htmlFor="image">Profile Image:</label>
-  //         <input
-  //           type="file"
-  //           id="image"
-  //           name="image"
-  //           onChange={handleFileChange}
-  //         />
-  //         {formData.imageUrl && (
-  //           <img src={formData.imageUrl} alt="Profile" style={{ width: '100px', height: '100px' }} />
-  //         )}
-  //       </div>
-  //       <button type="submit">Save</button>
-  //     </form>
-  //   );
-  // };
-
   return (
     <>
       <div className="row justify-content-center">
         <div className="col-xl-12">
           <Form method="post" autoComplete="off">
             <div className="d-flex flex-column gap-4">
-              {/* <!-- Profile Info --> */}
               <div className="profile-info-card">
-                {/* <!-- Header --> */}
                 <div className="profile-info-header">
                   <h4 className="text-18 fw-semibold header-text">
                     Profile Info

@@ -28,11 +28,9 @@ export const loader = (store) => async () => {
       store.dispatch(setParentCategories(pcategories.data.data.rows));
     }
 
-    if (localStorage.getItem("token")) {
-      if (!currentUser.first_name) {
-        const cuser = await customFetch.get(`/auth/current-user`);
-        store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
-      }
+    if (!currentUser.first_name) {
+      const cuser = await customFetch.get(`/auth/current-user`);
+      store.dispatch(setCurrentUser(cuser?.data?.data?.rows[0]));
     }
 
     return null;
