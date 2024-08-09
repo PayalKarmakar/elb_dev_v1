@@ -3,5 +3,6 @@
   "interactiveSession.editor.wordWrap": "on",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnPaste": true,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "reactSnippets.settings.prettierEnabled": true
 }
