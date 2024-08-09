@@ -59,32 +59,32 @@ const LayoutUser = () => {
   const navigate = useNavigate();
 
   // Check if login token is valid starts ------
-  const checkValidToken = async () => {
-    if (localStorage.getItem("token")) {
-      try {
-        const response = await customFetch.get(`/auth/is-valid-token`, {
-          params: { token: localStorage.getItem("token") },
-        });
-        if (!response) {
-          toast.error(`You've been logged out. Login required`);
-          localStorage.removeItem("token");
-          navigate(`/sign-in`);
-        }
-      } catch (error) {
-        splitErrors(error?.response?.data?.msg);
-        console.log(error);
-        return error;
-      }
-    } else {
-      toast.error(`You've been logged out. Login required`);
-      navigate(`/sign-in`);
-    }
-  };
-  // Check if login token is valid ends ------
+  // const checkValidToken = async () => {
+  //   if (localStorage.getItem("token")) {
+  //     try {
+  //       const response = await customFetch.get(`/auth/is-valid-token`, {
+  //         params: { token: localStorage.getItem("token") },
+  //       });
+  //       if (!response) {
+  //         toast.error(`You've been logged out. Login required`);
+  //         localStorage.removeItem("token");
+  //         navigate(`/sign-in`);
+  //       }
+  //     } catch (error) {
+  //       splitErrors(error?.response?.data?.msg);
+  //       console.log(error);
+  //       return error;
+  //     }
+  //   } else {
+  //     toast.error(`You've been logged out. Login required`);
+  //     navigate(`/sign-in`);
+  //   }
+  // };
+  // // Check if login token is valid ends ------
 
-  useEffect(() => {
-    checkValidToken();
-  }, [url]);
+  // useEffect(() => {
+  //   checkValidToken();
+  // }, [url]);
 
   return (
     <>
