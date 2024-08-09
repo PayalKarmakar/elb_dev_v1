@@ -45,7 +45,10 @@ const WbTopnav = () => {
                 </Link>
               ) : (
                 <Link to={`/${currentUser.slug}/post-ad`}>
-                  <button type="button" className="header-btn">
+                  <button
+                    type="button"
+                    className="header-btn# w-btn-secondary-sm text-decoration-none border"
+                  >
                     <MdOutlineSell
                       className="h-5 w-5 text-gray-400"
                       aria-hidden="true"
