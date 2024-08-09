@@ -10,6 +10,7 @@ import {
   resetPassword,
   restrict,
   changePassword,
+  isValidToken,
 } from "../controllers/authController.js";
 import {
   checkAccess,
@@ -25,6 +26,7 @@ import {
 router.post(`/register`, validateRegister, register);
 router.post(`/login`, validateLogin, login);
 router.get(`/logout`, logout);
+router.get(`/is-valid-token`, isValidToken);
 router.post(`/forgot-password`, validateForgotPass, forgotPassword);
 router.post(`/reset-password`, validateResetPass, resetPassword);
 router.get(`/current-user`, protectRoute, currentUser);

@@ -23,6 +23,7 @@ const PostAd = () => {
   const { parentCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
   );
+  const { currentUser } = useSelector((store) => store.currentUser);
 
   const [form, setForm] = useState({
     title: "",
@@ -65,6 +66,7 @@ const PostAd = () => {
       "image/png",
       "image/jpg",
       "image/gif",
+      "image/webp",
     ]; // Example MIME types
 
     files.forEach((file) => {
@@ -77,7 +79,8 @@ const PostAd = () => {
           !(file.type == "image/jpeg") &&
           !(file.type == "image/jpg") &&
           !(file.type == "image/png") &&
-          !(file.type == "image/gif")
+          !(file.type == "image/gif") &&
+          !(file.type == "image/webp")
         ) {
           toast.error(`Image should be JPG or JPEG or PNG or GIF type`);
           return;

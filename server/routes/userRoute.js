@@ -23,6 +23,6 @@ router.delete(`/delete/:userId`, deactivateUser);
 router.post(`/activate/:userId`, activateUser);
 router.get(`/my-posts`, myPosts);
 router.get(`/post-count`, myPostCount);
-router.get(`/my-posts/:id`, mySinglePost);
+router.get(`/my-single-post/:id`, mySinglePost);
 
 export default router;

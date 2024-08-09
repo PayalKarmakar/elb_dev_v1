@@ -344,7 +344,7 @@ body {
 }
 .w-btn-secondary-sm {
   color: var(--white);
-  background-color: var(--lime-300);
+  /*background-color: var(--lime-300);*/
   padding: 14px 24px;
   border-radius: 30px;
   text-align: center;

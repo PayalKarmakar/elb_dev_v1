@@ -2,8 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import pool from "../db.js";
 import { BadRequestError } from "../errors/customErrors.js";
 import { checkPassword, hashPassword } from "../utils/passwordUtils.js";
-import { createJWT } from "../utils/tokenUtils.js";
-import { generateSlug } from "../utils/functions.js";
+import { createJWT, verifyJWT } from "../utils/tokenUtils.js";
+import { generateSlug, getUserIdFromToken } from "../utils/functions.js";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import nodemailer from "nodemailer";
@@ -197,6 +197,8 @@ export const resetPassword = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ data: `failed` });
   }
 };
+
+// ------
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword, confirmPassword, uuid } = req.body;
   const getpasswordq = `SELECT id, password from master_users where uuid='${uuid}'`;
@@ -228,4 +230,12 @@ export const changePassword = async (req, res) => {
 
     res.status(StatusCodes.BAD_REQUEST).json({ data: `failed` });
   }
+};
+
+// ------
+export const isValidToken = async (req, res) => {
+  const { token } = req.query;
+  const isValid = verifyJWT(token);
+
+  res.status(StatusCodes.OK).json({ isValid });
 };
