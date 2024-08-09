@@ -74,6 +74,7 @@ export const addPost = async (req, res) => {
       "image/png",
       "image/jpg",
       "image/gif",
+      "image/webp",
     ];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
