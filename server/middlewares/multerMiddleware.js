@@ -5,7 +5,13 @@ import { fileTypeFromBuffer } from "file-type";
 const storage = multer.memoryStorage(); // Use memory storage to access file buffer
 
 const fileFilter = async (req, file, cb) => {
-  const validMimeTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+  const validMimeTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/gif",
+    "image/webp",
+  ];
 
   try {
     if (!file) {

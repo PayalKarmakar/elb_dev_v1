@@ -84,7 +84,7 @@ const MyPosts = () => {
                         </td>
                       </tr>
                     ) : (
-                      posts.map((post) => {
+                      posts?.map((post) => {
                         const {
                           title,
                           price,
@@ -98,7 +98,7 @@ const MyPosts = () => {
                           is_blocked,
                         });
 
-                        const image = post.images[0].image_path?.startsWith(
+                        const image = post.images[0]?.image_path?.startsWith(
                           "https"
                         )
                           ? post.images[0].image_path
@@ -144,7 +144,7 @@ const MyPosts = () => {
                                   className="dashboard-action-btn"
                                   onClick={() => {
                                     dispatch(showPostDetailsModal());
-                                    dispatch(setEditPost(post.id));
+                                    dispatch(setEditPost(post?.id));
                                   }}
                                 >
                                   <IoEyeOutline

@@ -129,7 +129,7 @@ const PostViewModal = () => {
                 <div className="col-xl-4 col-lg-12">
                   <div className="border p-4 rounded-3">
                     <div className="d-flex gap-3 align-items-center">
-                      {postDetails.images?.map((img) => {
+                      {postDetails?.images?.map((img) => {
                         return (
                           <div key={nanoid()} className="rounded-4">
                             <img

@@ -48,7 +48,7 @@ app.use("/api/v1/posts", protectRoute, postRoute);
 
 app.get("*", (req, res) => {
   // res.sendFile(path.resolve(__dirname, "./public/forntend", "index.html"));
-  res.sendFile(path.resolve(__dirname, "./frontend/dist", "index.html"));
+  // res.sendFile(path.resolve(__dirname, "./frontend/dist", "index.html"));
 });
 
 const port = process.env.APP_PORT || 3000;
