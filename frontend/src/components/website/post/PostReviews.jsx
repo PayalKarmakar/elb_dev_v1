@@ -44,7 +44,6 @@ const PostReviews = ({ postSlug }) => {
 
   const renderReview = () => {
     postReviews.reviews?.rows?.map((item) => {
-      console.log(item);
       return (
         <div className="review-card bg-white">
           <div>

@@ -12,6 +12,7 @@ import { LuWallet } from "react-icons/lu";
 import customFetch from "../../../../utils/customFetch";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
+import { currencyFormat } from "../../../../utils/functions";
 
 const PostViewModal = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const PostViewModal = () => {
     setIsLoading(true);
     try {
       const response = await customFetch.get(`/users/my-single-post/${editId}`);
+      console.log(response.data.data.rows[0]);
       setPostDetails(response.data.data.rows[0]);
       setIsLoading(false);
     } catch (error) {
@@ -39,6 +41,7 @@ const PostViewModal = () => {
 
   let address = postDetails?.address ? postDetails?.address : "";
   address += postDetails?.city + ", " + postDetails?.state;
+  const postPrice = currencyFormat().format(postDetails.price);
 
   useEffect(() => {
     editId && fetchData();
@@ -118,9 +121,7 @@ const PostViewModal = () => {
                                   {attr.attr_name}
                                 </p>
                                 <h4 className="text-18 fw-semibold text-dark-300">
-                                  {attr.type === "number" || "text"
-                                    ? attr.attr_entry
-                                    : ""}
+                                  {attr.attr_entry || attr.attr_db_label}
                                 </h4>
                               </li>
                             );
@@ -151,19 +152,10 @@ const PostViewModal = () => {
                       <li className="d-flex justify-content-between py-3 border-top">
                         <div className="d-flex gap-3">
                           <FaRegAddressCard className="text-green" size={24} />
-                          Member Since
+                          Price
                         </div>
                         <div>
-                          <p>Jan 10, 2024</p>
-                        </div>
-                      </li>
-                      <li className="d-flex justify-content-between py-3 border-top">
-                        <div className="d-flex gap-3">
-                          <FaRegAddressCard className="text-green" size={24} />
-                          Reviews
-                        </div>
-                        <div>
-                          <p>20</p>
+                          <p>{postPrice}</p>
                         </div>
                       </li>
                       <li className="d-flex justify-content-between py-3 border-top">

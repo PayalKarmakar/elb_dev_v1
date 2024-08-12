@@ -7,7 +7,6 @@ const DashboardPostList = () => {
   const fetchPostList = async () => {
     try {
       const data = await customFetch.get(`/posts/my-post-list`);
-      console.log(data);
       setPostList(data.data);
     } catch (error) {
       console.log(error);

@@ -89,7 +89,6 @@ const PostCreate = () => {
     let formData = new FormData(e.currentTarget);
     let data = Object.fromEntries(formData);
     data = { ...data, images: postImages };
-    console.log(data);
     try {
       const response = await customFetch.post(`/posts/posts`, data);
 
