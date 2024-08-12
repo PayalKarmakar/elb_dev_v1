@@ -169,10 +169,8 @@ const PostAd = () => {
       }
     });
     // console.log(selectedImages);
-    console.log(...data);
     try {
       const response = await customFetch.post(`/posts/posts`, data);
-      console.log(response);
       toast.success(`Post created`);
       navigate(`/`);
     } catch (error) {
@@ -380,7 +378,7 @@ const PostAd = () => {
                 </div>
               </div>
 
-              <div className="gig-info-card">
+              {/* <div className="gig-info-card">
                 <div className="gig-info-header">
                   <h4 className="text-18 fw-semibold text-white">
                     A video would be a nice touch to the post (not mandatory)
@@ -418,10 +416,10 @@ const PostAd = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div>
-                <PostSubmitBtn isLoading={false} text={`Add post`} />
+                <PostSubmitBtn isLoading={false} text={`Add Post`} />
               </div>
             </div>
           </form>

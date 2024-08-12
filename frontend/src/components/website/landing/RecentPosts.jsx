@@ -5,7 +5,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import product1 from "../../../assets/website/img/job/product-1.jpg"; // Default image for fallback
-import { encParam } from "../../../utils/functions";
+import { currencyFormat, encParam } from "../../../utils/functions";
 
 const RecentPosts = () => {
   const { recentPosts } = useSelector((store) => store.posts);
@@ -63,7 +63,7 @@ const RecentPosts = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <h3 className="job-post-subtitle fw-bold">
-                            {`₹${post.price}`}
+                            {`${currencyFormat().format(post.price)}`}
                           </h3>
                         </div>
                         <div className="d-flex align-items-center gap-1">
