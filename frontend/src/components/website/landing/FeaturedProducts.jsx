@@ -8,8 +8,8 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { encParam } from "../../../utils/functions";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { encParam } from "../../../utils/functions";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);

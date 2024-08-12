@@ -10,7 +10,6 @@ import {
 import Sidebar from "../../../components/website/user/UserSidebar";
 import UserHeader from "../../../components/website/user/UserHeader";
 import UserDashHighlights from "../../../components/website/user/UserDashHighlights";
-import { capitalizeWords } from "../../../utils/functions";
 import { useSelector } from "react-redux";
 import {
   setGetCategories,
@@ -20,6 +19,7 @@ import { setCurrentUser } from "../../../feature/currentUserSlice";
 import { splitErrors } from "../../../utils/showErrors";
 import customFetch from "../../../utils/customFetch";
 import { toast } from "react-toastify";
+import { capitalizeWords } from "../../../utils/functions";
 
 // Loader starts ------
 export const loader = (store) => async () => {
