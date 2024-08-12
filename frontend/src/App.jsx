@@ -20,6 +20,7 @@ import { loader as layoutUserLoader } from "./pages/website/user/LayoutUser";
 import { loader as LayoutWebsiteUser } from "./pages/website/user/LayoutWebsiteUser";
 import { Changepassaction } from "./pages/admin/profile/ChangePassword";
 import Getaddress from "./beta/Getaddress";
+import { loader as editPostLoader } from "./pages/website/user/post/PostEdit";
 
 const router = createBrowserRouter([
   {
@@ -39,9 +40,8 @@ const router = createBrowserRouter([
         action: registerAction,
       },
       {
-        path:'/beta/get-address',
-        element:<Getaddress/>
-
+        path: "/beta/get-address",
+        element: <Getaddress />,
       },
       {
         element: <Elb.LayoutWebsiteUser />,
@@ -74,12 +74,16 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <Elb.WebsiteUserDashboard /> },
       { path: "profile", element: <Elb.WebsiteUserProfile /> },
+      { path: "my-posts", element: <Elb.MyPosts /> },
       {
         path: "post-ad",
         element: <Elb.UserPostAd />,
-        // action: createPostAction,
       },
-      { path: "my-posts", element: <Elb.MyPosts /> },
+      {
+        path: "my-posts/:id/edit",
+        element: <Elb.UserPostEdit />,
+        loader: editPostLoader,
+      },
       {
         path: "test-upload",
         element: <TestUpload />,
