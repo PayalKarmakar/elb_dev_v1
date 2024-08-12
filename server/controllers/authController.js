@@ -11,7 +11,6 @@ import nodemailer from "nodemailer";
 // ------test
 export const register = async (req, res) => {
   const { firstName, lastName, email, mobile, password, tnc } = req.body;
-  console.log(firstName, lastName, email, mobile, password, tnc);
   const createdAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
   const updatedAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
   const userUuid = uuidv4();
@@ -234,7 +233,7 @@ export const changePassword = async (req, res) => {
 
 // ------
 export const isValidToken = async (req, res) => {
-  const { token } = req.query;
+  const { token } = req.cookies;
   const isValid = verifyJWT(token);
 
   res.status(StatusCodes.OK).json({ isValid });

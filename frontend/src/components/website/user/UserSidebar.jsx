@@ -9,7 +9,7 @@ import { ImUserMinus } from "react-icons/im";
 
 const UserSidebar = () => {
   const { currentUser } = useSelector((state) => state.currentUser);
-  console.log(currentUser);
+
   return (
     <>
       <aside className="dashboard-sidebar d-none d-xl-block">

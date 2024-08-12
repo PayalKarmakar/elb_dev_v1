@@ -60,7 +60,6 @@ export const myPosts = async (req, res) => {
 // ------
 export const myPostCount = async (req, res) => {
   const userId = await getUserIdFromToken(req);
-  console.log(userId);
 
   const data = await pool.query(
     `select 
@@ -82,34 +81,34 @@ export const mySinglePost = async (req, res) => {
   const data = await pool.query(
     `SELECT mp.*, 
     json_agg(
-      json_build_object(
+      distinct jsonb_build_object(
         'attr_id', dp.attr_id,
+        'attr_db_value', dp.attr_db_value,
         'attr_name', mff.field_label,
         'attr_type', mff.field_type,
-        'attr_db_value', dp.attr_db_value,
-        'attr_entry', dp.attr_entry
+        'attr_entry', dp.attr_entry,
+        'attr_db_label', mffo.option_value
       )
     ) AS attributes,
     json_agg(
-      json_build_object(
+      distinct jsonb_build_object(
         'image_path', ip.image_path,
-        'weight', ip.weight,
-        'is_cover', ip.is_cover,
-        'is_active', ip.is_active
+        'is_cover', ip.is_cover
       )
     ) AS images,
     mc.category as category,
     mcs.category as sub_category,
     ml.state,
     ml.city
-    FROM master_posts mp
-    LEFT JOIN details_posts dp ON mp.id = dp.post_id
-    LEFT JOIN image_posts ip ON mp.id = ip.post_id
-    join master_categories mc on mp.cat_id = mc.id
-    join master_categories mcs on mp.subcat_id = mcs.id
+    from master_posts mp
+    left join details_posts dp on mp.id = dp.post_id
     join master_locations ml on ml.id = mp.location_id
     left join master_form_fields mff on mff.id = dp.attr_id
-    WHERE mp.id = $1 GROUP BY mp.id, mc.category, mcs.category, ml.state, ml.city`,
+    join master_categories mc on mp.cat_id = mc.id
+    join master_categories mcs on mp.subcat_id = mcs.id
+    join image_posts ip on mp.id = ip.post_id
+    left join master_form_field_options mffo on mffo.id = dp.attr_db_value
+    where mp.id = $1 GROUP BY mp.id, ml.state, ml.city, mc.category, mcs.category`,
     [id]
   );
 

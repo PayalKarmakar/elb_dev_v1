@@ -169,10 +169,8 @@ const PostAd = () => {
       }
     });
     // console.log(selectedImages);
-    console.log(...data);
     try {
       const response = await customFetch.post(`/posts/posts`, data);
-      console.log(response);
       toast.success(`Post created`);
       navigate(`/`);
     } catch (error) {

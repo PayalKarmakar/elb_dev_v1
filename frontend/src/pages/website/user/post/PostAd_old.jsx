@@ -16,7 +16,6 @@ import { UserLocation, WebsiteLoader } from "../../../../components";
 // // Action starts ------
 export const action = async ({ request }) => {
   let formData = await request.formData();
-  console.log(...formData);
   return null;
   try {
     const response = await customFetch.post(`/posts/posts`, formData);
