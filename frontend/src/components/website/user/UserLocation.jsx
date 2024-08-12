@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import customFetch from "../../../utils/customFetch";
 import { nanoid } from "nanoid";
 
-const UserLocation = () => {
+const UserLocation = ({ postData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [states, setStates] = useState([]);
-  const [userState, setUserState] = useState();
+  const [userState, setUserState] = useState(postData?.state_code || "");
   const [cities, setCities] = useState([]);
-  const [userCity, setUserCity] = useState();
+  const [userCity, setUserCity] = useState(postData?.location_id || "");
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -39,6 +39,7 @@ const UserLocation = () => {
 
   useEffect(() => {
     fetchData();
+    if (postData?.state_code) getCities(postData?.state_code);
   }, []);
 
   return (

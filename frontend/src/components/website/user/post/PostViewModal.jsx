@@ -29,7 +29,6 @@ const PostViewModal = () => {
     setIsLoading(true);
     try {
       const response = await customFetch.get(`/users/my-single-post/${editId}`);
-      console.log(response.data.data.rows[0]);
       setPostDetails(response.data.data.rows[0]);
       setIsLoading(false);
     } catch (error) {
@@ -161,7 +160,7 @@ const PostViewModal = () => {
                       <li className="d-flex justify-content-between py-3 border-top">
                         <div className="d-flex gap-3">
                           <LuWallet className="text-green" size={24} />
-                          Total Job
+                          Total reviews
                         </div>
                         <div>
                           <p className="text-dark-200">25</p>

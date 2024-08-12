@@ -99,6 +99,7 @@ export const mySinglePost = async (req, res) => {
     mc.category as category,
     mcs.category as sub_category,
     ml.state,
+    ml.state_code,
     ml.city
     from master_posts mp
     left join details_posts dp on mp.id = dp.post_id
@@ -108,7 +109,7 @@ export const mySinglePost = async (req, res) => {
     join master_categories mcs on mp.subcat_id = mcs.id
     join image_posts ip on mp.id = ip.post_id
     left join master_form_field_options mffo on mffo.id = dp.attr_db_value
-    where mp.id = $1 GROUP BY mp.id, ml.state, ml.city, mc.category, mcs.category`,
+    where mp.id = $1 GROUP BY mp.id, ml.state, ml.state_code, ml.city, mc.category, mcs.category`,
     [id]
   );
 

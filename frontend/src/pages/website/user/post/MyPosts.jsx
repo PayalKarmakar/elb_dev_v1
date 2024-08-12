@@ -9,10 +9,10 @@ import { FaRegEdit } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { nanoid } from "nanoid";
 import dayjs from "dayjs";
-import { useLocation } from "react-router-dom";
-import { postStatusBadge } from "../../../../utils/functions";
+import { Link, useLocation } from "react-router-dom";
+import { encParam, postStatusBadge } from "../../../../utils/functions";
 import ImageLoading from "../../../../components/website/ImageLoading";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setEditPost,
   showPostDetailsModal,
@@ -20,6 +20,7 @@ import {
 
 const MyPosts = () => {
   document.title = `My Posts | ${import.meta.env.VITE_APP_TITLE}`;
+  const { currentUser } = useSelector((store) => store.currentUser);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [meta, setMeta] = useState();
@@ -137,9 +138,14 @@ const MyPosts = () => {
                             </td>
                             <td>
                               <div className="d-flex justify-content-end gap-2">
-                                <button className="dashboard-action-btn">
+                                <Link
+                                  to={`/${currentUser.slug}/my-posts/${encParam(
+                                    post.id.toString()
+                                  )}/edit`}
+                                  className="dashboard-action-btn"
+                                >
                                   <FaRegEdit className="text-muted" size={20} />
-                                </button>
+                                </Link>
                                 <button
                                   className="dashboard-action-btn"
                                   onClick={() => {
