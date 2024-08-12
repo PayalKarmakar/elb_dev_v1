@@ -111,7 +111,7 @@ const PostReviews = ({ postSlug }) => {
                 <div className="flex-shrink-0">
                   <span className="fs-6 text-dark-200">
                     {" "}
-                    ({postReviews.stars?.rows[0].fivestar}){" "}
+                    ({postReviews.stars?.rows[0]?.fivestar}){" "}
                   </span>
                 </div>
               </div>
@@ -128,7 +128,7 @@ const PostReviews = ({ postSlug }) => {
                 <div className="flex-shrink-0">
                   <span className="fs-6 text-dark-200">
                     {" "}
-                    ({postReviews.stars?.rows[0].fourstar}){" "}
+                    ({postReviews.stars?.rows[0]?.fourstar}){" "}
                   </span>
                 </div>
               </div>
@@ -145,7 +145,7 @@ const PostReviews = ({ postSlug }) => {
                 <div className="flex-shrink-0">
                   <span className="fs-6 text-dark-200">
                     {" "}
-                    ({postReviews.stars?.rows[0].threestar}){" "}
+                    ({postReviews.stars?.rows[0]?.threestar}){" "}
                   </span>
                 </div>
               </div>
@@ -162,7 +162,7 @@ const PostReviews = ({ postSlug }) => {
                 <div className="flex-shrink-0">
                   <span className="fs-6 text-dark-200">
                     {" "}
-                    ({postReviews.stars?.rows[0].twostar}){" "}
+                    ({postReviews.stars?.rows[0]?.twostar}){" "}
                   </span>
                 </div>
               </div>
@@ -179,7 +179,7 @@ const PostReviews = ({ postSlug }) => {
                 <div className="flex-shrink-0">
                   <span className="fs-6 text-dark-200">
                     {" "}
-                    ({postReviews.stars?.rows[0].onestar}){" "}
+                    ({postReviews.stars?.rows[0]?.onestar}){" "}
                   </span>
                 </div>
               </div>
