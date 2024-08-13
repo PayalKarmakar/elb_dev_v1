@@ -176,7 +176,6 @@ const PostAd = () => {
       toast.success(`Post created`);
       navigate(`/`);
     } catch (error) {
-      toast.error(`Failed to create post`);
       splitErrors(error?.response?.data?.msg);
       console.log(error);
       return null;
