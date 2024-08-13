@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PostViewModal,
   UserPaginationContainer,
@@ -111,11 +111,9 @@ const MyPosts = () => {
                           <tr key={nanoid()}>
                             <td>
                               <div className="d-flex gap-3 align-items-center project-name">
-                                <Suspense fallback={<ImageLoading />}>
-                                  <div className="rounded-3">
-                                    <img src={image} alt="" loading="lazy" />
-                                  </div>
-                                </Suspense>
+                                <div className="rounded-3">
+                                  <img src={image} alt="" loading="lazy" />
+                                </div>
                                 <div title={title}>
                                   <p className="text-dark-200">
                                     {title.length > 30

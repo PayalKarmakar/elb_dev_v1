@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import { decParam } from "../../../../utils/functions";
 import { useEffect, useState } from "react";
 import customFetch from "../../../../utils/customFetch";
@@ -20,7 +20,7 @@ export const loader = async ({ params }) => {
     const response = await customFetch.get(`/users/my-single-post/${postId}`);
     return response.data;
   } catch (error) {
-    splitErrors(error);
+    splitErrors(error?.response?.data?.msg);
     return error;
   }
 };
@@ -28,6 +28,8 @@ export const loader = async ({ params }) => {
 // Main component starts ------
 const PostEdit = () => {
   const { data } = useLoaderData();
+  const { id } = useParams();
+  const postId = decParam(id);
   const postData = data.rows[0];
   const { parentCategories, childCategories, formFields } = useSelector(
     (store) => store.categories
@@ -84,12 +86,15 @@ const PostEdit = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData);
+      const response = await customFetch.patch(`/posts/posts/${postId}`);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      return error;
     }
   };
-  console.log(postData);
 
   return (
     <div className="row justify-content-center">

@@ -11,7 +11,6 @@ export const addPost = async (req, res) => {
   const obj = { ...req.body };
   const { category, subCategory, userCity, title, description, price, cover } =
     obj;
-
   const { token } = req.cookies;
   const { uuid } = verifyJWT(token);
   const uid = await getUserId(uuid);
