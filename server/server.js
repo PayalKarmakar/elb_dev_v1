@@ -47,7 +47,7 @@ app.use("/api/v1/posts", protectRoute, postRoute);
 // API ends ---
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public/forntend", "index.html"));
+  // res.sendFile(path.resolve(__dirname, "./public/forntend", "index.html"));
   // res.sendFile(path.resolve(__dirname, "./frontend/dist", "index.html"));
 });
 
