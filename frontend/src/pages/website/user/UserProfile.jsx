@@ -6,6 +6,7 @@ import { Form } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { store } from "../../../store";
+import { Getaddress } from "../../../components";
 
 const UserProfile = () => {
   document.title = `Profile | ${import.meta.env.VITE_APP_TITLE}`;
@@ -109,7 +110,7 @@ const UserProfile = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                       <div className="form-container">
                         <label htmlFor="gender" className="form-label">
                           Gender
@@ -125,7 +126,7 @@ const UserProfile = () => {
                         </select>
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                       <div className="form-container">
                         <label htmlFor="email" className="form-label">
                           Email Address
@@ -140,7 +141,7 @@ const UserProfile = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                       <div className="form-container">
                         <label htmlFor="email" className="form-label">
                           Mobile
@@ -154,25 +155,24 @@ const UserProfile = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-8">
                       <div className="form-container">
-                        <label htmlFor="country" className="form-label">
-                          Country
+                        <label htmlFor="address" className="form-label">
+                          Address
                           <span className="text-lime-300">*</span>
                         </label>
-                        <select
-                          id="country"
-                          autoComplete="off"
-                          name="country"
-                          className="form-select shadow-none"
-                        >
-                          <option value="1" selected>
-                            INDIA
-                          </option>
-                        </select>
+                        <input
+                          type="text"
+                          className="form-control shadow-none"
+                          placeholder="Address"
+                          name="address"
+                          value={formData.address}
+                        />
                       </div>
                     </div>
-                    <div className="col-md-6">
+
+                    <Getaddress />
+                    {/* <div className="col-md-6">
                       <div className="form-container">
                         <label htmlFor="state" className="form-label">
                           State
@@ -218,6 +218,24 @@ const UserProfile = () => {
                           })}
                         </select>
                       </div>
+                    </div> */}
+                    <div className="col-md-4">
+                      <div className="form-container">
+                        <label htmlFor="country" className="form-label">
+                          Country
+                          <span className="text-lime-300">*</span>
+                        </label>
+                        <select
+                          id="country"
+                          autoComplete="off"
+                          name="country"
+                          className="form-select shadow-none"
+                        >
+                          <option value="1" selected>
+                            INDIA
+                          </option>
+                        </select>
+                      </div>
                     </div>
                     <div className="col-12">
                       <label htmlFor="description" className="form-label">
@@ -235,6 +253,7 @@ const UserProfile = () => {
                   </div>
                 </div>
               </div>
+
               <div className="gig-info-card">
                 <div className="gig-info-header">
                   <h4 className="text-18 fw-semibold text-white">

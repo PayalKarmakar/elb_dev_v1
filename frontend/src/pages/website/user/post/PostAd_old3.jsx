@@ -82,7 +82,7 @@ const PostAd = () => {
           !(file.type == "image/gif") &&
           !(file.type == "image/webp")
         ) {
-          toast.error(`Image should be JPG or JPEG or PNG or GIF or WEBP type`);
+          toast.error(`Image should be JPG or JPEG or PNG or GIF type`);
           return;
         }
         if (file.size > 500 * 1024) {
