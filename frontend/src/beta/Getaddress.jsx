@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import useAddressinfo from "./../hooks/fetchPincode"; // Custom hook to fetch address info
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 
 const Getaddress = () => {
   // State to manage the form data
   const [form, setForm] = useState({
-    pin: '',
-    po: '',
-    dist: '',
-    state: ''
+    pin: "",
+    po: "",
+    dist: "",
+    state: "",
   });
-    const [errors, setErrors] = useState({
-    pin: ''
+  const [errors, setErrors] = useState({
+    pin: "",
   });
 
   // State to store the fetched address data
@@ -21,22 +21,22 @@ const Getaddress = () => {
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    if (name === 'pin') {
+    if (name === "pin") {
       if (value.length !== 6 || isNaN(value)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          pin: 'Pin code must be a 6-digit number.'
+          pin: "Pin code must be a 6-digit number.",
         }));
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          pin: ''
+          pin: "",
         }));
       }
     }
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -57,20 +57,22 @@ const Getaddress = () => {
       <div className="container">
         <div className="row g-4">
           <div className="col-lg-6 p-3 p-lg-5 offset-lg-3">
-            <div 
-              className="bg-white rounded-3 p-4" 
-              style={{ marginTop: '81px' }}
+            <div
+              className="bg-white rounded-3 p-4"
+              style={{ marginTop: "81px" }}
             >
               <div className="mb-40">
                 <div className="form-container">
                   <div className="row gy-3">
-                      <div className="col-md-6">
+                    <div className="col-md-6">
                       <label className="form-label required" htmlFor="pin">
                         Pin Code
                       </label>
                       <input
                         type="text"
-                        className={`form-control ${errors.pin ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          errors.pin ? "is-invalid" : ""
+                        }`}
                         placeholder="Enter pin code"
                         name="pin"
                         id="pin"
@@ -78,9 +80,7 @@ const Getaddress = () => {
                         onChange={handleChange}
                       />
                       {errors.pin && (
-                        <div className="invalid-feedback">
-                          {errors.pin}
-                        </div>
+                        <div className="invalid-feedback">{errors.pin}</div>
                       )}
                     </div>
 
@@ -121,11 +121,13 @@ const Getaddress = () => {
                           onChange={handleChange}
                         >
                           <option value="">Select</option>
-                          {address?.data?.filter((i) => i.Name === form.po).map((i) => (
-                            <option key={nanoid()} value={i.District}>
-                              {i.District}
-                            </option>
-                          ))}
+                          {address?.data
+                            ?.filter((i) => i.Name === form.po)
+                            .map((i) => (
+                              <option key={nanoid()} value={i.District}>
+                                {i.District}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     )}
@@ -144,11 +146,16 @@ const Getaddress = () => {
                           onChange={handleChange}
                         >
                           <option value="">Select</option>
-                          {address?.data?.filter((i) => i.District === form.dist && i.Name === form.po).map((i) => (
-                            <option key={nanoid()} value={i.State}>
-                              {i.State}
-                            </option>
-                          ))}
+                          {address?.data
+                            ?.filter(
+                              (i) =>
+                                i.District === form.dist && i.Name === form.po
+                            )
+                            .map((i) => (
+                              <option key={nanoid()} value={i.State}>
+                                {i.State}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     )}

@@ -3,7 +3,7 @@ import pool from "../db.js";
 import { BadRequestError } from "../errors/customErrors.js";
 import { checkPassword, hashPassword } from "../utils/passwordUtils.js";
 import { createJWT, verifyJWT } from "../utils/tokenUtils.js";
-import { generateSlug, getUserIdFromToken } from "../utils/functions.js";
+import { generateSlug } from "../utils/functions.js";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import nodemailer from "nodemailer";
