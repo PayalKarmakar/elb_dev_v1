@@ -9,7 +9,7 @@ import "swiper/css";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import { encParam } from "../../../utils/functions";
+import { currencyFormat, encParam } from "../../../utils/functions";
 
 const FeaturedProducts = () => {
   const { featuredPosts } = useSelector((store) => store.posts);
@@ -60,7 +60,9 @@ const FeaturedProducts = () => {
                     </button>
                   </div>
                   <p className="job-post-subtitle fw-bold">{postTitle}</p>
-                  <p className="job-post-subtitle fw-bold">{`₹${i.price}`}</p>
+                  <p className="job-post-subtitle fw-bold">{`${currencyFormat().format(
+                    i.price
+                  )}`}</p>
                   {/* <h3 className="job-post-title fw-semibold">
                     <span className="text-decoration-none">
                       {i.description && i.description.length > 20
