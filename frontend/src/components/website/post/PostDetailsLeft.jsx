@@ -50,13 +50,13 @@ const PostDetailsLeft = ({ postSlug }) => {
   return (
     <>
       <div className="bg-white service-details-content">
-        <div className="row row-gap-4 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
+        <div className="">
           {selectedImage !== null ? (
             <div className="full-image-container">
               <img
                 src={selectedImage}
                 alt="Full Size Image"
-                className="full-image"
+                className="full-image# w-100"
               />
             </div>
           ) : (
@@ -78,8 +78,7 @@ const PostDetailsLeft = ({ postSlug }) => {
                           className="recently-view-card-img w-100"
                           alt={"Post Image"}
                         />
-                      </div>
-                      <div className="position-relative">
+
                         <button className="service-card-wishlist-btn">
                           <FaRegHeart />
                         </button>
@@ -92,7 +91,7 @@ const PostDetailsLeft = ({ postSlug }) => {
           )}
         </div>
 
-        <section className="py-110">
+        <section className="py-60">
           <div className="container">
             <div className="row row-cols-xl-3">
               <div className="swiper-nav-btn mt-6">
@@ -103,7 +102,7 @@ const PostDetailsLeft = ({ postSlug }) => {
 
               <Swiper
                 spaceBetween={8}
-                slidesPerView={3}
+                slidesPerView={2}
                 loop={true}
                 autoplay={{ delay: 1000 }}
                 ref={sliderRef}
@@ -152,7 +151,7 @@ const PostDetailsLeft = ({ postSlug }) => {
           </div>
         </section>
 
-        <div className="mt-40">
+        <div className="mt-40#">
           <h2 className="service-details-title fw-bold mb-4">
             {postDetails.title}
           </h2>
