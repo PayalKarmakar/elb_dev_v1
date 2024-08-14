@@ -70,9 +70,9 @@ const LayoutUser = () => {
   };
   // Check if login token is valid ends ------
 
-  useEffect(() => {
-    checkValidToken();
-  }, [url]);
+  // useEffect(() => {
+  //   checkValidToken();
+  // }, [url]);
 
   return (
     <>
