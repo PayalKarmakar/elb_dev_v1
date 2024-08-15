@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPostReviews } from "../../../feature/postSlice";
 import customFetch from "../../../utils/customFetch";
 import { FaStar } from "react-icons/fa";
+import { nanoid } from "@reduxjs/toolkit";
 
 const PostReviews = ({ postSlug }) => {
   let id = postSlug.postId;
@@ -42,44 +43,54 @@ const PostReviews = ({ postSlug }) => {
     totalReview = itemReviewArr.length;
   }
 
+  const calculateTimeAgo = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+
+    return `${diffDays} days ago`;
+  };
+
   const renderReview = () => {
-    postReviews.reviews?.rows?.map((item) => {
-      return (
-        <div className="review-card bg-white">
-          <div>
-            <div className="d-flex justify-content-between mb-3">
-              <FaStar />
-              <span className="text-dark-200 fs-6">2 days ago</span>
-            </div>
-            <p className="text-dark-200 fs-6">
-              There are many variations of passages of Lorem Ipsum available,
-              but the our as majoritys have su alteration in some form, by
-              injected humour, or randomised words which don't.
-            </p>
-            <div className="d-flex align-items-center buyer-info justify-content-between mt-4">
-              <div className="d-flex align-items-center gap-3">
-                <div>
-                  <img
-                    src="assets/img/services/av-3.png"
-                    className="rounded-circle"
-                    alt=""
-                  />
-                </div>
-                <div>
-                  <h4 className="text-18 text-dark-300 fw-semibold">
-                    Benja Barham
-                  </h4>
-                  <p className="text-dark-200 fs-6">Netherlands</p>
-                </div>
+    return postReviews.reviews?.rows?.map((item) => (
+      // console.log(item)
+      <div className="review-card bg-white" key={nanoid}>
+        <div>
+          <div className="d-flex justify-content-between mb-3">
+            <span className="text-dark-200 fs-6">
+              {Array.from({ length: item.reviews }).map((_, index) => (
+                <FaStar key={index} />
+              ))}
+            </span>
+            <span className="text-dark-200 fs-6">
+              {calculateTimeAgo(item.created)}
+            </span>
+          </div>
+          <p className="text-dark-200 fs-6">{item.comment}</p>
+          <div className="d-flex align-items-center buyer-info justify-content-between mt-4">
+            <div className="d-flex align-items-center gap-3">
+              <div>
+                <img
+                  src="assets/img/services/av-3.png"
+                  className="rounded-circle"
+                  alt=""
+                />
               </div>
               <div>
-                <button className="reply-btn">Reply</button>
+                <h4 className="text-18 text-dark-300 fw-semibold">
+                  {`${item.first_name} ${item.last_name}`}
+                </h4>
+                {/* <p className="text-dark-200 fs-6">Netherlands</p> */}
               </div>
+            </div>
+            <div>
+              <button className="reply-btn">Reply</button>
             </div>
           </div>
         </div>
-      );
-    });
+      </div>
+    ));
   };
   return (
     <div>

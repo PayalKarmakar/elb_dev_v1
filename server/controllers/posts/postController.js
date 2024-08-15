@@ -356,7 +356,7 @@ export const getPostDetails = async (req, res) => {
   } catch (error) {
     await pool.query(`ROLLBACK`);
   }
-};
+}; //jyoti
 
 export const getAllPosts = async (req, res) => {
   let cat = "";
@@ -417,8 +417,9 @@ export const getSearchPosts = async (req, res) => {
 };
 
 export const getPostReviews = async (req, res) => {
-  const queryTotal = `select review.*
+  const queryTotal = `select review.*,usr.first_name,usr.last_name,usr.email,usr.mobile
     from reviews_posts review
+    left join master_users usr on review.created_by = usr.id
     where post_id=${req.params.id} order by id`;
   const queryStar = ` SELECT 
     review2.post_id,
@@ -442,4 +443,9 @@ export const getPostReviews = async (req, res) => {
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ data: `No Data Found !!` });
   }
+}; //jyoti
+
+export const postContact = async (postId, userId) => {
+  // const { postId, userId } = req.body;
+  console.log(postId);
 };
