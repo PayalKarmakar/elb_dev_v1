@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import customFetch from "../../../utils/customFetch";
-import { FaStar, FaUser } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { MdPermContactCalendar } from "react-icons/md";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { TiTick } from "react-icons/ti";
 import { nanoid } from "nanoid";
 
 const PostDetailsRight = ({ postSlug }) => {
@@ -14,32 +12,64 @@ const PostDetailsRight = ({ postSlug }) => {
   const { postDetails } = useSelector((store) => store.posts);
   const { currentUser } = useSelector((store) => store.currentUser);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!postDetails.user_id) return; // Exit early if user_id is not available
+      if (!postDetails.user_id) return;
       try {
         const response = await customFetch.get(
           `/website/post/user/${postDetails.user_id}`
         );
-        setUser(response.data.data.rows[0]); // Assuming your API response structure
+        setUser(response.data.data.rows[0]);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
 
     fetchUser();
-  }, [postDetails.user_id]); // Update dependency array to only include user_id
+  }, [postDetails.user_id]);
 
-  const handleLoginCheck = useCallback(() => {
+  console.log(currentUser.id);
+  const handleLoginCheck = useCallback(async () => {
     if (!currentUser) {
       console.log("please login");
-      navigate("/sign-in"); // Use navigate for programmatic navigation
+      navigate("/sign-in");
     } else {
-      console.log("already login");
+      // Prepare email data
+      const emailData = {
+        to: "jyotibag9@gmail.com", // Recipient email (user email fetched from backend)
+        subject: "Contact Request",
+        // text: `Hello ${user?.first_name},\n\n${currentUser.name} is interested in your services. Please get in touch!`,
+        text: `Jyoti is interested in your services. Please get in touch!`,
+        postId: postId,
+        userId: currentUser.id,
+      };
+      // const data = {
+      //   postId: postId,
+      //   userId: currentUser.id,
+      // };
+
+      try {
+        // Send the email
+        const response = await customFetch.post(
+          "/website/send-email",
+          emailData
+        );
+        if (response.status === 200) {
+          console.log("Email sent successfully!");
+          // const responseData = await customFetch.post(
+          //   "/website/post-contact-insert",
+          //   data
+          // );
+        } else {
+          console.error("Failed to send email.");
+        }
+      } catch (error) {
+        console.error("Error sending email:", error);
+      }
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, navigate, user]);
 
   return (
     <div className="col-xl-3 mt-30 mt-xl-0">
