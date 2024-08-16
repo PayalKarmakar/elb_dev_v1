@@ -81,7 +81,7 @@ const Getaddress = () => {
       {form.pin.length === 6 && (
         <div className="col-md-6">
           <label className="form-label required" htmlFor="po">
-            Select Post
+            Select Locality
           </label>
           <select
             className="form-control"

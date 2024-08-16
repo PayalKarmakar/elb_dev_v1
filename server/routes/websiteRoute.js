@@ -34,6 +34,7 @@ router.get(`/get-allstates`, getAllStates); //Payal
 router.get(`/get-cities/:id`, getCities); //Payal
 router.get(`/post/user/:id`, getPostUser);
 router.post(`/search-post/:offset`, getSearchPosts); // Arko
+//router.post(`/get-profile`, getUserProfile);//Payal
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

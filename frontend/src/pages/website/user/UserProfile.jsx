@@ -36,9 +36,14 @@ const UserProfile = () => {
       setselectedCity([]);
     }
   };
+  const getUserDetails = async () => {
+    try {
+      //const getProfileInfo = await customFetch.get(`/website/get-profile`);
+    } catch (error) {}
+  };
   useEffect(() => {
     try {
-      fetchState();
+      // fetchState();
       setFormData({
         fname: currentUser.first_name,
         lname: currentUser.last_name,
@@ -46,6 +51,7 @@ const UserProfile = () => {
         mobile: currentUser.mobile,
         profile_img: currentUser.profile_img,
       });
+      getUserDetails();
       setLoading(false);
     } catch (error) {
       console.log(error);
