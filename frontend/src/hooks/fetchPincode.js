@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
 function useAddressinfo(code) {
- 
-  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!code) return;
+    if (!code || code.length !== 6) return;
 
     setLoading(true);
     setError(null);
@@ -19,11 +17,13 @@ function useAddressinfo(code) {
         if (res[0]?.PostOffice) {
           setData(res[0].PostOffice);
         } else {
-          setError("Invalid response structure");
+          setError("Invalid PIN code or no data available");
+          setData(null); // Clear data on error
         }
       })
       .catch((error) => {
         setError("Error fetching data: " + error.message);
+        setData(null); // Clear data on error
       })
       .finally(() => {
         setLoading(false);

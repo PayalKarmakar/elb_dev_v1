@@ -15,18 +15,19 @@ const Getaddress = () => {
   });
 
   // State to store the fetched address data
-  const [address, setAddress] = useState([]);
+  const [address, setAddress] = useState(null);
 
   // Handler for input change
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
+
     if (name === "pin") {
       if (value.length !== 6 || isNaN(value)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
           pin: "Pin code must be a 6-digit number.",
         }));
+        setAddress(null); // Clear address data if PIN is invalid
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -34,23 +35,24 @@ const Getaddress = () => {
         }));
       }
     }
+
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
   };
 
-  // Fetch address information using the custom hook
+  // Custom hook to fetch address data based on PIN
   const fetchedAddress = useAddressinfo(form.pin);
 
-  // Effect to update address state based on the pin code length
   useEffect(() => {
-    if (form.pin.length === 6) {
-      setAddress(fetchedAddress); // Ensure fetchedAddress has a .data property
+    if (form.pin.length === 6 && fetchedAddress.data) {
+      console.log("Address fetched:", fetchedAddress.data);
+      setAddress(fetchedAddress.data);
     } else {
-      setAddress([]); // Clear the address if the pin is not valid
+      setAddress(null); // Clear address if PIN is not 6 digits
     }
-  }, [form.pin]); // Include fetchedAddress in the dependency array
+  }, [form.pin, fetchedAddress.data]);
 
   return (
     <section className="py-110 bg-offWhite">
@@ -84,80 +86,89 @@ const Getaddress = () => {
                       )}
                     </div>
 
-                    {/* Conditionally render the PO selection dropdown if pin is valid and address data is available */}
-                    {form.pin.length === 6 && (
-                      <div className="col-md-6">
-                        <label className="form-label required" htmlFor="po">
-                          Select Post
-                        </label>
-                        <select
-                          className="form-control"
-                          name="po"
-                          id="po"
-                          value={form.po}
-                          onChange={handleChange}
-                        >
-                          <option value="">Select</option>
-                          {address?.data?.map((i) => (
-                            <option key={nanoid()} value={i.Name}>
-                              {i.Name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-
-                    {/* Conditionally render the District selection dropdown if PO is selected */}
-                    {form.po && (
-                      <div className="col-md-6">
-                        <label className="form-label required" htmlFor="dist">
-                          Select District
-                        </label>
-                        <select
-                          className="form-control"
-                          name="dist"
-                          id="dist"
-                          value={form.dist}
-                          onChange={handleChange}
-                        >
-                          <option value="">Select</option>
-                          {address?.data
-                            ?.filter((i) => i.Name === form.po)
-                            .map((i) => (
-                              <option key={nanoid()} value={i.District}>
-                                {i.District}
+                    {/* Conditionally render the Post Office selection dropdown if PIN is valid and address data is available */}
+                    {address && (
+                      <>
+                        <div className="col-md-6">
+                          <label className="form-label required" htmlFor="po">
+                            Select Post Office
+                          </label>
+                          <select
+                            className="form-control"
+                            name="po"
+                            id="po"
+                            value={form.po}
+                            onChange={handleChange}
+                          >
+                            <option value="">Select</option>
+                            {address.map((i) => (
+                              <option key={nanoid()} value={i.Name}>
+                                {i.Name}
                               </option>
                             ))}
-                        </select>
-                      </div>
-                    )}
+                          </select>
+                        </div>
 
-                    {/* Conditionally render the State selection dropdown if District is selected */}
-                    {form.dist && (
-                      <div className="col-md-6">
-                        <label className="form-label required" htmlFor="state">
-                          Select State
-                        </label>
-                        <select
-                          className="form-control"
-                          name="state"
-                          id="state"
-                          value={form.state}
-                          onChange={handleChange}
-                        >
-                          <option value="">Select</option>
-                          {address?.data
-                            ?.filter(
-                              (i) =>
-                                i.District === form.dist && i.Name === form.po
-                            )
-                            .map((i) => (
-                              <option key={nanoid()} value={i.State}>
-                                {i.State}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+                        {/* Conditionally render the District selection dropdown if PO is selected */}
+                        {form.po && (
+                          <div className="col-md-6">
+                            <label
+                              className="form-label required"
+                              htmlFor="dist"
+                            >
+                              Select District
+                            </label>
+                            <select
+                              className="form-control"
+                              name="dist"
+                              id="dist"
+                              value={form.dist}
+                              onChange={handleChange}
+                            >
+                              <option value="">Select</option>
+                              {address
+                                .filter((i) => i.Name === form.po)
+                                .map((i) => (
+                                  <option key={nanoid()} value={i.District}>
+                                    {i.District}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        )}
+
+                        {/* Conditionally render the State selection dropdown if District is selected */}
+                        {form.dist && (
+                          <div className="col-md-6">
+                            <label
+                              className="form-label required"
+                              htmlFor="state"
+                            >
+                              Select State
+                            </label>
+                            <select
+                              className="form-control"
+                              name="state"
+                              id="state"
+                              value={form.state}
+                              onChange={handleChange}
+                            >
+                              <option value="">Select</option>
+                              {address
+                                .filter(
+                                  (i) =>
+                                    i.District === form.dist &&
+                                    i.Name === form.po
+                                )
+                                .map((i) => (
+                                  <option key={nanoid()} value={i.State}>
+                                    {i.State}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
