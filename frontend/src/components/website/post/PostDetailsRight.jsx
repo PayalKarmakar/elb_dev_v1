@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import customFetch from "../../../utils/customFetch";
 import { FaStar } from "react-icons/fa";
@@ -12,6 +12,8 @@ const PostDetailsRight = ({ postSlug }) => {
   const { postDetails } = useSelector((store) => store.posts);
   const { currentUser } = useSelector((store) => store.currentUser);
   const [user, setUser] = useState(null);
+  const [emailSent, setEmailSent] = useState(false); // State to track if the email was sent
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,26 +31,25 @@ const PostDetailsRight = ({ postSlug }) => {
 
     fetchUser();
   }, [postDetails.user_id]);
-
-  console.log(currentUser.id);
+  console.log(currentUser);
   const handleLoginCheck = useCallback(async () => {
     if (!currentUser) {
       console.log("please login");
       navigate("/sign-in");
     } else {
+      setIsLoading(true); // Start loading when button is clicked
+
       // Prepare email data
       const emailData = {
-        to: "jyotibag9@gmail.com", // Recipient email (user email fetched from backend)
+        buyer_to: currentUser.email,
+        seller_to: user.email,
         subject: "Contact Request",
-        // text: `Hello ${user?.first_name},\n\n${currentUser.name} is interested in your services. Please get in touch!`,
-        text: `Jyoti is interested in your services. Please get in touch!`,
+        seller_text: `Hello ${user?.first_name},\n\n${currentUser.first_name} ${currentUser.last_name} is interested in your services.Here contact details of ${currentUser.first_name} \n\n Mobile - ${currentUser.mobile}\n\n Email - ${currentUser.email}.\n\n Please get in touch!`,
+        buyer_text: `Hello ${currentUser.first_name},\n\n you show interested in ${user.first_name} ${user.last_name}'s post. Here contact details of ${user.first_name} \n\n Mobile - ${user.mobile}\n\n Email - ${user.email}`,
         postId: postId,
-        userId: currentUser.id,
+        buyer_uid: currentUser.id,
+        seller_uid: user.id,
       };
-      // const data = {
-      //   postId: postId,
-      //   userId: currentUser.id,
-      // };
 
       try {
         // Send the email
@@ -58,18 +59,17 @@ const PostDetailsRight = ({ postSlug }) => {
         );
         if (response.status === 200) {
           console.log("Email sent successfully!");
-          // const responseData = await customFetch.post(
-          //   "/website/post-contact-insert",
-          //   data
-          // );
+          setEmailSent(true); // Update state when the email is successfully sent
         } else {
           console.error("Failed to send email.");
         }
       } catch (error) {
         console.error("Error sending email:", error);
+      } finally {
+        setIsLoading(false); // Stop loading after the operation is complete
       }
     }
-  }, [currentUser, navigate, user]);
+  }, [currentUser, navigate, user, postId]);
 
   return (
     <div className="col-xl-3 mt-30 mt-xl-0">
@@ -108,17 +108,30 @@ const PostDetailsRight = ({ postSlug }) => {
             </div>
           </div>
           <div className="d-grid">
-            <Link
-              to="#"
-              onClick={handleLoginCheck}
-              className="w-btn-secondary-lg text-decoration-none"
-            >
-              <MdPermContactCalendar
-                size={18}
-                style={{ borderRadius: "50%" }}
-              />
-              Contact Me
-            </Link>
+            {emailSent ? (
+              <>
+                <p className="text-dark-200">{`${user?.mobile}`}</p>
+                <p className="text-dark-200">{`${user?.email}`}</p>
+              </>
+            ) : (
+              <Link
+                to="#"
+                onClick={handleLoginCheck}
+                className="w-btn-secondary-lg text-decoration-none"
+              >
+                {isLoading ? (
+                  <span>Loading...</span> // Display loading text or spinner
+                ) : (
+                  <>
+                    <MdPermContactCalendar
+                      size={18}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    Contact Me
+                  </>
+                )}
+              </Link>
+            )}
           </div>
         </div>
       </aside>

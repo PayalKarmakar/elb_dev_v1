@@ -1,5 +1,4 @@
 import { Router } from "express";
-import nodemailer from "nodemailer";
 const router = Router();
 import {
   getTopLocations,
@@ -21,6 +20,7 @@ import {
   postContact,
 } from "../controllers/posts/postController.js";
 import { getAllStates } from "../controllers/masters/locationController.js";
+import sendEmailMiddleware from "../middlewares/sendEmailMiddleware.js";
 
 router.get(`/top-locations`, getTopLocations);
 router.get(`/get-categories`, getCategories);
@@ -36,38 +36,5 @@ router.get(`/post/user/:id`, getPostUser);
 router.post(`/search-post/:offset`, getSearchPosts); // Arko
 //router.post(`/get-profile`, getUserProfile);//Payal
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "elbcontact18@gmail.com",
-    pass: "agzi vken ytqj gjwl", // Use the App Password here
-  },
-});
-
-router.post("/send-email", (req, res) => {
-  const { to, subject, text, postId, userId } = req.body;
-
-  const mailOptions = {
-    from: "elbcontact18@gmail.com",
-    to,
-    subject,
-    text,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error("Error sending email:", error);
-      return res.status(500).send(error.toString());
-    }
-    console.log("Email sent: " + info.response);
-
-    // Pass postId and userId to postContact controller
-    postContact(postId, userId);
-
-    res.status(200).send("Email sent: " + info.response);
-  });
-});
-
-// router.post(`/post-contact-insert`, postContact);
-
+router.post("/send-email", sendEmailMiddleware, postContact);
 export default router;
