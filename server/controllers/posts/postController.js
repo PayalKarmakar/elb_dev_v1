@@ -445,7 +445,26 @@ export const getPostReviews = async (req, res) => {
   }
 }; //jyoti
 
-export const postContact = async (postId, userId) => {
-  // const { postId, userId } = req.body;
-  console.log(postId);
+export const postContact = async (req, res) => {
+  const { postId, buyer_uid, seller_uid } = req.body;
+  try {
+    await pool.query(`BEGIN`);
+
+    const result = await pool.query(
+      `INSERT INTO post_contacted_info(post_id, buyer_uid, seller_uid)
+      VALUES($1, $2, $3) RETURNING id`,
+      [postId, buyer_uid, seller_uid]
+    );
+
+    await pool.query(`COMMIT`);
+
+    console.log(`Contact ID: ${result.rows[0].id}`);
+    res.status(200).json({ data: "success", id: result.rows[0].id });
+  } catch (error) {
+    await pool.query(`ROLLBACK`);
+    console.error(`Error in postContact: ${error.message}`);
+    res
+      .status(400)
+      .json({ data: "something went wrong!!", error: error.message });
+  }
 };
