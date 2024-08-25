@@ -122,3 +122,129 @@ export const activateUser = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ data: `success` });
 };
+
+export const getUserProfile = async (req, res) => {
+  const { uuid } = req.params;
+
+  const query = `select * from elb_profile where uuid=$1`;
+  try {
+    const userDetails = await pool.query(query, [uuid]);
+
+    res.status(StatusCodes.ACCEPTED).json({ data: userDetails });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ data: "Failed" });
+  }
+};
+
+export const updateProfileUser = async (req, res) => {
+  const { uuid, id } = req.params;
+  console.log(req.body);
+  console.log(req.file);
+
+  // const { firstName, lastName, gender, email, mobile, address, pin, po, dist, state, country, bio} = req.body;
+  // const updatedAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  // const newSlug = await generateSlug(firstName.trim(), lastName.trim());
+
+  // const postDirectory = path.join("public", "uploads", "users", `${id}`);
+  // await fs.mkdir(postDirectory, { recursive: true });
+  // const validMimeTypes = [
+  //   "image/jpeg",
+  //   "image/png",
+  //   "image/jpg",
+  //   "image/gif",
+  //   "image/webp",
+  // ];
+  // try {
+  //   await pool.query(`BEGIN`);
+
+  //   if (result.rows[0].uuid) {
+
+  //   }
+  //     if (req.file && req.file.length > 0) {
+  //       // Ensure file.buffer is valid
+  //       if (!req.file.buffer) {
+  //         console.log("File buffer is missing");
+  //       } else {
+  //         const type = await fileTypeFromBuffer(req.file.buffer);
+
+  //         if (type && validMimeTypes.includes(type.mime)) {
+  //           // Define the file path
+  //           const filename = Date.now() + path.extname(req.file.originalname);
+  //           const destinationPath = path.join(postDirectory, filename);
+  //           console.log("Saving file to:", destinationPath);
+
+  //           // Save file to disk
+  //           await fs.writeFile(destinationPath, file.buffer);
+
+  //           const imgPath = path.join("uploads", "users", `${id}`, filename);
+  //           let is_cover = false;
+  //           if (file.originalname === cover) is_cover = true;
+
+  //           const userUpdate = await pool.query(
+  //             `update master_users set first_name=$1, last_name=$2, email=$3, mobile=$4, updated_at=$5, slug=$6, profile_img=$7 where id=$8 and uuid=$9 returning *`,
+  //             [
+  //               firstName.trim(),
+  //               lastName.trim(),
+  //               email,
+  //               mobile,
+  //               updatedAt,
+  //               newSlug,
+  //               imgPath,
+  //               id,
+  //               uuid,
+  //             ]
+  //           );
+
+  //           const query = `select * from elb_profile where uuid=$1`;
+  //           const userDetails = await pool.query(query, [uuid]);
+  //           if(userDetails.data?.rows){
+  //             let profileUpdate = await pool.query(
+  //               `update elb_profile set first_name=$1, last_name=$2, email=$3, mobile=$4, updated_at=$5, slug=$6, profile_img=$7 where id=$8 and uuid=$9 returning *`,
+  //               [
+  //                 firstName.trim(),
+  //                 lastName.trim(),
+  //                 email,
+  //                 mobile,
+  //                 updatedAt,
+  //                 newSlug,
+  //                 imgPath,
+  //                 userDetails.data.rows.id,
+  //                 uuid,
+  //               ]
+  //             );
+  //           }else{
+  //             let profileUpdate = await pool.query(
+  //               `insert into elb_profile set uid=$1, uuid=$2, gender=$3, bio=$4, pincode=$5, country_id=$6, country=$7,
+  //               state=$8, district=$9, locality=$10, address=$11 returning *`,
+  //               [
+  //                 firstName.trim(),
+  //                 lastName.trim(),
+  //                 email,
+  //                 mobile,
+  //                 updatedAt,
+  //                 newSlug,
+  //                 imgPath,
+  //                 userDetails.data.rows.id,
+  //                 uuid,
+  //               ]
+  //             );
+  //           }
+
+  //         } else {
+  //         }
+  //       }
+
+  //       await pool.query(`COMMIT`);
+
+  //       res.status(StatusCodes.CREATED).json({ data: `success` });
+  //     } else {
+  //       console.log(`file not uploaded!!`);
+  //     }
+  // } catch (error) {
+  //   console.log(error);
+  //   await pool.query(`ROLLBACK`);
+  //   res
+  //     .status(StatusCodes.BAD_REQUEST)
+  //     .json({ data: `something went wrong!!` });
+  // }
+};

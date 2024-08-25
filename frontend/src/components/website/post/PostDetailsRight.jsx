@@ -135,28 +135,28 @@ const PostDetailsRight = ({ postSlug }) => {
           </div>
         </div>
 
-        <div class="freelancer-sidebar-card p-4 rounded-4 bg-white">
-          <div class="freelancer-single-info border-bottom pb-4">
-            <h4 class="freelancer-sidebar-title text-dark-300 fw-semibold">
+        <div className="freelancer-sidebar-card p-4 rounded-4 bg-white">
+          <div className="freelancer-single-info border-bottom pb-4">
+            <h4 className="freelancer-sidebar-title text-dark-300 fw-semibold">
               About Description
             </h4>
-            <p class="text-dark-200 fs-6">
+            <p className="text-dark-200 fs-6">
               There are many variations of passages of Lorem Ipsum our a
               available, but the majority have oneks suffered alteration in some
               form, ki by injected humour, or randomised tomar a words which
-              don't look even slightly believable. If you are going to use a
+              don&#39t look even slightly believable. If you are going to use a
               valas passage of Lorem Ipsum, you need.Fusce eget pulvinar tor
               tor. Quisque suscipit ante ac nisi a rutrumnec mollis nulla.
             </p>
           </div>
-          <div class="freelancer-single-info pt-4">
-            <h4 class="freelancer-sidebar-title text-dark-300 fw-semibold">
+          <div className="freelancer-single-info pt-4">
+            <h4 className="freelancer-sidebar-title text-dark-300 fw-semibold">
               Language
             </h4>
             <ul>
-              <li class="py-1 text-dark-200 fs-6">English</li>
-              <li class="py-1 text-dark-200 fs-6">Bangla</li>
-              <li class="py-1 text-dark-200 fs-6">Arabic</li>
+              <li className="py-1 text-dark-200 fs-6">English</li>
+              <li className="py-1 text-dark-200 fs-6">Bangla</li>
+              <li className="py-1 text-dark-200 fs-6">Arabic</li>
             </ul>
           </div>
         </div>
