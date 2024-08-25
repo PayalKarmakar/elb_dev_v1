@@ -21,6 +21,7 @@ import {
 } from "../controllers/posts/postController.js";
 import { getAllStates } from "../controllers/masters/locationController.js";
 import sendEmailMiddleware from "../middlewares/sendEmailMiddleware.js";
+import { getUserProfile } from "../controllers/userController.js";
 
 router.get(`/top-locations`, getTopLocations);
 router.get(`/get-categories`, getCategories);
@@ -34,7 +35,7 @@ router.get(`/get-allstates`, getAllStates); //Payal
 router.get(`/get-cities/:id`, getCities); //Payal
 router.get(`/post/user/:id`, getPostUser);
 router.post(`/search-post/:offset`, getSearchPosts); // Arko
-//router.post(`/get-profile`, getUserProfile);//Payal
+router.get(`/get-profile/:uuid`, getUserProfile);
+router.post("/send-email", sendEmailMiddleware, postContact); //jyoti
 
-router.post("/send-email", sendEmailMiddleware, postContact);
 export default router;
