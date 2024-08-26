@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import customFetch from "../../../utils/customFetch";
@@ -11,10 +10,10 @@ import PaginationContainer from "../PaginationContainer";
 import { encParam } from "../../../utils/functions";
 
 const ProductCard = ({ catCard }) => {
-  const { allPosts } = useSelector((store) => store.posts);
-  const { listCategories } = useSelector((store) => store.categories);
+  const { allPosts = [] } = useSelector((store) => store.posts); // Initialize with empty array
+  const { listCategories = [] } = useSelector((store) => store.categories); // Initialize with empty array
   const dispatch = useDispatch();
-  const [totalCount, setTotalCount] = useState();
+  const [totalCount, setTotalCount] = useState(0); // Initialize with 0
 
   const fetchData = async (offset = 0) => {
     try {
@@ -23,22 +22,19 @@ const ProductCard = ({ catCard }) => {
 
       if (catCard.catname === "all") {
         const response = await customFetch.get(`/website/all-post/${offset}`);
-
-        dispatch(setAllPosts(response?.data?.data?.rows));
-        setTotalCount(response?.data?.result?.rows[0].countid);
+        dispatch(setAllPosts(response?.data?.data?.rows || [])); // Default to empty array
+        setTotalCount(response?.data?.result?.rows[0]?.countid || 0); // Default to 0
       } else if (catCard.catname === "search-value") {
         const searchItem = localStorage.getItem("searchItem");
-        let data = JSON.parse(searchItem);
+        let data = JSON.parse(searchItem) || {};
         try {
           const response = await customFetch.post(
             `/website/search-post/${offset}`,
             data
           );
-
-          dispatch(setAllPosts(response?.data?.data?.rows));
-          setTotalCount(response?.data?.result?.rows[0].countid);
+          dispatch(setAllPosts(response?.data?.data?.rows || [])); // Default to empty array
+          setTotalCount(response?.data?.result?.rows[0]?.countid || 0); // Default to 0
         } catch (error) {
-          // toast.error("No Product Found");
           splitErrors(error?.response?.data?.msg);
           return error;
         }
@@ -57,50 +53,37 @@ const ProductCard = ({ catCard }) => {
         const response = await customFetch.get(
           `/website/all-post/${offset}/${parentCategory}/${subcategory}`
         );
-        // console.log(`${parentCategory} || ${subcategory}`);
-        // console.log(response?.data?.data?.rows);
-        dispatch(setAllPosts(response?.data?.data?.rows));
-        setTotalCount(response?.data?.result?.rows?.countId);
+        dispatch(setAllPosts(response?.data?.data?.rows || [])); // Default to empty array
+        setTotalCount(response?.data?.result?.rows?.countId || 0); // Default to 0
       }
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
       return error;
     }
   };
-  console.log(allPosts);
+
   useEffect(() => {
     fetchData();
-  }, [catCard]); // Dependency array to re-fetch data when catCard changes
+  }, [catCard]);
 
-  const clearSlug = (path) => {
-    if (!path) return "";
-    const basePath = import.meta.env.VITE_BASE_URL;
-    const parts = path.split("/");
-    const filename = parts[parts.length - 1];
-    return `${basePath}${filename}`;
-  };
   const [currentPage, setCurrentPage] = useState(1);
   const [currentOffset, setCurrentOffset] = useState(0);
   const pageCount = Math.ceil(totalCount / 5);
 
   const handlePageChange = useCallback((page, offset) => {
-    // console.log(page);
-    // console.log(offset);
     fetchData(offset);
-
-    // fetchData(offset);
     setCurrentOffset(offset);
     setCurrentPage(page);
-  });
-  
-  if (allPosts.length == 0) {
+  }, []);
+
+  if (allPosts.length === 0) {
     return (
       <div>
         <h1>No Product found with your input search queries</h1>
       </div>
-    ); // Show loading message until data is fetched
+    );
   }
-  // let path = "";
+
   return (
     <section>
       <div className="tab-content" id="nav-tabContent">
@@ -118,12 +101,12 @@ const ProductCard = ({ catCard }) => {
                 : product1;
 
               const postTitle =
-                post.title.length > 15
+                post.title?.length > 15
                   ? post.title.substring(0, 15) + "..."
                   : post.title;
 
               return (
-                <article key={nanoid()}>
+                <article key={post.id}>
                   <Link
                     to={`/post/${encParam(String(post.id))}`}
                     className="text-decoration-none"

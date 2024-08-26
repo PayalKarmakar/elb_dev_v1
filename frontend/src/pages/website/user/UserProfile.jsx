@@ -149,7 +149,6 @@ const UserProfile = () => {
         `/users/update-user/${currentUser.uuid}/${currentUser.id}`,
         formData
       );
-      console.log(response);
       toast.success(`Profile Updated`);
       navigate(`/${currentUser.slug}/dashboard`);
     } catch (error) {
