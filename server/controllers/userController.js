@@ -4,6 +4,9 @@ import { generateSlug, paginationLogic } from "../utils/functions.js";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import { hashPassword } from "../utils/passwordUtils.js";
+import fs from "fs/promises";
+import path from "path";
+import { fileTypeFromBuffer } from "file-type";
 
 // ------
 export const allUsers = async (req, res) => {
@@ -137,114 +140,121 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const updateProfileUser = async (req, res) => {
+  console.log(123);
   const { uuid, id } = req.params;
   console.log(req.body);
-  console.log(req.file);
+  const {
+    fname,
+    lname,
+    gender,
+    email,
+    mobile,
+    address,
+    pin,
+    po,
+    dist,
+    state,
+    country,
+    bio,
+  } = req.body;
+  const updatedAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  const newSlug = await generateSlug(fname.trim(), lname.trim());
 
-  // const { firstName, lastName, gender, email, mobile, address, pin, po, dist, state, country, bio} = req.body;
-  // const updatedAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
-  // const newSlug = await generateSlug(firstName.trim(), lastName.trim());
+  try {
+    await pool.query(`BEGIN`);
 
-  // const postDirectory = path.join("public", "uploads", "users", `${id}`);
-  // await fs.mkdir(postDirectory, { recursive: true });
-  // const validMimeTypes = [
-  //   "image/jpeg",
-  //   "image/png",
-  //   "image/jpg",
-  //   "image/gif",
-  //   "image/webp",
-  // ];
-  // try {
-  //   await pool.query(`BEGIN`);
+    const postDirectory = path.join("public", "uploads", "users", `${id}`);
+    await fs.mkdir(postDirectory, { recursive: true });
+    const validMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+      "image/webp",
+    ];
 
-  //   if (result.rows[0].uuid) {
+    if (req.file) {
+      // Ensure file.buffer is valid
+      if (!req.file.buffer) {
+        console.log("File buffer is missing");
+      } else {
+        const type = await fileTypeFromBuffer(req.file.buffer);
 
-  //   }
-  //     if (req.file && req.file.length > 0) {
-  //       // Ensure file.buffer is valid
-  //       if (!req.file.buffer) {
-  //         console.log("File buffer is missing");
-  //       } else {
-  //         const type = await fileTypeFromBuffer(req.file.buffer);
+        if (type && validMimeTypes.includes(type.mime)) {
+          const filename = Date.now() + path.extname(req.file.originalname);
+          const destinationPath = path.join(postDirectory, filename);
+          console.log("Saving file to:", destinationPath);
 
-  //         if (type && validMimeTypes.includes(type.mime)) {
-  //           // Define the file path
-  //           const filename = Date.now() + path.extname(req.file.originalname);
-  //           const destinationPath = path.join(postDirectory, filename);
-  //           console.log("Saving file to:", destinationPath);
+          await fs.writeFile(destinationPath, req.file.buffer);
 
-  //           // Save file to disk
-  //           await fs.writeFile(destinationPath, file.buffer);
+          const imgPath = path.join("uploads", "users", `${id}`, filename);
 
-  //           const imgPath = path.join("uploads", "users", `${id}`, filename);
-  //           let is_cover = false;
-  //           if (file.originalname === cover) is_cover = true;
+          const userUpdate = await pool.query(
+            `UPDATE master_users
+             SET first_name=$1, last_name=$2, email=$3, mobile=$4, updated_at=$5, slug=$6, profile_img=$7
+             WHERE id=$8 AND uuid=$9
+             RETURNING *`,
+            [
+              fname.trim(),
+              lname.trim(),
+              email,
+              mobile,
+              updatedAt,
+              newSlug,
+              imgPath,
+              id,
+              uuid,
+            ]
+          );
 
-  //           const userUpdate = await pool.query(
-  //             `update master_users set first_name=$1, last_name=$2, email=$3, mobile=$4, updated_at=$5, slug=$6, profile_img=$7 where id=$8 and uuid=$9 returning *`,
-  //             [
-  //               firstName.trim(),
-  //               lastName.trim(),
-  //               email,
-  //               mobile,
-  //               updatedAt,
-  //               newSlug,
-  //               imgPath,
-  //               id,
-  //               uuid,
-  //             ]
-  //           );
+          const query = `SELECT * FROM elb_profile WHERE uuid=$1`;
+          const userDetails = await pool.query(query, [uuid]);
 
-  //           const query = `select * from elb_profile where uuid=$1`;
-  //           const userDetails = await pool.query(query, [uuid]);
-  //           if(userDetails.data?.rows){
-  //             let profileUpdate = await pool.query(
-  //               `update elb_profile set first_name=$1, last_name=$2, email=$3, mobile=$4, updated_at=$5, slug=$6, profile_img=$7 where id=$8 and uuid=$9 returning *`,
-  //               [
-  //                 firstName.trim(),
-  //                 lastName.trim(),
-  //                 email,
-  //                 mobile,
-  //                 updatedAt,
-  //                 newSlug,
-  //                 imgPath,
-  //                 userDetails.data.rows.id,
-  //                 uuid,
-  //               ]
-  //             );
-  //           }else{
-  //             let profileUpdate = await pool.query(
-  //               `insert into elb_profile set uid=$1, uuid=$2, gender=$3, bio=$4, pincode=$5, country_id=$6, country=$7,
-  //               state=$8, district=$9, locality=$10, address=$11 returning *`,
-  //               [
-  //                 firstName.trim(),
-  //                 lastName.trim(),
-  //                 email,
-  //                 mobile,
-  //                 updatedAt,
-  //                 newSlug,
-  //                 imgPath,
-  //                 userDetails.data.rows.id,
-  //                 uuid,
-  //               ]
-  //             );
-  //           }
+          if (userDetails?.rows.length > 0) {
+            await pool.query(
+              `UPDATE elb_profile
+               SET uid=$1, uuid=$2, gender=$3, bio=$4, pincode=$5, country_id=$6,
+                   state=$7, district=$8, locality=$9, address=$10, updated_at=$11
+               WHERE id=$12 AND uuid=$13
+               RETURNING *`,
+              [
+                id,
+                uuid,
+                gender,
+                bio,
+                pin,
+                country,
+                state,
+                dist,
+                po,
+                address,
+                updatedAt,
+                userDetails.rows[0].id,
+                uuid,
+              ]
+            );
+          } else {
+            await pool.query(
+              `INSERT INTO elb_profile
+               (uid, uuid, gender, bio, pincode, country_id, state, district, locality, address)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+               RETURNING id`,
+              [id, uuid, gender, bio, pin, country, state, dist, po, address]
+            );
+          }
+        } else {
+          console.log("Invalid file type");
+        }
+      }
+    }
 
-  //         } else {
-  //         }
-  //       }
-
-  //       await pool.query(`COMMIT`);
-
-  //       res.status(StatusCodes.CREATED).json({ data: `success` });
-  //     } else {
-  //       console.log(`file not uploaded!!`);
-  //     }
-  // } catch (error) {
-  //   console.log(error);
-  //   await pool.query(`ROLLBACK`);
-  //   res
-  //     .status(StatusCodes.BAD_REQUEST)
-  //     .json({ data: `something went wrong!!` });
-  // }
+    await pool.query(`COMMIT`);
+    res.status(StatusCodes.CREATED).json({ data: `success` });
+  } catch (error) {
+    console.log(error);
+    await pool.query(`ROLLBACK`);
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ data: `something went wrong!!` });
+  }
 };

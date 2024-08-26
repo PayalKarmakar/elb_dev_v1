@@ -2,24 +2,25 @@ import { useState, useEffect } from "react";
 import useAddressinfo from "../../hooks/fetchPincode"; // Custom hook to fetch address info
 import { nanoid } from "nanoid";
 
-const Getaddress = ({ pincode, onPincodeChange }) => {
-  // Initialize form state with pincode passed from props
+const Getaddress = ({ pincode, po, state, dist, onPincodeChange }) => {
   const [form, setForm] = useState({
-    pin: pincode || "", // Initialize with pincode prop or empty string
-    po: "",
-    dist: "",
-    state: "",
+    pin: pincode || "",
+    po: po || "",
+    dist: dist || "",
+    state: state || "",
   });
+
   const [errors, setErrors] = useState({
     pin: "",
   });
+
   const [address, setAddress] = useState([]);
 
   // Update form state when pincode prop changes
   useEffect(() => {
     setForm((prevForm) => ({
       ...prevForm,
-      pin: pincode || "", // Update pin in form state when pincode prop changes
+      pin: pincode || "",
     }));
   }, [pincode]);
 
@@ -57,11 +58,27 @@ const Getaddress = ({ pincode, onPincodeChange }) => {
   useEffect(() => {
     if (pin_code_string.length === 6 && fetchedAddress.data) {
       setAddress(fetchedAddress.data);
+
+      // Automatically populate the fields if a match is found
+      const poName = po ? po : form.po || fetchedAddress.data[0]?.Name || "";
+      const distName = dist
+        ? dist
+        : form.dist || fetchedAddress.data[0]?.District || "";
+      const stateName = state
+        ? state
+        : form.state || fetchedAddress.data[0]?.State || "";
+
+      setForm((prevForm) => ({
+        ...prevForm,
+        po: poName,
+        dist: distName,
+        state: stateName,
+      }));
     } else {
       setAddress([]); // Clear address if no valid data
     }
   }, [form.pin, fetchedAddress.data]);
-
+  console.log(form.po);
   return (
     <>
       <div className="col-md-6">

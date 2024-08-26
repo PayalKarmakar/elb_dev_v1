@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import customFetch from "../../../utils/customFetch";
-import { useDispatch, useSelector } from "react-redux";
-import { setAllStates } from "../../../feature/masters/locationSlice";
-import { Form, Navigate } from "react-router-dom";
-import { nanoid } from "nanoid";
+
+import { useNavigate } from "react-router-dom";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { store } from "../../../store";
 import { Getaddress } from "../../../components";
@@ -13,11 +11,9 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 const UserProfile = () => {
   document.title = `Profile | ${import.meta.env.VITE_APP_TITLE}`;
-  const dispatch = useDispatch();
-  const { allStates } = useSelector((store) => store.locations);
+
   const { currentUser } = store.getState().currentUser;
-  const [postImages, setPostImages] = useState([]);
-  const [selectedImages, setSelectedImages] = useState(new Map());
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -29,21 +25,12 @@ const UserProfile = () => {
     address: "",
     pincode: "",
     bio: "",
+    po: "",
+    dist: "",
+    state: "",
   });
 
   const [loading, setLoading] = useState(true);
-
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState([]);
-
-  const fetchState = async () => {
-    try {
-      const getStates = await customFetch.get(`/website/get-allstates`);
-      dispatch(setAllStates(getStates?.data?.data?.rows));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     const fetchProfileInfo = async () => {
@@ -64,12 +51,10 @@ const UserProfile = () => {
             address: profile.address || "",
             pincode: profile.pincode || "",
             bio: profile.bio || "",
+            po: profile.locality || "",
+            dist: profile.district || "",
+            state: profile.state || "",
           });
-          setSelectedState(profile.state || "");
-          // Fetch cities based on the fetched state
-          if (profile.state) {
-            getCities(profile.state);
-          }
         } else {
           setFormData({
             fname: currentUser.first_name,
@@ -87,21 +72,7 @@ const UserProfile = () => {
     };
 
     fetchProfileInfo();
-    fetchState(); // Ensure states are fetched
   }, [currentUser.uuid]);
-
-  const getCities = async (stateCode) => {
-    try {
-      const getallCities = await customFetch.get(
-        `/website/get-cities/${stateCode}`
-      );
-      setSelectedState(stateCode);
-      setSelectedCity(getallCities.data.data.rows);
-    } catch (error) {
-      console.log(error);
-      setSelectedCity([]);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -142,14 +113,17 @@ const UserProfile = () => {
   };
 
   const loopImg = () => {
+    // Check if the image is an uploaded file or a newly selected file
     if (!formData.profile_img) return null;
+
+    const isUploadedFile = typeof formData.profile_img === "string";
+    const imageUrl = isUploadedFile
+      ? `${import.meta.env.VITE_BASE_URL}/${formData.profile_img}`
+      : URL.createObjectURL(formData.profile_img);
+
     return (
       <div className="position-relative gig-media-thumb overflow-hidden">
-        <img
-          src={URL.createObjectURL(formData.profile_img)}
-          className="img-fluid"
-          alt=""
-        />
+        <img src={imageUrl} className="img-fluid" alt="Profile" />
         <button
           type="button"
           className="gig-img-delete-btn"
@@ -177,7 +151,7 @@ const UserProfile = () => {
       );
       console.log(response);
       toast.success(`Profile Updated`);
-      Navigate(`/`);
+      navigate(`/${currentUser.slug}/dashboard`);
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
       console.log(error);
@@ -305,7 +279,10 @@ const UserProfile = () => {
                     </div>
 
                     <Getaddress
-                      pincode={formData.pincode}
+                      pincode={formData?.pincode}
+                      po={formData?.po}
+                      state={formData?.state}
+                      dist={formData?.dist}
                       onPincodeChange={(pincode) =>
                         setFormData((prevFormData) => ({
                           ...prevFormData,
@@ -314,56 +291,6 @@ const UserProfile = () => {
                       }
                     />
 
-                    {/* <div className="col-md-6">
-                      <div className="form-container">
-                        <label htmlFor="state" className="form-label">
-                          State
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <select
-                          id="state"
-                          name="state"
-                          value={selectedState}
-                          autoComplete="off"
-                          className="form-select shadow-none"
-                          onChange={(e) => {
-                            const stateCode = e.target.value;
-                            setSelectedState(stateCode);
-                            getCities(stateCode);
-                          }}
-                        >
-                          <option value="">- Select -</option>
-                          {allStates.map((i) => (
-                            <option key={nanoid()} value={i.state_code}>
-                              {i.state}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-container">
-                        <label htmlFor="city" className="form-label">
-                          Town/City
-                          <span className="text-lime-300">*</span>
-                        </label>
-                        <select
-                          id="city"
-                          name="city"
-                          autoComplete="off"
-                          className="form-select shadow-none"
-                          value={formData.city || ""}
-                          onChange={handleChange}
-                        >
-                          <option value="">- Select -</option>
-                          {selectedCity.map((city) => (
-                            <option key={nanoid()} value={city.id}>
-                              {city.city}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div> */}
                     <div className="col-md-4">
                       <div className="form-container">
                         <label htmlFor="country" className="form-label">
